@@ -1,13 +1,11 @@
-name: deploy
+name: build_push
 
 on:
-  push:
-    branches:
-      - 'main'
+  workflow_dispatch:
 
 jobs:
-  Deploy:
-    name: BE Build Deploy
+  Build_Push_Images:
+    name: Build Push Images
     runs-on: ubuntu-latest
     env:
       CR_PAT: ${{ secrets.CR_PAT }}
@@ -19,9 +17,5 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.CR_PAT }}
-      - name: Pull image
-        run: make docker_pull_images
-      - name: Run tests
-        run: make js_run_unit_tests
-      - name: Run linting
-        run: make js_run_lint
+      - name: Build and push docker images
+        run: make docker_build_tag_push
