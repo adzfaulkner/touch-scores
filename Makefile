@@ -12,6 +12,9 @@ js_run_unit_tests:
 js_run_lint:
 	make js_run_command cmd='npm run lint'
 
+js_run_build:
+	make js_run_command cmd='npm run build'
+
 docker_build_tag_push:
 	make js_build_docker_image
 	docker tag ${IMAGE_TAG_JS}:latest ghcr.io/adzfaulkner/${IMAGE_TAG_JS}:latest

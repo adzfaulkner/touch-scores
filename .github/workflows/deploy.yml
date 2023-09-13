@@ -7,7 +7,7 @@ on:
 
 jobs:
   Deploy:
-    name: BE Build Deploy
+    name: Deploy
     runs-on: ubuntu-latest
     env:
       CR_PAT: ${{ secrets.CR_PAT }}
@@ -25,3 +25,5 @@ jobs:
         run: make js_run_unit_tests
       - name: Run linting
         run: make js_run_lint
+      - name: Build package for deployment
+        run: make js_run_build
