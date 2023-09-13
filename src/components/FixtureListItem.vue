@@ -44,7 +44,7 @@ const scoreClasses = (): string[] => {
             <span class="fs-6">{{ fixture.homeTeam }}</span>
           </div>
           <div class="pt-2 pb-2">
-            <div :class="scoreClasses(fixture.stage)">
+            <div :class="scoreClasses()">
               {{ fixture.homeTeamScore === '' ? '&nbsp;' : fixture.homeTeamScore }}
             </div>
           </div>
@@ -54,7 +54,7 @@ const scoreClasses = (): string[] => {
             <span class="fs-6">{{ fixture.awayTeam }}</span>
           </div>
           <div class="pt-2 pb-2">
-            <div :class="scoreClasses(fixture.stage)">
+            <div :class="scoreClasses()">
               {{ fixture.awayTeamScore === '' ? '&nbsp;' : fixture.awayTeamScore }}
             </div>
           </div>

@@ -142,7 +142,7 @@ export const useFixtureStore = defineStore('fixture', {
             competitions
             // @ts-ignore
           } = aggregateRawData(
-            byTapoffTimeAndPitch(s, r, Number(m[1] ?? 0), config.competition, date)
+            byTapoffTimeAndPitch(s, r, Number(m?.[1] ?? 0), config.competition, date)
           )
 
           staged = {
