@@ -1,0 +1,21 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  BE_Build_Deploy:
+    name: BE Build Deploy
+    runs-on: ubuntu-latest
+    env:
+      CR_PAT: ${{ secrets.CR_PAT }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build js image
+        run: make js_build_docker_image
+      - name: Run tests
+        run: make js_run_unit_tests
+      - name: Run linting
+        run: make js_run_lint
