@@ -203,7 +203,7 @@ export const useFixtureStore = defineStore('fixture', {
           },
         }).then(() => {
           notificationStore.setNotification(true, 'Fixture(s) updated')
-        }).catch(e => {
+        }).catch((e: any) => {
           if (e.status === 401) {
             authenticationStore.token = null
             notificationStore.setNotification(false, 'Logged out expired token')
