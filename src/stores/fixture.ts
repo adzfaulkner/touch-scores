@@ -2,7 +2,7 @@ import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { DateTime } from 'luxon'
 
-import { aggregateRawData, filterFixtures, pivotOnV, pivotOnVSeds } from '@/support/fixtures'
+import { aggregateRawData, filterFixtures, pivotOnVSeds } from '@/support/fixtures'
 import { useNotificationStore } from '@/stores/notification'
 import type { Filters, Fixture, FilterBy } from '@/types'
 import { useAuthenticationStore } from '@/stores/authentication'

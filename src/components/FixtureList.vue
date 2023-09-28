@@ -54,7 +54,7 @@ const accordionButtonClasses = (date: string, comp: string, totalCount: number):
   return classes
 }
 
-const accordionBgClasses = (date: string): string[] => {
+const accordionBgClasses = (): string[] => {
   return ['accordion-body', 'bg-primary-subtle']
 }
 
@@ -96,7 +96,7 @@ const fixtureUpdated = () => {
           </button>
         </h2>
         <div v-if="openAccordion === fixtureDate.date.toFormat('d MMMM y')">
-          <div :class="accordionBgClasses(fixtureDate.date.toFormat('d MMMM y'))">
+          <div :class="accordionBgClasses()">
             <h6 v-if="fixtureDate.totalCount < 1">No fixtures found matching filter criteria</h6>
             <div
               class="mb-4"

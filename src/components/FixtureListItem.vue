@@ -81,7 +81,7 @@ const fixtureUpdate = (event: Event, range: string): void => {
         <div class="row">
           <div class="col col-12 col-sm-6 pt-1">
             <select class="form-select" :value="fixture.ref1" @change="(e: Event) => fixtureUpdate(e, fixture.ref1Range)" v-if="canEdit">
-              <option v-for="referee in referees">{{referee}}</option>
+              <option v-for="referee in referees" :key="referee">{{referee}}</option>
             </select>
             <span class="text-danger fst-italic fw-bold fs-6" v-else>{{
               fixture.ref1
@@ -89,7 +89,7 @@ const fixtureUpdate = (event: Event, range: string): void => {
           </div>
           <div class="col col-12 col-sm-6 pt-2">
             <select class="form-select" :value="fixture.ref3" @change="(e: Event) => fixtureUpdate(e, fixture.ref3Range)" v-if="canEdit">
-              <option v-for="referee in referees">{{referee}}</option>
+              <option v-for="referee in referees" :key="referee">{{referee}}</option>
             </select>
             <span class="text-danger fst-italic fw-bold" v-else>{{
               fixture.ref3
