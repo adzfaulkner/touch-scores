@@ -89,7 +89,7 @@ export const byTapoffTimeAndPitch =
           homeTeam: filterVal(schedule[row + 1][col]),
           homeTeamScore:
             schedule[row + 1][col + 1] === undefined ? '' : schedule[row + 1][col + 1].trim(),
-          homeTeamScoreRange: `${columnToLetter(col + 1)}${readingFromCell + (row + 1)}`,
+          homeTeamScoreRange: `${columnToLetter(col + 2)}${readingFromCell + (row + 1)}`,
           awayTeam: filterVal(schedule[row + 2][col]),
           awayTeamScore:
             schedule[row + 2][col + 1] === undefined ? '' : schedule[row + 2][col + 1].trim(),

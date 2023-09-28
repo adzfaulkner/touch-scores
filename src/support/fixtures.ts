@@ -5,7 +5,7 @@ import * as aggregators from '@/support/fixture'
 
 export const dateRegex = /^MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY/i
 export const timeRegex = /^\d+:\d+$/
-export const pitchRegex = /^Field|Pitch /i
+export const pitchRegex = /^Field|Pitch|AGP /i
 
 export type Aggregated = (
   dates: Set<string>,
@@ -124,5 +124,12 @@ const byTapoffTimeAndPitch = aggregators.byTapoffTimeAndPitch(
   normalizeRefName
 )
 const pivotOnV = aggregators.pivotOnV(columnToLetter, normalizeDate, normalizeRefName)
+const pivotOnVSeds = aggregators.pivotOnVSeds(columnToLetter, normalizeDate, normalizeRefName)
 
-export { aggregateRawData, filterFixtures, byTapoffTimeAndPitch, pivotOnV }
+export {
+  aggregateRawData,
+  filterFixtures,
+  byTapoffTimeAndPitch,
+  pivotOnV,
+  pivotOnVSeds
+}

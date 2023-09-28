@@ -1,15 +1,18 @@
 <script async setup lang="ts">
-import { ref, inject } from 'vue'
+import { ref, inject, provide } from 'vue'
 import type { Ref } from 'vue'
 import { DateTime } from 'luxon'
 
 import FixtureListItem from '@/components/FixtureListItem.vue'
+import { useAuthenticationStore } from '@/stores/authentication'
 import { useFixtureStore } from '@/stores/fixture'
 import type { FixturesByDate } from '@/stores/fixture'
 
 const fixtureStore = useFixtureStore()
+const authenticatedStore = useAuthenticationStore()
 
 const loadFixtures = inject('loadFixtures') as Function
+const updateSheet = inject('updateSheet') as Function
 
 await loadFixtures()
 
@@ -19,19 +22,29 @@ const defaultOpen = fixtureStore.fixturesByDate
 
 const openAccordion: Ref<string | null> = ref<string | null>(defaultOpen ?? null)
 
+const updates: Ref<Map<string, string>> = ref(new Map)
+
+provide('updates', updates)
+
 const toggleAccordion = (date: string): void => {
   openAccordion.value = date === openAccordion.value ? null : date
 }
 
 const accordionButtonClasses = (date: string, comp: string, totalCount: number): string[] => {
-  const classes = ['accordion-button', 'bg-gradient', 'fw-bold']
+  let classes = ['accordion-button', 'bg-gradient', 'fw-bold']
 
   if (totalCount > 0) {
-    classes.push(date === '18 June 2023' ? 'bg-red' : 'bg-khaki')
-    classes.push(`text-black`)
+    classes = [
+      ...classes,
+      'bg-dark-subtle',
+      'text-black'
+    ]
   } else {
-    classes.push('bg-body-tertiary')
-    classes.push('text-black-50')
+    classes = [
+      ...classes,
+      'bg-body-tertiary',
+      'text-black-50'
+    ]
   }
 
   if (openAccordion.value !== date) {
@@ -42,7 +55,7 @@ const accordionButtonClasses = (date: string, comp: string, totalCount: number):
 }
 
 const accordionBgClasses = (date: string): string[] => {
-  return ['accordion-body', date === '18 June 2023' ? 'bg-blue' : 'bg-green']
+  return ['accordion-body', 'bg-primary-subtle']
 }
 
 const sortByDate = (fixtureByDates: FixturesByDate[]) =>
@@ -50,6 +63,11 @@ const sortByDate = (fixtureByDates: FixturesByDate[]) =>
     (a: FixturesByDate, b: FixturesByDate) =>
       parseInt(a.date.toFormat('yMMdd'), 10) - parseInt(b.date.toFormat('yMMdd'), 10)
   )
+
+const fixtureUpdated = () => {
+  updateSheet(Array.from(updates.value.entries()))
+  updates.value.clear()
+}
 </script>
 
 <template>
@@ -97,7 +115,7 @@ const sortByDate = (fixtureByDates: FixturesByDate[]) =>
                   v-for="fixture in fixtureDateTime.fixtures"
                   :key="fixture.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
                 >
-                  <FixtureListItem :fixture="fixture" />
+                  <FixtureListItem :fixture="fixture" :can-edit="authenticatedStore.isAuthenticated" @fixtureUpdated="fixtureUpdated" :referees="fixtureStore.refs" />
                 </div>
               </div>
             </div>
@@ -158,6 +176,10 @@ const sortByDate = (fixtureByDates: FixturesByDate[]) =>
 
 .img-mixed_nts {
   background-image: url('@/assets/comps/mixed_nts.png');
+}
+
+.img-seds {
+  background-image: url('@/assets/comps/seds.png');
 }
 
 .button-nts {

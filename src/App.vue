@@ -45,7 +45,7 @@ const refreshFixtures = async (): Promise<any> => {
     <nav class="navbar">
       <div class="container">
         <span class="navbar-brand">
-          <img src="@/assets/eta_logo.png" alt="Logo" width="130" height="75" />
+          <img src="@/assets/logo.png" alt="Logo" />
         </span>
         <AuthenticationControls @openFilerModal="toggleModal" @refreshFixtures="refreshFixtures" />
       </div>

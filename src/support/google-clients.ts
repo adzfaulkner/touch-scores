@@ -34,6 +34,7 @@ const signIn = (authenticationClient: AuthenticationClient, cb: Function): void 
 const signOut = (token: AccessToken): void => {
   // @ts-ignore
   window.google.accounts.oauth2.revoke(token.access_token)
+  window.gapi.client.setToken('')
 }
 
 const initApiClient = (apiKey: string, discoveryDocs: string[]): Promise<any> => {

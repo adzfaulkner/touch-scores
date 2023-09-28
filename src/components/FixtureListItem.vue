@@ -1,35 +1,45 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
-
+import type {PropType, Ref} from 'vue'
 import type { Fixture } from '@/types'
 
+import { inject } from 'vue'
+
+import { debounce } from '@/support/debounce'
+
+const emit = defineEmits(['fixtureUpdated'])
+
 defineProps({
-  fixture: { type: Object as PropType<Fixture>, required: true }
+  canEdit: Boolean,
+  referees: { type: Array as PropType<Array<String>>, required: true },
+  fixture: { type: Object as PropType<Fixture>, required: true },
 })
 
-const scoreClasses = (): string[] => {
-  const classes = ['score', 'pt-2', 'pb-2', 'text-center', 'fw-bold']
+const updates = inject('updates') as Ref<Map<string, string>>
 
-  /**
-    const laterRound = /^(cup|plate|bowl)\s/i
-    const segs: RegExpMatchArray | null = stage.match(laterRound)
+const scoreClasses = (stage: string, defaults: string[]): string[] => {
+  const ret = [...defaults, 'pt-2', 'pb-2', 'text-center', 'fw-bold']
 
-    const placePlayOff = /\/(\d+)(st|nd|rd|th)\splay-off$/i
-    const segs2: RegExpMatchArray | null = stage.match(placePlayOff)
+  const s = stage.toLowerCase()
 
-    if (segs?.length !== undefined) {
-      const majorOrMinor = stage.toLowerCase().includes('play-off') ? 'minor' : 'major'
-      classes.push(`score-${segs[1].toLowerCase()}-${majorOrMinor}`)
-    } else if (segs2?.length !== undefined) {
-      classes.push(`score-${['cup', 'plate', 'bowl'][Math.ceil(Number(segs2[1]) / 8) - 1]}-minor`)
-    } else {
-      classes.push('bg-secondary-subtle')
-    }
-     */
+  if (s.substring(0, 4) === 'cup ') {
+    ret.push('bg-cup')
+  } else if(s.substring(0, 6) === 'plate ') {
+    ret.push('bg-plate')
+  } else {
+    ret.push('bg-default')
+  }
 
-  classes.push('bg-secondary-subtle')
+  return ret
+}
 
-  return classes
+const fixtureUpdate = (event: Event, range: string): void => {
+  const val = (event.target as HTMLInputElement).value
+
+  updates.value.set(range, val)
+
+  debounce(() =>  {
+    emit('fixtureUpdated')
+  }, 2000)()
 }
 </script>
 
@@ -44,7 +54,8 @@ const scoreClasses = (): string[] => {
             <span class="fs-6">{{ fixture.homeTeam }}</span>
           </div>
           <div class="pt-2 pb-2">
-            <div :class="scoreClasses()">
+            <input type="number" :class="scoreClasses(fixture.stage,['form-control','score-input'])" :value="fixture.homeTeamScore" @keyup="(e: Event) => fixtureUpdate(e, fixture.homeTeamScoreRange)" v-if="canEdit">
+            <div :class="scoreClasses(fixture.stage, ['score'])" v-else>
               {{ fixture.homeTeamScore === '' ? '&nbsp;' : fixture.homeTeamScore }}
             </div>
           </div>
@@ -54,7 +65,8 @@ const scoreClasses = (): string[] => {
             <span class="fs-6">{{ fixture.awayTeam }}</span>
           </div>
           <div class="pt-2 pb-2">
-            <div :class="scoreClasses()">
+            <input type="number" :class="scoreClasses(fixture.stage,['form-control','score-input'])" :value="fixture.awayTeamScore" @keyup="(e: Event) => fixtureUpdate(e, fixture.awayTeamScoreRange)" v-if="canEdit">
+            <div :class="scoreClasses(fixture.stage,['score'])" v-else>
               {{ fixture.awayTeamScore === '' ? '&nbsp;' : fixture.awayTeamScore }}
             </div>
           </div>
@@ -67,19 +79,20 @@ const scoreClasses = (): string[] => {
           </div>
         </div>
         <div class="row">
-          <div class="col col-4 col-lg-4 pt-1">
-            <span class="text-danger fst-italic fw-bold fs-6">{{
-              fixture.ref1 !== '' ? fixture.ref1 : 'TBA'
+          <div class="col col-12 col-sm-6 pt-1">
+            <select class="form-select" :value="fixture.ref1" @change="(e: Event) => fixtureUpdate(e, fixture.ref1Range)" v-if="canEdit">
+              <option v-for="referee in referees">{{referee}}</option>
+            </select>
+            <span class="text-danger fst-italic fw-bold fs-6" v-else>{{
+              fixture.ref1
             }}</span>
           </div>
-          <div class="col col-4 col-lg-4 pt-2">
-            <span class="text-danger fst-italic fw-bold">{{
-              fixture.ref2 !== '' ? fixture.ref2 : 'TBA'
-            }}</span>
-          </div>
-          <div class="col col-4 col-lg-4 pt-2">
-            <span class="text-danger fst-italic fw-bold">{{
-              fixture.ref3 !== '' ? fixture.ref3 : 'TBA'
+          <div class="col col-12 col-sm-6 pt-2">
+            <select class="form-select" :value="fixture.ref3" @change="(e: Event) => fixtureUpdate(e, fixture.ref3Range)" v-if="canEdit">
+              <option v-for="referee in referees">{{referee}}</option>
+            </select>
+            <span class="text-danger fst-italic fw-bold" v-else>{{
+              fixture.ref3
             }}</span>
           </div>
         </div>
@@ -91,6 +104,10 @@ const scoreClasses = (): string[] => {
 <style scoped>
 .score {
   width: 60px;
+}
+
+.score-input {
+  width: 75px;
 }
 
 .score-cup-major {
@@ -119,5 +136,17 @@ const scoreClasses = (): string[] => {
 
 .score-plate-minor {
   background-color: #b7b7b7;
+}
+
+.bg-cup {
+  background-color: #fff3cc;
+}
+
+.bg-plate {
+  background-color: #efefef;
+}
+
+.bg-default {
+  background-color: #d0e2f3;
 }
 </style>

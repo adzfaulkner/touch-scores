@@ -2,9 +2,10 @@ import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { DateTime } from 'luxon'
 
-import { aggregateRawData, filterFixtures, byTapoffTimeAndPitch } from '@/support/fixtures'
+import { aggregateRawData, filterFixtures, pivotOnV, pivotOnVSeds } from '@/support/fixtures'
 import { useNotificationStore } from '@/stores/notification'
 import type { Filters, Fixture, FilterBy } from '@/types'
+import { useAuthenticationStore } from '@/stores/authentication'
 
 const fromCellRegex = /(\d+):/
 
@@ -48,22 +49,13 @@ const defaultFilters: Filters = {
 
 const configs = [
   {
-    sheetId: '12J7Cr_H8vzuO3GuzswCcksv7VpqtE2r59mgzUhFVXys',
-    date: '2023-07-15T00:00:00+00:00',
+    sheetId: '1sBY-UbKEU30TD4WZJE_-HLjYr6g0WcIoI7miGEITyMc',
+    date: '2023-10-07T00:00:00+00:00',
     ranges: {
-      schedule: 'Schedule!A15:AY',
-      refAllocations: 'Ref Allocations!A2:Q'
+      schedule: 'Schedule!A10:P',
+      refAllocations: null
     },
-    competition: 'mixed_nts'
-  },
-  {
-    sheetId: '16_OXZExSsH3K6fanCNSnkXLgd3-F2wlcCGYrc6l1Pfw',
-    date: '2023-07-16T00:00:00+00:00',
-    ranges: {
-      schedule: 'Schedule!A13:AY',
-      refAllocations: 'Ref Allocations!A2:Q'
-    },
-    competition: 'mixed_nts'
+    competition: 'seds'
   }
 ]
 
@@ -117,13 +109,6 @@ export const useFixtureStore = defineStore('fixture', {
             range: config.ranges.schedule
           })
 
-          const {
-            result: { values: r }
-          } = await apiClient.sheets.spreadsheets.values.get({
-            spreadsheetId: config.sheetId,
-            range: config.ranges.refAllocations
-          })
-
           const m = config.ranges.schedule.match(fromCellRegex)
 
           const date =
@@ -142,7 +127,7 @@ export const useFixtureStore = defineStore('fixture', {
             competitions
             // @ts-ignore
           } = aggregateRawData(
-            byTapoffTimeAndPitch(s, r, Number(m?.[1] ?? 0), config.competition, date)
+            pivotOnVSeds(s,  Number(m?.[1] ?? 0), config.competition, date)
           )
 
           staged = {
@@ -197,7 +182,35 @@ export const useFixtureStore = defineStore('fixture', {
     },
     setFilteringInProgress(filteringInProgress: boolean): void {
       this.filteringInProgress = filteringInProgress
-    }
+    },
+    updateSheet(apiClient: any): Function {
+      return (scores: string[][]): void => {
+        const notificationStore = useNotificationStore()
+        const authenticationStore = useAuthenticationStore()
+
+        apiClient.sheets.spreadsheets.values.batchUpdate({
+          spreadsheetId: configs[0].sheetId,
+          resource: {
+            data: scores.map((score: string[]) => ({
+              range: score[0],
+              values: [
+                [
+                  score[1],
+                ],
+              ],
+            })),
+            valueInputOption: 'RAW',
+          },
+        }).then(() => {
+          notificationStore.setNotification(true, 'Fixture(s) updated')
+        }).catch(e => {
+          if (e.status === 401) {
+            authenticationStore.token = null
+            notificationStore.setNotification(false, 'Logged out expired token')
+          }
+        })
+      }
+    },
   },
   getters: {
     fixturesByDate: (state): FixturesByDate[] => {
