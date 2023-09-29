@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 
-import { signIn, signOut } from '@/support/google-clients'
+import { resetApiClientToken, signIn, signOut } from '@/support/google-clients'
 import { useNotificationStore } from '@/stores/notification'
 
 export const useAuthenticationStore = defineStore('authentication', {
@@ -33,6 +33,14 @@ export const useAuthenticationStore = defineStore('authentication', {
       this.token = null
 
       notificationStore.setNotification(true, 'Signed out')
+    },
+    expiredToken(): void {
+      const notificationStore = useNotificationStore()
+
+      this.token = null
+      notificationStore.setNotification(false, 'Logged out expired token')
+
+      resetApiClientToken()
     }
   },
   getters: {

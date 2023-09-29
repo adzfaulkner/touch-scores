@@ -2,10 +2,12 @@ import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { DateTime } from 'luxon'
 
+import type { Filters, Fixture, FilterBy } from '@/types'
+
 import { aggregateRawData, filterFixtures, pivotOnVSeds } from '@/support/fixtures'
 import { useNotificationStore } from '@/stores/notification'
-import type { Filters, Fixture, FilterBy } from '@/types'
 import { useAuthenticationStore } from '@/stores/authentication'
+import { makeAPICall } from '@/support/google-clients'
 
 const fromCellRegex = /(\d+):/
 
@@ -101,13 +103,30 @@ export const useFixtureStore = defineStore('fixture', {
           stages: [] as string[]
         }
 
+        const getFixtureData = async (config: any) => {
+          const getSheetValues = async (config: any) => {
+            const r = await apiClient.sheets.spreadsheets.values.get({
+              spreadsheetId: config.sheetId,
+              range: config.ranges.schedule
+            })
+
+            return r.result.values
+          }
+
+          return await makeAPICall(
+              async () => {
+                return await getSheetValues(config)
+              },
+              async () => {
+                const authenticationStore = useAuthenticationStore()
+                authenticationStore.expiredToken()
+                return await getSheetValues(config)
+              }
+          )
+        }
+
         for (const config of configs) {
-          const {
-            result: { values: s }
-          } = await apiClient.sheets.spreadsheets.values.get({
-            spreadsheetId: config.sheetId,
-            range: config.ranges.schedule
-          })
+          const s = await getFixtureData(config)
 
           const m = config.ranges.schedule.match(fromCellRegex)
 
@@ -183,32 +202,35 @@ export const useFixtureStore = defineStore('fixture', {
     setFilteringInProgress(filteringInProgress: boolean): void {
       this.filteringInProgress = filteringInProgress
     },
-    updateSheet(apiClient: any): Function {
-      return (scores: string[][]): void => {
+    updateSheet (apiClient: any): Function {
+      return async (scores: string[][]): Promise<any> => {
         const notificationStore = useNotificationStore()
         const authenticationStore = useAuthenticationStore()
 
-        apiClient.sheets.spreadsheets.values.batchUpdate({
-          spreadsheetId: configs[0].sheetId,
-          resource: {
-            data: scores.map((score: string[]) => ({
-              range: score[0],
-              values: [
-                [
-                  score[1],
-                ],
-              ],
-            })),
-            valueInputOption: 'RAW',
+        await makeAPICall(
+          async () => {
+            await apiClient.sheets.spreadsheets.values.batchUpdate({
+              spreadsheetId: configs[0].sheetId,
+              resource: {
+                data: scores.map((score: string[]) => ({
+                  range: score[0],
+                  values: [
+                    [
+                      score[1],
+                    ],
+                  ],
+                })),
+                valueInputOption: 'RAW',
+              },
+            })
+
+            notificationStore.setNotification(true, 'Fixture(s) updated')
           },
-        }).then(() => {
-          notificationStore.setNotification(true, 'Fixture(s) updated')
-        }).catch((e: any) => {
-          if (e.status === 401) {
-            authenticationStore.token = null
-            notificationStore.setNotification(false, 'Logged out expired token')
-          }
-        })
+          () => {
+            authenticationStore.expiredToken()
+            notificationStore.setNotification(false, 'Signed out due to expired token. Please sign-in again')
+          },
+        )
       }
     },
   },

@@ -107,7 +107,9 @@ const fixtureUpdate = (event: Event, range: string): void => {
 }
 
 .score-input {
-  width: 75px;
+  width: 90px;
+  background-color: white !important;
+  height: 60px;
 }
 
 .score-cup-major {

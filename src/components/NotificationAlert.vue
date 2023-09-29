@@ -26,19 +26,25 @@ const hideNotification = (): void => {
 </script>
 
 <template>
-  <div class="toast-container bottom-0 start-50 p-3 translate-middle-x">
-    <div role="alert" :class="alertClasses()" aria-live="assertive" aria-atomic="true">
-      <div class="d-flex">
-        <div class="toast-body">
-          <strong>{{ notificationStore.notification.message }}</strong>
+  <div class="fixed-bottom">
+    <div class="toast-container bottom-0 start-50 translate-middle-x" style="padding-bottom: 55px !important">
+      <div :class="alertClasses()">
+        <div class="d-flex">
+          <div class="toast-body">
+            <strong>{{ notificationStore.notification.message }}</strong>
+          </div>
+          <button
+            type="button"
+            class="btn-close me-2 m-auto btn-close-white"
+            aria-label="Close"
+            @click="hideNotification"
+          ></button>
         </div>
-        <button
-          type="button"
-          class="btn-close me-2 m-auto btn-close-white"
-          aria-label="Close"
-          @click="hideNotification"
-        ></button>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+
+</style>

@@ -3,6 +3,11 @@ interface AuthenticationClient {
   requestAccessToken(config: any): void
 }
 
+interface APIClient {
+  init: Function,
+  setToken: Function
+}
+
 interface AccessToken {
   access_token: string
 }
@@ -34,8 +39,13 @@ const signIn = (authenticationClient: AuthenticationClient, cb: Function): void 
 const signOut = (token: AccessToken): void => {
   // @ts-ignore
   window.google.accounts.oauth2.revoke(token.access_token)
+  resetApiClientToken()
+}
+
+const getAPIClient = (): APIClient => {
   // @ts-ignore
-  window.gapi.client.setToken('')
+  const client: APIClient = window.gapi.client
+  return client
 }
 
 const initApiClient = (apiKey: string, discoveryDocs: string[]): Promise<any> => {
@@ -47,8 +57,7 @@ const initApiClient = (apiKey: string, discoveryDocs: string[]): Promise<any> =>
     googleScript.onload = () => {
       // @ts-ignore
       window.gapi.load('client', async function () {
-        // @ts-ignore
-        const client = window.gapi.client
+        const client = getAPIClient()
 
         await client.init({
           apiKey: apiKey,
@@ -61,4 +70,22 @@ const initApiClient = (apiKey: string, discoveryDocs: string[]): Promise<any> =>
   })
 }
 
-export { initSignInClient, initApiClient, signIn, signOut }
+const resetApiClientToken = (): void => {
+  // @ts-ignore
+  getAPIClient().setToken('')
+}
+
+const makeAPICall = async (call: Function, handleE: Function) => {
+  try {
+    return await call()
+  } catch (e: unknown) {
+    // @ts-ignore
+    if (e.status === 401) {
+      return await handleE()
+    }
+
+    throw e
+  }
+}
+
+export { initSignInClient, initApiClient, signIn, signOut, resetApiClientToken, makeAPICall }
