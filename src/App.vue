@@ -43,9 +43,9 @@ const refreshFixtures = async (): Promise<any> => {
 <template>
   <header>
     <nav class="navbar">
-      <div class="container">
-        <span class="navbar-brand">
-          <img src="@/assets/logo.png" alt="Logo" />
+      <div class="container pt-2 pb-2">
+        <span class="navbar-brand logo-container">
+          <img src="@/assets/logo.png" class="img-fluid" alt="TheTouch.live" />
         </span>
         <AuthenticationControls @openFilerModal="toggleModal" @refreshFixtures="refreshFixtures" />
       </div>
@@ -84,4 +84,9 @@ const refreshFixtures = async (): Promise<any> => {
   </ModalView>
 </template>
 
-<style scoped></style>
+<style scoped>
+  .logo-container {
+    width: 100%;
+    max-width: 180px;
+  }
+</style>

@@ -71,7 +71,7 @@ const fixtureUpdated = () => {
 </script>
 
 <template>
-  <div class="mt-3">
+  <div class="mb-3">
     <h6 class="mt-4" v-if="fixtureStore.dates.length === 0">No fixtures found</h6>
     <div class="accordion" v-else>
       <div
