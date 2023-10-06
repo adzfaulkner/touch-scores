@@ -3,8 +3,10 @@ import { inject, ref } from 'vue'
 import type { Ref } from 'vue'
 import { RouterView } from 'vue-router'
 
+import ActivityMonitor from '@/components/ActivityMonitor.vue'
 import AuthenticationControls from '@/components/AuthenticationControls.vue'
 import NotificationAlert from '@/components/NotificationAlert.vue'
+import ModalBackdrop from '@/components/ModalBackdrop.vue'
 import ModalView from '@/components/ModalView.vue'
 import FixtureFilter from '@/components/FixtureFilter.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
@@ -73,15 +75,8 @@ const refreshFixtures = async (): Promise<any> => {
       </button>
     </template>
   </ModalView>
-  <ModalView :id="'activityModal'" :open="showActivityModal" @close="() => {}">
-    <template #default>
-      <div class="d-flex justify-content-center align-items-center" style="height: 100%">
-        <div class="spinner-border" style="width: 200px; height: 200px" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    </template>
-  </ModalView>
+  <ActivityMonitor :open="showActivityModal" />
+  <ModalBackdrop :open="showModal || showActivityModal" />
 </template>
 
 <style scoped>

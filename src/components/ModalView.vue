@@ -33,16 +33,6 @@ const modalDialogClasses = (): string[] => {
   return classes
 }
 
-const modalBackdropClasses = (): string[] => {
-  let classes = ['modal-backdrop', 'fade']
-
-  if (props.open) {
-    classes = [...classes, ...['show', 'd-block']]
-  }
-
-  return classes
-}
-
 document.addEventListener('click', (event: Event) => {
   const id: string | undefined = (event.target as HTMLInputElement).id
 
@@ -69,7 +59,6 @@ document.addEventListener('click', (event: Event) => {
       </div>
     </div>
   </div>
-  <div v-if="open" :class="modalBackdropClasses()"></div>
 </template>
 
 <style></style>
