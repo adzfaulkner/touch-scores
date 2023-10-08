@@ -81,7 +81,7 @@ export const pivotOnVSeds =
             data[r + 1] === undefined || data[r + 1][c + 2] === undefined
               ? ''
               : normalizeRefName(data[r + 1][c + 2]),
-          ref3Range: `${columnToLetter(c + 2)}${readingFromCell + (r + 1)}`,
+          ref3Range: `${columnToLetter(c + 3)}${readingFromCell + (r + 1)}`,
         }
 
         fixtures.push(tmp)
