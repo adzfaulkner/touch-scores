@@ -25,7 +25,7 @@
     showModal.value = !showModal.value
   }
 
-  const refreshFixtures = async (): Promise<any> => {
+  const refreshFixtures = async (): Promise<void> => {
     showActivityModal.value = true
     await loadFixtures()
     showActivityModal.value = false

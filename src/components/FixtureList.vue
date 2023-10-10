@@ -1,6 +1,7 @@
 <script async setup lang="ts">
-import { ref, inject, provide } from 'vue'
 import type { Ref } from 'vue'
+
+import { ref, inject, provide } from 'vue'
 import { DateTime } from 'luxon'
 
 import FixtureListItem from '@/components/FixtureListItem.vue'

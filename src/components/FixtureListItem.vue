@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type {PropType, Ref} from 'vue'
 import type { Fixture } from '@/types'
+import type {PropType, Ref} from 'vue'
 
 import { inject } from 'vue'
 

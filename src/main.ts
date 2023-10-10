@@ -35,8 +35,6 @@ const updateSheet = fixtureStore.updateSheet(batchUpdateSheetValues(apiClient))
 await loadFixtures()
 
 setInterval((): void => {
-    console.log(authenticationStore.isAuthenticated || fixtureStore.isFilteringInProgress)
-
     if (authenticationStore.isAuthenticated || fixtureStore.isFilteringInProgress) {
         return
     }

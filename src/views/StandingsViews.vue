@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 
+import { inject, ref } from 'vue'
+
 import ActionBar from '@/components/ActionBar.vue'
 import ActivityMonitor from '@/components/ActivityMonitor.vue'
 import ModalBackdrop from '@/components/ModalBackdrop.vue'
 import { useStandingsStore } from "@/stores/standings"
-import {inject, ref} from 'vue'
 
 const standingsStore = useStandingsStore()
 
@@ -13,7 +14,7 @@ const showActivityModal: Ref<boolean> = ref(false)
 
 const loadFixtures = inject('loadFixtures') as Function
 
-const refreshStandings = async (): Promise<any> => {
+const refreshStandings = async (): Promise<void> => {
   showActivityModal.value = true
   await loadFixtures()
   showActivityModal.value = false

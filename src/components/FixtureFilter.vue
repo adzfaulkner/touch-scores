@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { Ref } from 'vue'
+
+import { ref } from 'vue'
 import escapeStringRegexp from 'escape-string-regexp'
 
 import { useFixtureStore } from '@/stores/fixture'
