@@ -31,7 +31,7 @@ const refreshStandings = async (): Promise<any> => {
             <th class="team">Team</th>
             <th class="pts text-center">Pts</th>
             <th class="td text-center">TD</th>
-            <th class="td2 text-center">TD+</th>
+            <th class="td2 text-center">TS</th>
           </tr>
         </thead>
         <tbody>
