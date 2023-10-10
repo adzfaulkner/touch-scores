@@ -5,11 +5,25 @@ interface AuthenticationClient {
 
 interface APIClient {
   init: Function,
-  setToken: Function
+  setToken: Function,
+  sheets: {
+    spreadsheets: {
+      values: {
+        get: Function,
+        batchGet: Function,
+        batchUpdate: Function,
+      }
+    }
+  }
 }
 
 interface AccessToken {
   access_token: string
+}
+
+interface BatchGetItem {
+  range: string,
+  values: string[][]
 }
 
 const initSignInClient = (clientId: string, scopes: string): Promise<any> => {
@@ -44,11 +58,10 @@ const signOut = (token: AccessToken): void => {
 
 const getAPIClient = (): APIClient => {
   // @ts-ignore
-  const client: APIClient = window.gapi.client
-  return client
+  return window.gapi.client as APIClient
 }
 
-const initApiClient = (apiKey: string, discoveryDocs: string[]): Promise<any> => {
+const initApiClient = (apiKey: string, discoveryDocs: string[]): Promise<APIClient> => {
   const googleScript = document.createElement('script')
   googleScript.setAttribute('src', 'https://apis.google.com/js/api.js')
   document.head.appendChild(googleScript)
@@ -88,4 +101,42 @@ const makeAPICall = async (call: Function, handleE: Function) => {
   }
 }
 
-export { initSignInClient, initApiClient, signIn, signOut, resetApiClientToken, makeAPICall }
+const getSheetValues = (apiClient: APIClient) => async (spreadsheetId: string, range: string): Promise<string[][]> => {
+  const r = await apiClient.sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range,
+  })
+
+  return r.result.values
+}
+
+const batchGetSheetValues = (apiClient: APIClient) => async (spreadsheetId: string, ranges: string[]): Promise<BatchGetItem[]> => {
+  const r = await apiClient.sheets.spreadsheets.values.batchGet({
+    spreadsheetId,
+    ranges,
+  })
+
+  return r.result.valueRanges
+}
+
+const batchUpdateSheetValues = (apiClient: APIClient) => async (spreadsheetId: string, data: string[][]): Promise<void> => {
+  await apiClient.sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId,
+    resource: {
+      data,
+      valueInputOption: 'RAW',
+    },
+  })
+}
+
+export {
+  initSignInClient,
+  initApiClient,
+  signIn,
+  signOut,
+  resetApiClientToken,
+  makeAPICall,
+  getSheetValues,
+  batchGetSheetValues,
+  batchUpdateSheetValues,
+}

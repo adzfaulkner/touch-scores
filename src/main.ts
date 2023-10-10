@@ -4,9 +4,14 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import { getEnv } from '@/support/env'
-import { initApiClient, initSignInClient } from '@/support/google-clients'
-import { useFixtureStore } from '@/stores/fixture'
+import {
+    initApiClient,
+    initSignInClient,
+    batchUpdateSheetValues,
+    batchGetSheetValues,
+} from '@/support/google-clients'
 import { useAuthenticationStore } from '@/stores/authentication'
+import { useFixtureStore } from '@/stores/fixture'
 
 const pinia = createPinia()
 const app = createApp(App)
@@ -14,8 +19,8 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 
-const fixtureStore = useFixtureStore()
 const authenticationStore = useAuthenticationStore()
+const fixtureStore = useFixtureStore()
 
 const tokenClient = await initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
 const apiClient = await initApiClient(getEnv('VITE_API_KEY'), [getEnv('VITE_DISCOVERY_DOC')])
@@ -23,10 +28,21 @@ const apiClient = await initApiClient(getEnv('VITE_API_KEY'), [getEnv('VITE_DISC
 apiClient.setToken(authenticationStore.token)
 
 app.provide('googleTokenClient', tokenClient)
-app.provide('googleAPIClient', apiClient)
 
-const loadFixtures = fixtureStore.loadFixtures(apiClient)
-const updateSheet = fixtureStore.updateSheet(apiClient)
+const loadFixtures = fixtureStore.loadFixtures(batchGetSheetValues(apiClient))
+const updateSheet = fixtureStore.updateSheet(batchUpdateSheetValues(apiClient))
+
+await loadFixtures()
+
+setInterval((): void => {
+    console.log(authenticationStore.isAuthenticated || fixtureStore.isFilteringInProgress)
+
+    if (authenticationStore.isAuthenticated || fixtureStore.isFilteringInProgress) {
+        return
+    }
+
+    loadFixtures()
+}, 15000)
 
 app.provide('loadFixtures', loadFixtures)
 app.provide('updateSheet', updateSheet)

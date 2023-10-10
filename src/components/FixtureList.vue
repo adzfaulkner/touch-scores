@@ -11,10 +11,7 @@ import type { FixturesByDate } from '@/stores/fixture'
 const fixtureStore = useFixtureStore()
 const authenticatedStore = useAuthenticationStore()
 
-const loadFixtures = inject('loadFixtures') as Function
 const updateSheet = inject('updateSheet') as Function
-
-await loadFixtures()
 
 const defaultOpen = fixtureStore.fixturesByDate
   .map((fixtureByDate: FixturesByDate): string => fixtureByDate.date.toFormat('d MMMM y') as string)

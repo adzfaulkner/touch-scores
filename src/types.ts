@@ -18,6 +18,14 @@ export interface Fixture {
   ref3Range: string
 }
 
+export interface Standing {
+  position: number,
+  team: string,
+  points: number,
+  tdDiff: number,
+  tdFor: number,
+}
+
 export interface Filters {
   date: string[]
   time: string[]

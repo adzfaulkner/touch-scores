@@ -5,8 +5,9 @@ import { DateTime } from 'luxon'
 import type { Filters, Fixture, FilterBy } from '@/types'
 
 import { aggregateRawData, filterFixtures, pivotOnVSeds } from '@/support/fixtures'
-import { useNotificationStore } from '@/stores/notification'
 import { useAuthenticationStore } from '@/stores/authentication'
+import { useNotificationStore } from '@/stores/notification'
+import { useStandingsStore } from '@/stores/standings'
 import { makeAPICall } from '@/support/google-clients'
 
 const fromCellRegex = /(\d+):/
@@ -55,6 +56,12 @@ const configs = [
     date: '2023-10-07T00:00:00+00:00',
     ranges: {
       schedule: 'Schedule!A10:P',
+      standings: [
+        'Pool One Standings!B11:S13',
+        'Pool Two Standings!B11:S13',
+        'Cup Standings!B11:S13',
+        'Plate Standings!B11:S13',
+      ],
       refAllocations: null
     },
     competition: 'seds'
@@ -89,8 +96,8 @@ export const useFixtureStore = defineStore('fixture', {
     }
   },
   actions: {
-    loadFixtures(apiClient: any): Function {
-      return async (detectChange: Boolean = false): Promise<any> => {
+    loadFixtures(batchGetSheetValues: Function): Function {
+      return async (): Promise<void> => {
         let staged = {
           fixtures: [] as Fixture[],
           filtered: [] as Fixture[],
@@ -104,31 +111,37 @@ export const useFixtureStore = defineStore('fixture', {
         }
 
         const getFixtureData = async (config: any) => {
-          const getSheetValues = async (config: any) => {
-            const r = await apiClient.sheets.spreadsheets.values.get({
-              spreadsheetId: config.sheetId,
-              range: config.ranges.schedule
-            })
-
-            return r.result.values
-          }
-
           return await makeAPICall(
               async () => {
-                return await getSheetValues(config)
+                return await batchGetSheetValues(
+                    config.sheetId,
+                    [
+                      config.ranges.schedule,
+                      ...config.ranges.standings
+                    ]
+                )
               },
               async () => {
                 const authenticationStore = useAuthenticationStore()
                 authenticationStore.expiredToken()
-                return await getSheetValues(config)
+
+                return await batchGetSheetValues(
+                    config.sheetId,
+                    [
+                      config.ranges.schedule,
+                      ...config.ranges.standings
+                    ]
+                )
               }
           )
         }
 
-        for (const config of configs) {
-          const s = await getFixtureData(config)
+        const standingsStore = useStandingsStore()
 
-          const m = config.ranges.schedule.match(fromCellRegex)
+        for (const config of configs) {
+          const data = await getFixtureData(config)
+
+          const readFromCell = config.ranges.schedule.match(fromCellRegex)
 
           const date =
             config.date !== null
@@ -146,7 +159,7 @@ export const useFixtureStore = defineStore('fixture', {
             competitions
             // @ts-ignore
           } = aggregateRawData(
-            pivotOnVSeds(s,  Number(m?.[1] ?? 0), config.competition, date)
+            pivotOnVSeds(data[0].values,  Number(readFromCell?.[1] ?? 0), config.competition, date)
           )
 
           staged = {
@@ -166,11 +179,8 @@ export const useFixtureStore = defineStore('fixture', {
           for (const date of dates) {
             this.dateCompetitionMap.set(date, config.competition)
           }
-        }
 
-        if (detectChange && JSON.stringify(this.fixtures) !== JSON.stringify(staged.fixtures)) {
-          const notificationStore = useNotificationStore()
-          notificationStore.setNotification(true, 'Fixtures auto updated', false)
+          standingsStore.standings = data.slice(1)
         }
 
         this.fixtures = staged.fixtures
@@ -202,27 +212,24 @@ export const useFixtureStore = defineStore('fixture', {
     setFilteringInProgress(filteringInProgress: boolean): void {
       this.filteringInProgress = filteringInProgress
     },
-    updateSheet (apiClient: any): Function {
+    updateSheet (batchUpdateSheetValues: Function): Function {
       return async (scores: string[][]): Promise<any> => {
         const notificationStore = useNotificationStore()
         const authenticationStore = useAuthenticationStore()
 
         await makeAPICall(
           async () => {
-            await apiClient.sheets.spreadsheets.values.batchUpdate({
-              spreadsheetId: configs[0].sheetId,
-              resource: {
-                data: scores.map((score: string[]) => ({
+            await batchUpdateSheetValues(
+                configs[0].sheetId,
+                scores.map((score: string[]) => ({
                   range: score[0],
                   values: [
                     [
                       score[1],
                     ],
                   ],
-                })),
-                valueInputOption: 'RAW',
-              },
-            })
+                }))
+            )
 
             notificationStore.setNotification(true, 'Fixture(s) updated')
           },
