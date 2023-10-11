@@ -2,7 +2,6 @@
 import type { Ref } from 'vue'
 
 import { ref, inject, provide } from 'vue'
-import { DateTime } from 'luxon'
 
 import FixtureListItem from '@/components/FixtureListItem.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
@@ -14,11 +13,10 @@ const authenticatedStore = useAuthenticationStore()
 
 const updateSheet = inject('updateSheet') as Function
 
-const defaultOpen = fixtureStore.fixturesByDate
-  .map((fixtureByDate: FixturesByDate): string => fixtureByDate.date.toFormat('d MMMM y') as string)
-  .find((date: string) => date === DateTime.now().toFormat('d MMMM y'))
+const todayFixture = fixtureStore.fixturesByDate
+  .find((fbd: FixturesByDate) => fbd.isToday)
 
-const openAccordion: Ref<string | null> = ref<string | null>(defaultOpen ?? null)
+const openAccordion: Ref<string | null> = ref<string | null>(todayFixture ? todayFixture.date.toFormat('d MMMM y') :  null)
 
 const updates: Ref<Map<string, string>> = ref(new Map)
 
@@ -56,12 +54,6 @@ const accordionBgClasses = (): string[] => {
   return ['accordion-body', 'bg-primary-subtle']
 }
 
-const sortByDate = (fixtureByDates: FixturesByDate[]) =>
-  fixtureByDates.sort(
-    (a: FixturesByDate, b: FixturesByDate) =>
-      parseInt(a.date.toFormat('yMMdd'), 10) - parseInt(b.date.toFormat('yMMdd'), 10)
-  )
-
 const fixtureUpdated = () => {
   updateSheet(Array.from(updates.value.entries()))
   updates.value.clear()
@@ -74,7 +66,7 @@ const fixtureUpdated = () => {
     <div class="accordion" v-else>
       <div
         class="accordion-item"
-        v-for="fixtureDate in sortByDate(fixtureStore.fixturesByDate)"
+        v-for="fixtureDate in fixtureStore.fixturesByDate"
         :key="fixtureDate.date.toFormat('d MMMM y')"
       >
         <h2 class="accordion-header">

@@ -6,7 +6,7 @@ import { inject, ref } from 'vue'
 import ActionBar from '@/components/ActionBar.vue'
 import ActivityMonitor from '@/components/ActivityMonitor.vue'
 import ModalBackdrop from '@/components/ModalBackdrop.vue'
-import { useStandingsStore } from "@/stores/standings"
+import { useStandingsStore } from '@/stores/standings'
 
 const standingsStore = useStandingsStore()
 

@@ -4,6 +4,7 @@ import type { Ref } from 'vue'
 import { ref } from 'vue'
 import escapeStringRegexp from 'escape-string-regexp'
 
+import { useFilterStore } from '@/stores/filters'
 import { useFixtureStore } from '@/stores/fixture'
 import { FilterBy } from '@/types'
 
@@ -11,6 +12,7 @@ const globalSearchTxt = ref<HTMLInputElement>()
 const globalSearchSuggestionsList = ref<HTMLDivElement>()
 const globalSearchResetBtn = ref<HTMLInputElement>()
 
+const filtersStore = useFilterStore()
 const fixtureStore = useFixtureStore()
 
 const globalSuggestions: Ref<string[]> = ref([])
@@ -24,17 +26,17 @@ const filterByTeam = FilterBy.Team
 const filterByGlobal = FilterBy.Global
 
 const filterFixtures = (event: Event, by: FilterBy): void => {
-  fixtureStore.filterBy(by, [(event.target as HTMLInputElement).value])
+  filtersStore.filterBy(by, [(event.target as HTMLInputElement).value])
 }
 
 const resetGlobal = (): void => {
-  fixtureStore.globalValue = ''
-  fixtureStore.filterBy(filterByGlobal, [''])
+  filtersStore.globalValue = ''
+  filtersStore.filterBy(filterByGlobal, [''])
 }
 
 const findSuggestions = (e: Event): void => {
   const value = String((e.target as HTMLInputElement).value).trim()
-  fixtureStore.globalValue = (e.target as HTMLInputElement).value
+  filtersStore.globalValue = (e.target as HTMLInputElement).value
 
   if (value.length < 2) {
     globalSuggestions.value = []
@@ -62,16 +64,16 @@ const findSuggestions = (e: Event): void => {
 
 const renderSuggestion = (suggestion: string): string => {
   const suggestionReplaceRegex = new RegExp(
-    '(' + escapeStringRegexp(fixtureStore.globalValue) + ')',
+    '(' + escapeStringRegexp(filtersStore.globalValue) + ')',
     'i'
   )
   return suggestion.replace(suggestionReplaceRegex, '<b>$1</b>')
 }
 
 const acceptSuggestion = (suggestion: string): void => {
-  fixtureStore.globalValue = suggestion
+  filtersStore.globalValue = suggestion
   showGlobalSuggestions.value = false
-  fixtureStore.filterBy(filterByGlobal, [suggestion])
+  filtersStore.filterBy(filterByGlobal, [suggestion])
 }
 
 const timesSorted = (times: string[]): string[] => {
@@ -107,7 +109,7 @@ document.addEventListener('click', (event: Event) => {
           <input
             type="text"
             class="form-control"
-            :value="fixtureStore.globalValue"
+            :value="filtersStore.globalValue"
             @keyup="findSuggestions"
             @change="findSuggestions"
             @focus="findSuggestions"
@@ -144,7 +146,7 @@ document.addEventListener('click', (event: Event) => {
           <option
             v-for="option in fixtureStore.teams.sort()"
             :key="option"
-            :selected="fixtureStore.filtersApplied.team.includes(option)"
+            :selected="filtersStore.filtersApplied.team.includes(option)"
           >
             {{ option }}
           </option>
@@ -159,7 +161,7 @@ document.addEventListener('click', (event: Event) => {
           <option
             v-for="option in fixtureStore.refs.sort()"
             :key="option"
-            :selected="fixtureStore.filtersApplied.ref.includes(option)"
+            :selected="filtersStore.filtersApplied.ref.includes(option)"
           >
             {{ option }}
           </option>
@@ -174,7 +176,7 @@ document.addEventListener('click', (event: Event) => {
           <option
             v-for="option in timesSorted(fixtureStore.times)"
             :key="option"
-            :selected="fixtureStore.filtersApplied.time.includes(option)"
+            :selected="filtersStore.filtersApplied.time.includes(option)"
           >
             {{ option }}
           </option>
@@ -189,7 +191,7 @@ document.addEventListener('click', (event: Event) => {
           <option
             v-for="option in fixtureStore.pitches.sort()"
             :key="option"
-            :selected="fixtureStore.filtersApplied.pitch.includes(option)"
+            :selected="filtersStore.filtersApplied.pitch.includes(option)"
           >
             {{ option }}
           </option>
@@ -204,7 +206,7 @@ document.addEventListener('click', (event: Event) => {
           <option
             v-for="option in fixtureStore.stages.sort()"
             :key="option"
-            :selected="fixtureStore.filtersApplied.stage.includes(option)"
+            :selected="filtersStore.filtersApplied.stage.includes(option)"
           >
             {{ option }}
           </option>

@@ -1,3 +1,35 @@
+import type { RemovableRef } from '@vueuse/core'
+
+export interface SheetConfig {
+  sheetId: string,
+  date: string,
+  ranges: {
+    schedule: string,
+    standings: string[],
+    refAllocations: null|string,
+  }
+  competition: string
+}
+
+export interface FixtureState {
+  fixtures: Fixture[]
+  filtered: Fixture[]
+  dates: string[]
+  times: string[]
+  pitches: string[]
+  competitions: string[]
+  stages: string[]
+  teams: string[]
+  refs: string[]
+  dateCompetitionMap: Map<string, string>
+}
+
+export interface FilterState {
+  filteringInProgress: boolean
+  globalValue: RemovableRef<string>
+  filters: RemovableRef<Filters>
+}
+
 export interface Fixture {
   date: string
   time: string

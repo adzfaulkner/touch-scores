@@ -8,10 +8,12 @@
   import FixtureList from '@/components/FixtureList.vue'
   import ModalBackdrop from '@/components/ModalBackdrop.vue'
   import ModalView from '@/components/ModalView.vue'
+  import { useFilterStore } from '@/stores/filters'
   import { useFixtureStore } from '@/stores/fixture'
 
   const loadFixtures = inject('loadFixtures') as Function
 
+  const filtersStore = useFilterStore()
   const fixtureStore = useFixtureStore()
 
   const showModal: Ref<boolean> = ref(false)
@@ -48,7 +50,7 @@
       <FixtureFilter />
     </template>
     <template #footer>
-      <button class="btn btn-secondary" @click="fixtureStore.resetFilters">
+      <button class="btn btn-secondary" @click="filtersStore.resetFilters">
         <i class="bi bi-backspace-fill"></i> Reset Filters
       </button>
       <button class="btn btn-primary" @click="toggleModal">

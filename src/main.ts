@@ -12,6 +12,7 @@ import {
 } from '@/support/google-clients'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useFixtureStore } from '@/stores/fixture'
+import { useFilterStore } from '@/stores/filters'
 
 const pinia = createPinia()
 const app = createApp(App)
@@ -20,6 +21,7 @@ app.use(router)
 app.use(pinia)
 
 const authenticationStore = useAuthenticationStore()
+const filtersStore = useFilterStore()
 const fixtureStore = useFixtureStore()
 
 const tokenClient = await initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
@@ -35,7 +37,7 @@ const updateSheet = fixtureStore.updateSheet(batchUpdateSheetValues(apiClient))
 await loadFixtures()
 
 setInterval((): void => {
-    if (authenticationStore.isAuthenticated || fixtureStore.isFilteringInProgress) {
+    if (authenticationStore.isAuthenticated || filtersStore.isFilteringInProgress) {
         return
     }
 

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 import type { Standing } from '@/types';
 
-export interface StandingsByCompetition {
+interface StandingsByCompetition {
     stage: string
     standings: Standing[]
 }

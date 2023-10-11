@@ -1,90 +1,65 @@
-import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { DateTime } from 'luxon'
 
-import type { Filters, Fixture, FilterBy } from '@/types'
+import type {
+  FixtureState,
+  Fixture,
+  SheetConfig
+} from '@/types'
 
+import { sheetConfigs } from '@/sheet-config'
 import { aggregateRawData, filterFixtures, pivotOnVSeds } from '@/support/fixtures'
 import { useAuthenticationStore } from '@/stores/authentication'
+import { useFilterStore } from '@/stores/filters'
 import { useNotificationStore } from '@/stores/notification'
 import { useStandingsStore } from '@/stores/standings'
 import { makeAPICall } from '@/support/google-clients'
 
 const fromCellRegex = /(\d+):/
 
-export interface State {
-  filteringInProgress: boolean
-  fixtures: Fixture[]
-  filtered: Fixture[]
-  globalValue: string
-  filters: Filters
-  dates: string[]
-  times: string[]
-  pitches: string[]
-  competitions: string[]
-  stages: string[]
-  teams: string[]
-  refs: string[]
-  dateCompetitionMap: Map<string, string>
-}
-
-export interface FixturesByDateTimes {
+interface FixturesByDateTimes {
   time: string
   fixtures: Fixture[]
 }
 
 export interface FixturesByDate {
   date: DateTime
+  isToday: boolean
   competition: string
   totalCount: number
   times: FixturesByDateTimes[]
 }
 
-const defaultFilters: Filters = {
-  date: [] as string[],
-  time: [] as string[],
-  stage: [] as string[],
-  pitch: [] as string[],
-  ref: [] as string[],
-  team: [] as string[],
-  global: [] as string[]
+const getFixtureData = async (batchGetSheetValues: Function, config: SheetConfig) => {
+  const payload = [
+    config.ranges.schedule,
+    ...config.ranges.standings
+  ]
+
+  return await makeAPICall(
+      async () => {
+        return await batchGetSheetValues(
+            config.sheetId,
+            payload
+        )
+      },
+      async () => {
+        const authenticationStore = useAuthenticationStore()
+        authenticationStore.expiredToken()
+
+        return await batchGetSheetValues(
+            config.sheetId,
+            payload
+        )
+      }
+  )
 }
 
-const configs = [
-  {
-    sheetId: '1sBY-UbKEU30TD4WZJE_-HLjYr6g0WcIoI7miGEITyMc',
-    date: '2023-10-07T00:00:00+00:00',
-    ranges: {
-      schedule: 'Schedule!A10:P',
-      standings: [
-        'Pool One Standings!B11:S13',
-        'Pool Two Standings!B11:S13',
-        'Cup Standings!B11:S13',
-        'Plate Standings!B11:S13',
-      ],
-      refAllocations: null
-    },
-    competition: 'seds'
-  }
-]
-
-const storageUid = btoa(configs.map((c) => c.sheetId).join('|'))
-
 export const useFixtureStore = defineStore('fixture', {
-  state: (): State => {
+  state: (): FixtureState => {
     return {
-      filteringInProgress: false,
       fixtures: [],
       filtered: [],
-      globalValue: useStorage(`fixtures/${storageUid}/globalValue`, '') as any,
-      filters: useStorage(
-        `fixtures/${storageUid}/filters`,
-        {
-          ...defaultFilters
-        },
-        undefined,
-        { serializer: StorageSerializers.object }
-      ) as any,
       dates: [],
       competitions: [],
       pitches: [],
@@ -110,36 +85,11 @@ export const useFixtureStore = defineStore('fixture', {
           stages: [] as string[]
         }
 
-        const getFixtureData = async (config: any) => {
-          return await makeAPICall(
-              async () => {
-                return await batchGetSheetValues(
-                    config.sheetId,
-                    [
-                      config.ranges.schedule,
-                      ...config.ranges.standings
-                    ]
-                )
-              },
-              async () => {
-                const authenticationStore = useAuthenticationStore()
-                authenticationStore.expiredToken()
-
-                return await batchGetSheetValues(
-                    config.sheetId,
-                    [
-                      config.ranges.schedule,
-                      ...config.ranges.standings
-                    ]
-                )
-              }
-          )
-        }
-
+        const filtersStore = useFilterStore()
         const standingsStore = useStandingsStore()
 
-        for (const config of configs) {
-          const data = await getFixtureData(config)
+        for (const config of sheetConfigs) {
+          const data = await getFixtureData(batchGetSheetValues, config)
 
           const readFromCell = config.ranges.schedule.match(fromCellRegex)
 
@@ -149,15 +99,7 @@ export const useFixtureStore = defineStore('fixture', {
               : null
 
           const {
-            fixtures,
-            dates,
-            pitches,
-            refs,
-            teams,
-            times,
-            stages,
-            competitions
-            // @ts-ignore
+            fixtures, dates, pitches, refs, teams, times, stages, competitions
           } = aggregateRawData(
             pivotOnVSeds(data[0].values,  Number(readFromCell?.[1] ?? 0), config.competition, date)
           )
@@ -174,7 +116,10 @@ export const useFixtureStore = defineStore('fixture', {
             stages: [...new Set([...staged.stages, ...stages])]
           }
 
-          staged.filtered = [...staged.filtered, ...filterFixtures(fixtures, this.filters)]
+          staged.filtered = [
+            ...staged.filtered,
+            ...filterFixtures(fixtures, filtersStore.filters)
+          ]
 
           for (const date of dates) {
             this.dateCompetitionMap.set(date, config.competition)
@@ -194,33 +139,12 @@ export const useFixtureStore = defineStore('fixture', {
         this.stages = staged.stages
       }
     },
-    filterBy(filterBy: FilterBy, value: string[]): void {
-      this.filters = {
-        ...this.filters,
-        [String(filterBy)]: value.filter((val) => val !== '')
-      }
-
-      this.filtered = filterFixtures(this.fixtures, this.filters).map((fixture: Fixture) => {
-        return { ...fixture }
-      })
-    },
-    resetFilters(): void {
-      this.filters = { ...defaultFilters }
-      this.globalValue = ''
-      this.filtered = filterFixtures(this.fixtures, this.filters)
-    },
-    setFilteringInProgress(filteringInProgress: boolean): void {
-      this.filteringInProgress = filteringInProgress
-    },
     updateSheet (batchUpdateSheetValues: Function): Function {
-      return async (scores: string[][]): Promise<any> => {
-        const notificationStore = useNotificationStore()
-        const authenticationStore = useAuthenticationStore()
-
+      return async (scores: string[][]): Promise<void> => {
         await makeAPICall(
           async () => {
             await batchUpdateSheetValues(
-                configs[0].sheetId,
+                sheetConfigs[0].sheetId,
                 scores.map((score: string[]) => ({
                   range: score[0],
                   values: [
@@ -230,10 +154,11 @@ export const useFixtureStore = defineStore('fixture', {
                   ],
                 }))
             )
-
-            notificationStore.setNotification(true, 'Fixture(s) updated')
           },
           () => {
+            const authenticationStore = useAuthenticationStore()
+            const notificationStore = useNotificationStore()
+
             authenticationStore.expiredToken()
             notificationStore.setNotification(false, 'Signed out due to expired token. Please sign-in again')
           },
@@ -244,13 +169,17 @@ export const useFixtureStore = defineStore('fixture', {
   getters: {
     fixturesByDate: (state): FixturesByDate[] => {
       const dateTimeIndexes = new Map()
+      const nowStr = DateTime.now().toFormat('d MMMM y')
 
-      const primed = state.dates.map((date: string): FixturesByDate => {
+      const primed = state.dates.map((dateStr: string): FixturesByDate => {
+        const date = DateTime.fromFormat(dateStr, 'EEEE d MMMM y')
+
         return {
-          date: DateTime.fromFormat(date, 'EEEE d MMMM y'),
-          competition: state.dateCompetitionMap.get(date) as string,
+          date,
+          isToday: date.toFormat('d MMMM y') === nowStr,
+          competition: state.dateCompetitionMap.get(dateStr) as string,
           totalCount: 0,
-          times: []
+          times: [],
         }
       })
 
@@ -277,10 +206,11 @@ export const useFixtureStore = defineStore('fixture', {
           return grouped
         },
         primed
+      ).sort(
+          (a: FixturesByDate, b: FixturesByDate) =>
+              parseInt(a.date.toFormat('yMMdd'), 10) - parseInt(b.date.toFormat('yMMdd'), 10)
       )
     },
-    filtersApplied: (state): Filters => state.filters,
     totalFixturesFound: (state): number => state.filtered.length,
-    isFilteringInProgress: (state): boolean => state.filteringInProgress
   }
 })
