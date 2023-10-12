@@ -25,10 +25,10 @@ import NotificationAlert from '@/components/NotificationAlert.vue'
 
 <style scoped>
   .router-container {
-    margin-bottom: 120px;
+    margin-bottom: 80px;
   }
 
   .notification-container {
-    margin-bottom: 150px;
+    margin-bottom: 110px;
   }
 </style>

@@ -12,12 +12,12 @@ const iconClass = (path: string, inactiveIcon: string, activeIcon: string) => {
 </script>
 
 <template>
-  <div class="bg-body-secondary bg-gradient">
+  <div class="bg-danger bg-gradient">
     <div class="d-flex justify-content-around">
-      <button class="btn text-body-secondary fw-semibold" type="button" @click="router.push('/')">
+      <button class="btn text-white fw-semibold" type="button" @click="router.push('/')">
         <i :class="iconClass('/', 'bi-clock', 'bi-clock-fill')"></i><br>Schedule
       </button>
-      <button class="btn text-body-secondary fw-semibold" type="button" @click="router.push('/standings')">
+      <button class="btn text-white fw-semibold" type="button" @click="router.push('/standings')">
         <i :class="iconClass('/standings', 'bi-file-ruled','bi-file-ruled-fill')"></i><br>Standings
       </button>
     </div>

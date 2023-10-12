@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="d-flex justify-content-around bg-primary">
+  <div class="d-flex justify-content-around">
     <slot></slot>
   </div>
 </template>

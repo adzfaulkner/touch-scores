@@ -35,6 +35,16 @@
 </script>
 
 <template>
+  <div class="actionbar-container sticky-top bg-white">
+    <ActionBar>
+      <button class="btn btn-lg text-primary fw-bold border-0" type="button" @click="toggleModal">
+        <i class="bi bi-filter me-1"></i>Filter
+      </button>
+      <button class="btn btn-lg text-primary fw-bold border-0" type="button" @click="refreshFixtures">
+        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+      </button>
+    </ActionBar>
+  </div>
   <Suspense>
     <div class="container">
       <FixtureList />
@@ -60,20 +70,10 @@
   </ModalView>
   <ActivityMonitor :open="showActivityModal" />
   <ModalBackdrop :open="showModal || showActivityModal" />
-  <div class="actionbar-container fixed-bottom">
-    <ActionBar>
-      <button class="btn text-white" type="button" @click="toggleModal">
-        <i class="bi bi-filter me-1"></i>Filter
-      </button>
-      <button class="btn text-white" type="button" @click="refreshFixtures">
-        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-      </button>
-    </ActionBar>
-  </div>
 </template>
 
 <style scoped>
   .actionbar-container {
-    margin-bottom: 62px;
+    margin-bottom: 10px;
   }
 </style>
