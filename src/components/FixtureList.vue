@@ -6,7 +6,7 @@ import { ref, inject, provide } from 'vue'
 import FixtureListItem from '@/components/FixtureListItem.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useFixtureStore } from '@/stores/fixture'
-import type { FixturesByDate } from '@/stores/fixture'
+import type { FixturesByDate, SheetUpdate } from '@/stores/fixture'
 
 const fixtureStore = useFixtureStore()
 const authenticatedStore = useAuthenticationStore()
@@ -18,7 +18,7 @@ const todayFixture = fixtureStore.fixturesByDate
 
 const openAccordion: Ref<string | null> = ref<string | null>(todayFixture ? todayFixture.date.toFormat('d MMMM y') :  null)
 
-const updates: Ref<Map<string, string>> = ref(new Map)
+const updates: Ref<Map<string, SheetUpdate>> = ref(new Map)
 
 provide('updates', updates)
 
@@ -55,7 +55,7 @@ const accordionBgClasses = (): string[] => {
 }
 
 const fixtureUpdated = () => {
-  updateSheet(Array.from(updates.value.entries()))
+  updateSheet(Array.from(updates.value.values()))
   updates.value.clear()
 }
 </script>
@@ -74,14 +74,14 @@ const fixtureUpdated = () => {
             :class="
               accordionButtonClasses(
                 fixtureDate.date.toFormat('d MMMM y'),
-                fixtureDate.competition,
+                fixtureDate.competition.name,
                 fixtureDate.totalCount
               )
             "
             type="button"
             @click="() => toggleAccordion(fixtureDate.date.toFormat('d MMMM y'))"
           >
-            <div :class="['img', `img-${fixtureDate.competition}`, 'me-2']"></div>
+            <div :class="['img', `img-${fixtureDate.competition.name}`, 'me-2']"></div>
             {{ fixtureDate.date.toFormat('EEEE d MMMM y') }} ({{ fixtureDate.totalCount }})
           </button>
         </h2>
@@ -89,23 +89,33 @@ const fixtureUpdated = () => {
           <div :class="accordionBgClasses()">
             <h6 v-if="fixtureDate.totalCount < 1">No fixtures found matching filter criteria</h6>
             <div
-              class="mb-4"
-              v-for="fixtureDateTime in fixtureDate.times"
-              :key="fixtureDateTime.time"
               v-else
             >
-              <div class="row g-2 mb-2 bg-danger-subtle">
-                <div class="col text-center">
-                  <h3>{{ fixtureDateTime.time }}</h3>
+              <div class="mb-4">
+                <div class="row g-2 pt-4 pb-4 bg-secondary text-white">
+                  <div class="col m-0 text-center">
+                    <h5 class="m-0">{{fixtureDate.competition.info}}</h5>
+                  </div>
                 </div>
               </div>
-              <div class="row row-cols-1 row-cols-lg-2 g-2">
-                <div
-                  class="col"
-                  v-for="fixture in fixtureDateTime.fixtures"
-                  :key="fixture.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
-                >
-                  <FixtureListItem :fixture="fixture" :can-edit="authenticatedStore.isAuthenticated" @fixtureUpdated="fixtureUpdated" :referees="fixtureStore.refs" />
+              <div
+                  class="mb-4"
+                  v-for="fixtureDateTime in fixtureDate.times"
+                  :key="fixtureDateTime.time"
+             >
+                <div class="row g-2 mb-2 bg-danger-subtle">
+                  <div class="col text-center">
+                    <h3>{{ fixtureDateTime.time }}</h3>
+                  </div>
+                </div>
+                <div class="row row-cols-1 row-cols-lg-2 g-2">
+                  <div
+                    class="col"
+                    v-for="fixture in fixtureDateTime.fixtures"
+                    :key="fixture.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
+                  >
+                    <FixtureListItem :fixture="fixture" :can-edit="authenticatedStore.isAuthenticated" @fixtureUpdated="fixtureUpdated" :referees="fixtureStore.refs" />
+                  </div>
                 </div>
               </div>
             </div>

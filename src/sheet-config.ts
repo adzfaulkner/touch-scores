@@ -12,6 +12,7 @@ const sheetConfigs: SheetConfig[] = [
                 'Cup Standings!B11:S13',
                 'Plate Standings!B11:S13',
             ],
+            slotInfo: 'Schedule!B8:P8',
             refAllocations: null
         },
         competition: 'seds'

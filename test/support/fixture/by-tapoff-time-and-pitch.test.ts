@@ -24,7 +24,9 @@ describe('Aggregates raw data', () => {
             nts_schedule,
             nts_refAllocs,
             readFromCell,
-            'nts',
+            {
+                info: "", name: "nts", sheetId: ""
+            },
             DateTime.fromISO(dateIso).toFormat('cccc d MMMM y').toUpperCase()
         )
 

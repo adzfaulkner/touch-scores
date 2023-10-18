@@ -2,9 +2,10 @@ import { defineStore } from 'pinia'
 import { DateTime } from 'luxon'
 
 import type {
+  Competition,
   FixtureState,
   Fixture,
-  SheetConfig
+  SheetConfig,
 } from '@/types'
 
 import { sheetConfigs } from '@/sheet-config'
@@ -25,13 +26,20 @@ interface FixturesByDateTimes {
 export interface FixturesByDate {
   date: DateTime
   isToday: boolean
-  competition: string
+  competition: Competition
   totalCount: number
   times: FixturesByDateTimes[]
 }
 
-const getFixtureData = async (batchGetSheetValues: Function, config: SheetConfig) => {
+export interface SheetUpdate {
+  sheetId: string,
+  value: string,
+  range: string
+}
+
+const getFixtureData = async (batchGetSheetValues: Function, config: SheetConfig): Promise<any> => {
   const payload = [
+    config.ranges.slotInfo,
     config.ranges.schedule,
     ...config.ranges.standings
   ]
@@ -91,6 +99,12 @@ export const useFixtureStore = defineStore('fixture', {
         for (const config of sheetConfigs) {
           const data = await getFixtureData(batchGetSheetValues, config)
 
+          const competition: Competition = {
+            sheetId: config.sheetId,
+            name: config.competition,
+            info: data[0].values[0][0]
+          }
+
           const readFromCell = config.ranges.schedule.match(fromCellRegex)
 
           const date =
@@ -101,7 +115,7 @@ export const useFixtureStore = defineStore('fixture', {
           const {
             fixtures, dates, pitches, refs, teams, times, stages, competitions
           } = aggregateRawData(
-            pivotOnVSeds(data[0].values,  Number(readFromCell?.[1] ?? 0), config.competition, date)
+            pivotOnVSeds(data[1].values,  Number(readFromCell?.[1] ?? 0), competition, date)
           )
 
           staged = {
@@ -122,10 +136,10 @@ export const useFixtureStore = defineStore('fixture', {
           ]
 
           for (const date of dates) {
-            this.dateCompetitionMap.set(date, config.competition)
+            this.dateCompetitionMap.set(date, competition)
           }
 
-          standingsStore.standings = data.slice(1)
+          standingsStore.standings = data.slice(2)
         }
 
         this.fixtures = staged.fixtures
@@ -140,29 +154,40 @@ export const useFixtureStore = defineStore('fixture', {
       }
     },
     updateSheet (batchUpdateSheetValues: Function): Function {
-      return async (scores: string[][]): Promise<void> => {
-        await makeAPICall(
-          async () => {
-            await batchUpdateSheetValues(
-                sheetConfigs[0].sheetId,
-                scores.map((score: string[]) => ({
-                  range: score[0],
-                  values: [
-                    [
-                      score[1],
-                    ],
-                  ],
-                }))
-            )
-          },
-          () => {
-            const authenticationStore = useAuthenticationStore()
-            const notificationStore = useNotificationStore()
+      return async (updates: SheetUpdate[]): Promise<void> => {
+        const groupedBySheet: Map<string, SheetUpdate[]> = new Map()
+        for (const l of updates) {
+          if (!groupedBySheet.has(l.sheetId)) {
+            groupedBySheet.set(l.sheetId, [])
+          }
 
-            authenticationStore.expiredToken()
-            notificationStore.setNotification(false, 'Signed out due to expired token. Please sign-in again')
-          },
-        )
+          groupedBySheet.get(l.sheetId)?.push(l)
+        }
+
+        groupedBySheet.forEach((updates: SheetUpdate[], sheetId: string) => {
+          makeAPICall(
+              async () => {
+                await batchUpdateSheetValues(
+                    sheetId,
+                    updates.map((update: SheetUpdate) => ({
+                      range: update.range,
+                      values: [
+                        [
+                          update.value,
+                        ],
+                      ],
+                    }))
+                )
+              },
+              () => {
+                const authenticationStore = useAuthenticationStore()
+                const notificationStore = useNotificationStore()
+
+                authenticationStore.expiredToken()
+                notificationStore.setNotification(false, 'Signed out due to expired token. Please sign-in again')
+              },
+          )
+        })
       }
     },
   },
@@ -173,11 +198,12 @@ export const useFixtureStore = defineStore('fixture', {
 
       const primed = state.dates.map((dateStr: string): FixturesByDate => {
         const date = DateTime.fromFormat(dateStr, 'EEEE d MMMM y')
+        const competition = state.dateCompetitionMap.get(dateStr) as Competition
 
         return {
           date,
           isToday: date.toFormat('d MMMM y') === nowStr,
-          competition: state.dateCompetitionMap.get(dateStr) as string,
+          competition,
           totalCount: 0,
           times: [],
         }

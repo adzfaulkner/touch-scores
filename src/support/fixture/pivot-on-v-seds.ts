@@ -1,5 +1,5 @@
-import type { Fixture } from '@/types'
-import { dateRegex, timeRegex, pitchRegex } from '@/support/fixtures'
+import type { Competition, Fixture } from '@/types'
+import { isDateValue, isPitchValue, isTimeValue } from '@/support/fixtures'
 import type { Aggregated } from '@/support/fixtures'
 
 export const pivotOnVSeds =
@@ -7,7 +7,7 @@ export const pivotOnVSeds =
   (
     data: string[][],
     readingFromCell: number,
-    competition: string,
+    competition: Competition,
     date: string | null
   ): Aggregated =>
   (
@@ -21,7 +21,7 @@ export const pivotOnVSeds =
     competitions: Set<string>
   ): void => {
     const pitchMap = new Map()
-    competitions.add(competition)
+    competitions.add(competition.name)
 
     const datesArr = []
     const timesArr = []
@@ -33,19 +33,19 @@ export const pivotOnVSeds =
 
     for (let r: number = 0; r < data.length; r++) {
       for (let c: number = 0; c < data[r].length; c++) {
-        if (date === null && dateRegex.test(data[r][c])) {
+        if (date === null && isDateValue(data[r][c])) {
           datesArr.push(normalizeDate(data[r][c].trim()))
           dates.add(normalizeDate(data[r][c].trim()))
           continue
         }
 
-        if (timeRegex.test(data[r][c])) {
+        if (isTimeValue(data[r][c])) {
           timesArr.push(data[r][c].trim())
           times.add(data[r][c].trim())
           continue
         }
 
-        if (pitchRegex.test(data[r][c])) {
+        if (isPitchValue(data[r][c])) {
           pitchMap.set(c, data[r][c].trim())
           pitches.add(data[r][c].trim())
           continue

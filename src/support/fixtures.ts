@@ -3,9 +3,21 @@ import type { Filters, Fixture } from '@/types'
 import { DateTime } from 'luxon'
 import * as aggregators from '@/support/fixture'
 
-export const dateRegex = /^MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY/i
-export const timeRegex = /^\d+:\d+$/
-export const pitchRegex = /^Field|Pitch|AGP /i
+const dateRegex = /^MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY/i
+const timeRegex = /^\d+:\d+$/
+const pitchRegex = /^Field|Pitch|AGP /i
+
+const isDateValue = ((dateRegex: RegExp) => (subject: string): boolean => {
+  return dateRegex.test(subject)
+})(dateRegex)
+
+const isTimeValue = ((timeRegex: RegExp) => (subject: string): boolean => {
+  return timeRegex.test(subject)
+})(timeRegex)
+
+const isPitchValue = ((pitchRegex: RegExp) => (subject: string): boolean => {
+  return pitchRegex.test(subject)
+})(pitchRegex)
 
 export type Aggregated = (
   dates: Set<string>,
@@ -131,5 +143,8 @@ export {
   filterFixtures,
   byTapoffTimeAndPitch,
   pivotOnV,
-  pivotOnVSeds
+  pivotOnVSeds,
+  isDateValue,
+  isPitchValue,
+  isTimeValue,
 }

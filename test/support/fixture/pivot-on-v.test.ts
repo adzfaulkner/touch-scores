@@ -26,7 +26,7 @@ describe('Aggregates raw data', () => {
         const fixtures: Fixture[] = []
         const teams  = new Set<string>()
 
-        const it = pivotOnV(rd, readFromCell, 'nationals', null)
+        const it = pivotOnV(rd, readFromCell, { info: "", name: "nationals", sheetId: "" }, null)
         it(dates, times, pitches, fixtures, teams, new Set<string>(), new Set<string>(), new Set<string>())
 
         assert.deepEqual(expectedDates, Array.from(dates.values()))

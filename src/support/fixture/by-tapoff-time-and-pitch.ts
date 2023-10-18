@@ -1,7 +1,7 @@
-import type { Fixture } from '@/types'
+import type { Competition, Fixture } from '@/types'
 import type { Aggregated } from '@/support/fixtures'
 
-import { pitchRegex, timeRegex } from '@/support/fixtures'
+import { isPitchValue, isTimeValue } from '@/support/fixtures'
 
 export const byTapoffTimeAndPitch =
   (columnToLetter: Function, normalizeDate: Function, normalizeRefName: Function) =>
@@ -9,8 +9,8 @@ export const byTapoffTimeAndPitch =
     schedule: string[][],
     refAllocations: string[][],
     readingFromCell: number,
-    competition: string,
-    date: string | null
+    competition: Competition,
+    date: string | null,
   ): Aggregated =>
   (
     dates: Set<string>,
@@ -22,7 +22,7 @@ export const byTapoffTimeAndPitch =
     refs: Set<string>,
     competitions: Set<string>
   ): void => {
-    competitions.add(competition)
+    competitions.add(competition.name)
 
     const datesArr = []
 
@@ -38,25 +38,25 @@ export const byTapoffTimeAndPitch =
     const tapOffTimeMap = new Map()
 
     for (let c: number = 0; c < schedule[0].length; c++) {
-      if (pitchRegex.test(schedule[0][c])) {
+      if (isPitchValue(schedule[0][c])) {
         schedulePitchMap.set(c, schedule[0][c].trim())
       }
     }
 
     for (let c: number = 0; c < refAllocations[0].length; c++) {
-      if (pitchRegex.test(refAllocations[0][c])) {
+      if (isPitchValue(refAllocations[0][c])) {
         refPitchMap.set(refAllocations[0][c].trim(), c)
       }
     }
 
     for (let r: number = 0; r < schedule.length; r++) {
-      if (timeRegex.test(schedule[r][0])) {
+      if (isTimeValue(schedule[r][0])) {
         tapOffTimeMap.set(r, schedule[r][0].trim())
       }
     }
 
     for (let r: number = 0; r < refAllocations.length; r++) {
-      if (timeRegex.test(refAllocations[r][0])) {
+      if (isTimeValue(refAllocations[r][0])) {
         refTimeMap.set(refAllocations[r][0].trim(), r)
       }
     }
@@ -83,7 +83,7 @@ export const byTapoffTimeAndPitch =
         const tmp: Fixture = {
           date: filterVal(datesArr[datesArr.length - 1]),
           time,
-          competition: filterVal(competition),
+          competition,
           stage,
           pitch,
           homeTeam: filterVal(schedule[row + 1][col]),
@@ -106,7 +106,7 @@ export const byTapoffTimeAndPitch =
 
         dates.add(tmp.date)
         times.add(tmp.time)
-        competitions.add(tmp.competition)
+        competitions.add(tmp.competition.name)
         stages.add(tmp.stage)
         pitches.add(tmp.pitch)
         teams.add(tmp.homeTeam)

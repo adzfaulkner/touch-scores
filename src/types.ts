@@ -1,4 +1,5 @@
 import type { RemovableRef } from '@vueuse/core'
+import type { DateTime } from 'luxon'
 
 export interface SheetConfig {
   sheetId: string,
@@ -7,6 +8,7 @@ export interface SheetConfig {
     schedule: string,
     standings: string[],
     refAllocations: null|string,
+    slotInfo: string,
   }
   competition: string
 }
@@ -21,7 +23,7 @@ export interface FixtureState {
   stages: string[]
   teams: string[]
   refs: string[]
-  dateCompetitionMap: Map<string, string>
+  dateCompetitionMap: Map<string, Competition>
 }
 
 export interface FilterState {
@@ -30,10 +32,29 @@ export interface FilterState {
   filters: RemovableRef<Filters>
 }
 
+export interface Competition {
+  sheetId: string
+  name: string
+  info: string
+}
+
+export interface Slot {
+  time: string
+  fixtures: Fixture[]
+}
+
+export interface CompetitionDateFixtures {
+  competition: Competition
+  date: DateTime
+  isToday: boolean
+  totalCount: number
+  slots: Slot[]
+}
+
 export interface Fixture {
   date: string
   time: string
-  competition: string
+  competition: Competition
   stage: string
   pitch: string
   homeTeam: string
