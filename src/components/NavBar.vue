@@ -5,9 +5,9 @@ import AuthenticationControls from '@/components/AuthenticationControls.vue'
 <template>
   <nav class="navbar">
     <div class="container pt-2 pb-2">
-        <span class="logo-container navbar-brand">
-          <img src="@/assets/logo.png" class="img-fluid" alt="TheTouch.live" />
-        </span>
+      <span class="logo-container navbar-brand">
+        <img src="@/assets/logo.png" class="img-fluid" alt="TheTouch.live" />
+      </span>
       <AuthenticationControls />
     </div>
   </nav>

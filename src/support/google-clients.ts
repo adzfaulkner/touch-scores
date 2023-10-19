@@ -4,14 +4,14 @@ interface AuthenticationClient {
 }
 
 interface APIClient {
-  init: Function,
-  setToken: Function,
+  init: Function
+  setToken: Function
   sheets: {
     spreadsheets: {
       values: {
-        get: Function,
-        batchGet: Function,
-        batchUpdate: Function,
+        get: Function
+        batchGet: Function
+        batchUpdate: Function
       }
     }
   }
@@ -22,7 +22,7 @@ interface AccessToken {
 }
 
 interface BatchGetItem {
-  range: string,
+  range: string
   values: string[][]
 }
 
@@ -101,33 +101,39 @@ const makeAPICall = async (call: Function, handleE: Function) => {
   }
 }
 
-const getSheetValues = (apiClient: APIClient) => async (spreadsheetId: string, range: string): Promise<string[][]> => {
-  const r = await apiClient.sheets.spreadsheets.values.get({
-    spreadsheetId,
-    range,
-  })
+const getSheetValues =
+  (apiClient: APIClient) =>
+  async (spreadsheetId: string, range: string): Promise<string[][]> => {
+    const r = await apiClient.sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range
+    })
 
-  return r.result.values
-}
+    return r.result.values
+  }
 
-const batchGetSheetValues = (apiClient: APIClient) => async (spreadsheetId: string, ranges: string[]): Promise<BatchGetItem[]> => {
-  const r = await apiClient.sheets.spreadsheets.values.batchGet({
-    spreadsheetId,
-    ranges,
-  })
+const batchGetSheetValues =
+  (apiClient: APIClient) =>
+  async (spreadsheetId: string, ranges: string[]): Promise<BatchGetItem[]> => {
+    const r = await apiClient.sheets.spreadsheets.values.batchGet({
+      spreadsheetId,
+      ranges
+    })
 
-  return r.result.valueRanges
-}
+    return r.result.valueRanges
+  }
 
-const batchUpdateSheetValues = (apiClient: APIClient) => async (spreadsheetId: string, data: string[][]): Promise<void> => {
-  await apiClient.sheets.spreadsheets.values.batchUpdate({
-    spreadsheetId,
-    resource: {
-      data,
-      valueInputOption: 'RAW',
-    },
-  })
-}
+const batchUpdateSheetValues =
+  (apiClient: APIClient) =>
+  async (spreadsheetId: string, data: string[][]): Promise<void> => {
+    await apiClient.sheets.spreadsheets.values.batchUpdate({
+      spreadsheetId,
+      resource: {
+        data,
+        valueInputOption: 'RAW'
+      }
+    })
+  }
 
 export {
   initSignInClient,
@@ -138,5 +144,5 @@ export {
   makeAPICall,
   getSheetValues,
   batchGetSheetValues,
-  batchUpdateSheetValues,
+  batchUpdateSheetValues
 }

@@ -7,17 +7,26 @@ const dateRegex = /^MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY/i
 const timeRegex = /^\d+:\d+$/
 const pitchRegex = /^Field|Pitch|AGP /i
 
-const isDateValue = ((dateRegex: RegExp) => (subject: string): boolean => {
-  return dateRegex.test(subject)
-})(dateRegex)
+const isDateValue = (
+  (dateRegex: RegExp) =>
+  (subject: string): boolean => {
+    return dateRegex.test(subject)
+  }
+)(dateRegex)
 
-const isTimeValue = ((timeRegex: RegExp) => (subject: string): boolean => {
-  return timeRegex.test(subject)
-})(timeRegex)
+const isTimeValue = (
+  (timeRegex: RegExp) =>
+  (subject: string): boolean => {
+    return timeRegex.test(subject)
+  }
+)(timeRegex)
 
-const isPitchValue = ((pitchRegex: RegExp) => (subject: string): boolean => {
-  return pitchRegex.test(subject)
-})(pitchRegex)
+const isPitchValue = (
+  (pitchRegex: RegExp) =>
+  (subject: string): boolean => {
+    return pitchRegex.test(subject)
+  }
+)(pitchRegex)
 
 export type Aggregated = (
   dates: Set<string>,
@@ -146,5 +155,5 @@ export {
   pivotOnVSeds,
   isDateValue,
   isPitchValue,
-  isTimeValue,
+  isTimeValue
 }

@@ -2,13 +2,13 @@ import type { RemovableRef } from '@vueuse/core'
 import type { DateTime } from 'luxon'
 
 export interface SheetConfig {
-  sheetId: string,
-  date: string,
+  sheetId: string
+  date: string
   ranges: {
-    schedule: string,
-    standings: string[],
-    refAllocations: null|string,
-    slotInfo: string,
+    schedule: string
+    standings: string[]
+    refAllocations: null | string
+    slotInfo: string
   }
   competition: string
 }
@@ -72,11 +72,11 @@ export interface Fixture {
 }
 
 export interface Standing {
-  position: number,
-  team: string,
-  points: number,
-  tdDiff: number,
-  tdFor: number,
+  position: number
+  team: string
+  points: number
+  tdDiff: number
+  tdFor: number
 }
 
 export interface Filters {

@@ -1,12 +1,7 @@
 import { defineStore } from 'pinia'
 import { DateTime } from 'luxon'
 
-import type {
-  Competition,
-  FixtureState,
-  Fixture,
-  SheetConfig,
-} from '@/types'
+import type { Competition, FixtureState, Fixture, SheetConfig } from '@/types'
 
 import { sheetConfigs } from '@/sheet-config'
 import { aggregateRawData, filterFixtures, pivotOnVSeds } from '@/support/fixtures'
@@ -32,34 +27,24 @@ export interface FixturesByDate {
 }
 
 export interface SheetUpdate {
-  sheetId: string,
-  value: string,
+  sheetId: string
+  value: string
   range: string
 }
 
 const getFixtureData = async (batchGetSheetValues: Function, config: SheetConfig): Promise<any> => {
-  const payload = [
-    config.ranges.slotInfo,
-    config.ranges.schedule,
-    ...config.ranges.standings
-  ]
+  const payload = [config.ranges.slotInfo, config.ranges.schedule, ...config.ranges.standings]
 
   return await makeAPICall(
-      async () => {
-        return await batchGetSheetValues(
-            config.sheetId,
-            payload
-        )
-      },
-      async () => {
-        const authenticationStore = useAuthenticationStore()
-        authenticationStore.expiredToken()
+    async () => {
+      return await batchGetSheetValues(config.sheetId, payload)
+    },
+    async () => {
+      const authenticationStore = useAuthenticationStore()
+      authenticationStore.expiredToken()
 
-        return await batchGetSheetValues(
-            config.sheetId,
-            payload
-        )
-      }
+      return await batchGetSheetValues(config.sheetId, payload)
+    }
   )
 }
 
@@ -112,11 +97,10 @@ export const useFixtureStore = defineStore('fixture', {
               ? DateTime.fromISO(config.date).toFormat('cccc d MMMM y').toUpperCase()
               : null
 
-          const {
-            fixtures, dates, pitches, refs, teams, times, stages, competitions
-          } = aggregateRawData(
-            pivotOnVSeds(data[1].values,  Number(readFromCell?.[1] ?? 0), competition, date)
-          )
+          const { fixtures, dates, pitches, refs, teams, times, stages, competitions } =
+            aggregateRawData(
+              pivotOnVSeds(data[1].values, Number(readFromCell?.[1] ?? 0), competition, date)
+            )
 
           staged = {
             ...staged,
@@ -130,10 +114,7 @@ export const useFixtureStore = defineStore('fixture', {
             stages: [...new Set([...staged.stages, ...stages])]
           }
 
-          staged.filtered = [
-            ...staged.filtered,
-            ...filterFixtures(fixtures, filtersStore.filters)
-          ]
+          staged.filtered = [...staged.filtered, ...filterFixtures(fixtures, filtersStore.filters)]
 
           for (const date of dates) {
             this.dateCompetitionMap.set(date, competition)
@@ -153,7 +134,7 @@ export const useFixtureStore = defineStore('fixture', {
         this.stages = staged.stages
       }
     },
-    updateSheet (batchUpdateSheetValues: Function): Function {
+    updateSheet(batchUpdateSheetValues: Function): Function {
       return async (updates: SheetUpdate[]): Promise<void> => {
         const groupedBySheet: Map<string, SheetUpdate[]> = new Map()
         for (const l of updates) {
@@ -166,30 +147,29 @@ export const useFixtureStore = defineStore('fixture', {
 
         groupedBySheet.forEach((updates: SheetUpdate[], sheetId: string) => {
           makeAPICall(
-              async () => {
-                await batchUpdateSheetValues(
-                    sheetId,
-                    updates.map((update: SheetUpdate) => ({
-                      range: update.range,
-                      values: [
-                        [
-                          update.value,
-                        ],
-                      ],
-                    }))
-                )
-              },
-              () => {
-                const authenticationStore = useAuthenticationStore()
-                const notificationStore = useNotificationStore()
+            async () => {
+              await batchUpdateSheetValues(
+                sheetId,
+                updates.map((update: SheetUpdate) => ({
+                  range: update.range,
+                  values: [[update.value]]
+                }))
+              )
+            },
+            () => {
+              const authenticationStore = useAuthenticationStore()
+              const notificationStore = useNotificationStore()
 
-                authenticationStore.expiredToken()
-                notificationStore.setNotification(false, 'Signed out due to expired token. Please sign-in again')
-              },
+              authenticationStore.expiredToken()
+              notificationStore.setNotification(
+                false,
+                'Signed out due to expired token. Please sign-in again'
+              )
+            }
           )
         })
       }
-    },
+    }
   },
   getters: {
     fixturesByDate: (state): FixturesByDate[] => {
@@ -205,12 +185,12 @@ export const useFixtureStore = defineStore('fixture', {
           isToday: date.toFormat('d MMMM y') === nowStr,
           competition,
           totalCount: 0,
-          times: [],
+          times: []
         }
       })
 
-      return state.filtered.reduce(
-        (grouped: FixturesByDate[], fixture: Fixture): FixturesByDate[] => {
+      return state.filtered
+        .reduce((grouped: FixturesByDate[], fixture: Fixture): FixturesByDate[] => {
           const { date, time } = fixture
 
           const dateIndex = state.dates.indexOf(date)
@@ -230,13 +210,12 @@ export const useFixtureStore = defineStore('fixture', {
           grouped[dateIndex].totalCount++
 
           return grouped
-        },
-        primed
-      ).sort(
+        }, primed)
+        .sort(
           (a: FixturesByDate, b: FixturesByDate) =>
-              parseInt(a.date.toFormat('yMMdd'), 10) - parseInt(b.date.toFormat('yMMdd'), 10)
-      )
+            parseInt(a.date.toFormat('yMMdd'), 10) - parseInt(b.date.toFormat('yMMdd'), 10)
+        )
     },
-    totalFixturesFound: (state): number => state.filtered.length,
+    totalFixturesFound: (state): number => state.filtered.length
   }
 })

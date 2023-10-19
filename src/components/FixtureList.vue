@@ -1,4 +1,4 @@
-<script async setup lang="ts">
+<script setup lang="ts">
 import type { Ref } from 'vue'
 
 import { ref, inject, provide } from 'vue'
@@ -13,14 +13,15 @@ const authenticatedStore = useAuthenticationStore()
 
 const updateSheet = inject('updateSheet') as Function
 
-const todayFixture = fixtureStore.fixturesByDate
-  .find((fbd: FixturesByDate) => fbd.isToday)
-
-const openAccordion: Ref<string | null> = ref<string | null>(todayFixture ? todayFixture.date.toFormat('d MMMM y') :  null)
-
-const updates: Ref<Map<string, SheetUpdate>> = ref(new Map)
+const updates: Ref<Map<string, SheetUpdate>> = ref(new Map())
 
 provide('updates', updates)
+
+const todayFixture = fixtureStore.fixturesByDate.find((fbd: FixturesByDate) => fbd.isToday)
+
+const openAccordion: Ref<string | null> = ref<string | null>(
+  todayFixture ? todayFixture.date.toFormat('d MMMM y') : null
+)
 
 const toggleAccordion = (date: string): void => {
   openAccordion.value = date === openAccordion.value ? null : date
@@ -30,17 +31,9 @@ const accordionButtonClasses = (date: string, comp: string, totalCount: number):
   let classes = ['accordion-button', 'bg-gradient', 'fw-bold']
 
   if (totalCount > 0) {
-    classes = [
-      ...classes,
-      'bg-dark-subtle',
-      'text-black'
-    ]
+    classes = [...classes, 'bg-dark-subtle', 'text-black']
   } else {
-    classes = [
-      ...classes,
-      'bg-body-tertiary',
-      'text-black-50'
-    ]
+    classes = [...classes, 'bg-body-tertiary', 'text-black-50']
   }
 
   if (openAccordion.value !== date) {
@@ -88,21 +81,19 @@ const fixtureUpdated = () => {
         <div v-if="openAccordion === fixtureDate.date.toFormat('d MMMM y')">
           <div :class="accordionBgClasses()">
             <h6 v-if="fixtureDate.totalCount < 1">No fixtures found matching filter criteria</h6>
-            <div
-              v-else
-            >
+            <div v-else>
               <div class="mb-4">
                 <div class="row g-2 pt-4 pb-4 bg-secondary text-white">
                   <div class="col m-0 text-center">
-                    <h5 class="m-0">{{fixtureDate.competition.info}}</h5>
+                    <h5 class="m-0">{{ fixtureDate.competition.info }}</h5>
                   </div>
                 </div>
               </div>
               <div
-                  class="mb-4"
-                  v-for="fixtureDateTime in fixtureDate.times"
-                  :key="fixtureDateTime.time"
-             >
+                class="mb-4"
+                v-for="fixtureDateTime in fixtureDate.times"
+                :key="fixtureDateTime.time"
+              >
                 <div class="row g-2 mb-2 bg-danger-subtle">
                   <div class="col text-center">
                     <h3>{{ fixtureDateTime.time }}</h3>
@@ -114,7 +105,12 @@ const fixtureUpdated = () => {
                     v-for="fixture in fixtureDateTime.fixtures"
                     :key="fixture.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
                   >
-                    <FixtureListItem :fixture="fixture" :can-edit="authenticatedStore.isAuthenticated" @fixtureUpdated="fixtureUpdated" :referees="fixtureStore.refs" />
+                    <FixtureListItem
+                      :fixture="fixture"
+                      :can-edit="authenticatedStore.isAuthenticated"
+                      @fixtureUpdated="fixtureUpdated"
+                      :referees="fixtureStore.refs"
+                    />
                   </div>
                 </div>
               </div>

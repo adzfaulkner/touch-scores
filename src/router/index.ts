@@ -14,7 +14,7 @@ const router = createRouter({
       path: '/standings',
       name: 'Standings',
       component: StandingsViews
-    },
+    }
   ]
 })
 

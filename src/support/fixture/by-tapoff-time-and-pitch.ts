@@ -10,7 +10,7 @@ export const byTapoffTimeAndPitch =
     refAllocations: string[][],
     readingFromCell: number,
     competition: Competition,
-    date: string | null,
+    date: string | null
   ): Aggregated =>
   (
     dates: Set<string>,

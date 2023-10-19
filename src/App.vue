@@ -1,16 +1,21 @@
-<script async setup lang="ts">
+<script setup lang="ts">
 import { RouterView } from 'vue-router'
 
+import ActivityMonitor from '@/components/ActivityMonitor.vue'
 import AppNavigation from '@/components/AppNavigation.vue'
 import NavBar from '@/components/NavBar.vue'
 import NotificationAlert from '@/components/NotificationAlert.vue'
+import { useFixtureStore } from '@/stores/fixture'
+
+const fixtureStore = useFixtureStore()
 </script>
 
 <template>
-  <header>
+  <ActivityMonitor :open="fixtureStore.fixturesByDate.length === 0" />
+  <header v-if="fixtureStore.fixturesByDate.length > 0">
     <NavBar />
   </header>
-  <main>
+  <main v-if="fixtureStore.fixturesByDate.length > 0">
     <div class="router-container">
       <RouterView />
     </div>
@@ -24,11 +29,11 @@ import NotificationAlert from '@/components/NotificationAlert.vue'
 </template>
 
 <style scoped>
-  .router-container {
-    margin-bottom: 80px;
-  }
+.router-container {
+  margin-bottom: 80px;
+}
 
-  .notification-container {
-    margin-bottom: 110px;
-  }
+.notification-container {
+  margin-bottom: 110px;
+}
 </style>
