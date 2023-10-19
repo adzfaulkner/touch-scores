@@ -14,6 +14,7 @@ export interface SheetConfig {
 }
 
 export interface FixtureState {
+  initialized: boolean,
   fixtures: Fixture[]
   filtered: Fixture[]
   dates: string[]

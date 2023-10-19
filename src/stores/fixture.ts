@@ -51,6 +51,7 @@ const getFixtureData = async (batchGetSheetValues: Function, config: SheetConfig
 export const useFixtureStore = defineStore('fixture', {
   state: (): FixtureState => {
     return {
+      initialized: false,
       fixtures: [],
       filtered: [],
       dates: [],
@@ -132,6 +133,7 @@ export const useFixtureStore = defineStore('fixture', {
         this.times = staged.times
         this.competitions = staged.competitions
         this.stages = staged.stages
+        this.initialized = true
       }
     },
     updateSheet(batchUpdateSheetValues: Function): Function {

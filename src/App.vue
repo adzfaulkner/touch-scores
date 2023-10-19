@@ -11,18 +11,18 @@ const fixtureStore = useFixtureStore()
 </script>
 
 <template>
-  <ActivityMonitor :open="fixtureStore.fixturesByDate.length === 0" />
-  <header v-if="fixtureStore.fixturesByDate.length > 0">
-    <NavBar />
+  <header>
+    <NavBar :show-authentication-controls="fixtureStore.initialized" />
   </header>
-  <main v-if="fixtureStore.fixturesByDate.length > 0">
+  <main>
     <div class="router-container">
-      <RouterView />
+      <ActivityMonitor :open="!fixtureStore.initialized" />
+      <RouterView v-if="fixtureStore.initialized" />
     </div>
     <div class="notification-container fixed-bottom bottom-0 start-50">
       <NotificationAlert />
     </div>
-    <div class="fixed-bottom">
+    <div class="fixed-bottom" v-if="fixtureStore.initialized">
       <AppNavigation />
     </div>
   </main>
