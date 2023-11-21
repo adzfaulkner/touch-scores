@@ -7,8 +7,8 @@ const sheetConfigs: SheetConfig[] = [
     ranges: {
       schedule: 'Schedule!A10:Q',
       standings: [
-        'Standings - Pool One!A14:U18',
-        'Standings - Pool TWO!A14:U18'
+        'Standings - Pool One!A12:U15',
+        'Standings - Pool TWO!A12:U15'
       ],
       slotInfo: 'Schedule!C10:Q10',
       refAllocations: null
