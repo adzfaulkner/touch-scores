@@ -41,4 +41,4 @@ jobs:
       - name: Build package for FE deployment
         run: make js_run_build
       - name: Deploy FE
-        run: make deploy
+        run: make deploy_fe
