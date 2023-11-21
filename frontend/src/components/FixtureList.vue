@@ -88,7 +88,7 @@ const fixtureUpdated = () => {
                 <div class="row g-2 ps-3 pe-3 pt-4 pb-4 bg-secondary text-white">
                   <div class="col m-0 text-center">
                     <h5 class="m-0">
-                      <span v-for="i in fixtureDate.competition.info.split('\n')" v-bind="i">{{i}}<br></span>
+                      <span v-for="(i, k) in fixtureDate.competition.info.split('\n')" v-bind:key="k">{{i}}<br></span>
                     </h5>
                   </div>
                 </div>

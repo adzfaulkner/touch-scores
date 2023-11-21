@@ -131,10 +131,10 @@ const filterFixtures = (fixturesByDateAndTime: Map<string, Map<string, Fixture[]
   let filtered: Fixture[]
   let total: number = 0
 
-  for (let [date, times] of  fixturesByDateAndTime.entries()) {
+  for (const [date, times] of  fixturesByDateAndTime.entries()) {
     timeMap = new Map()
 
-    for (let [time, fixtures] of times.entries()) {
+    for (const [time, fixtures] of times.entries()) {
       filtered = fixtures.filter((fix: Fixture): boolean => {
         return (
             (filters.date.length === 0 || filters.date.includes(fix.date)) &&

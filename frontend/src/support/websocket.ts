@@ -3,7 +3,7 @@ const initConnection = (url: string): WebSocket => {
 }
 
 const connect = (url: string, persist: boolean = true): WebSocket => {
-    let ws = initConnection(url)
+    const ws = initConnection(url)
 
     const reconnect = ((ws: WebSocket, persist: boolean, url: string) => () => {
         if (persist) {

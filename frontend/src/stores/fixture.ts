@@ -162,11 +162,11 @@ export const useFixtureStore = defineStore('fixture', {
   getters: {
     fixturesByCompetitionDate: (state): FixturesByCompetitionDate[] => {
       const nowStr = DateTime.now().toFormat('d MMMM y')
-      let result: FixturesByCompetitionDate[] = []
+      const result: FixturesByCompetitionDate[] = []
       let primed: FixturesByCompetitionDate
 
       for (const [, { competition, filtered }] of state.events) {
-        for (let [dateStr, times] of filtered) {
+        for (const [dateStr, times] of filtered) {
           const date = DateTime.fromFormat(dateStr, 'EEEE d MMMM y')
           const timesFiltered = Array.from(times.entries())
               .filter(([, fixtures]) => fixtures.length > 0)
