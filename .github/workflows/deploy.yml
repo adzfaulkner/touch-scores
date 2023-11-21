@@ -37,8 +37,8 @@ jobs:
       - name: Run JS tests
         run: make js_run_unit_tests
       - name: Run JS linting
-        run: make JS js_run_lint
-      - name: Build package for deployment
+        run: make js_run_lint
+      - name: Build package for FE deployment
         run: make js_run_build
-      - name: Deploy to AWS
+      - name: Deploy FE
         run: make deploy
