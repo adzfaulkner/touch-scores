@@ -33,7 +33,7 @@ jobs:
       - name: Build API image
         run: make build_api
       - name: Deploy API
-        run: deploy_api
+        run: make deploy_api
       - name: Run JS tests
         run: make js_run_unit_tests
       - name: Run JS linting
