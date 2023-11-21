@@ -1,4 +1,4 @@
-import type { FilterState, Filters, FilterBy, Fixture } from '@/types'
+import type { FilterState, Filters, FilterBy } from '@/types'
 
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
