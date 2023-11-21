@@ -42,11 +42,11 @@ docker_build_tag_push:
 	make go_build_docker_image
 	make serverless_build_docker_image
 	docker tag ${IMAGE_TAG_JS}:latest ghcr.io/adzfaulkner/${IMAGE_TAG_JS}:latest
-	docker push ghcr.io/adzfaulkner/${IMAGE_TAG_JS}:
+	docker push ghcr.io/adzfaulkner/${IMAGE_TAG_JS}:latest
 	docker tag ${IMAGE_TAG_GO}:latest ghcr.io/adzfaulkner/${IMAGE_TAG_GO}:latest
-	docker push ghcr.io/adzfaulkner/${IMAGE_TAG_GO}:
+	docker push ghcr.io/adzfaulkner/${IMAGE_TAG_GO}:latest
 	docker tag ${IMAGE_TAG_SERVERLESS}:latest ghcr.io/adzfaulkner/${IMAGE_TAG_SERVERLESS}:latest
-	docker push ghcr.io/adzfaulkner/${IMAGE_TAG_SERVERLESS}:
+	docker push ghcr.io/adzfaulkner/${IMAGE_TAG_SERVERLESS}:latest
 
 docker_pull_images:
 	docker pull ghcr.io/adzfaulkner/${IMAGE_TAG_JS}:latest
