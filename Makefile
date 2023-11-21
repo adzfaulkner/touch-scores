@@ -34,8 +34,9 @@ js_run_build:
 	make js_run_command cmd='npm run build'
 
 build_api:
+	mkdir -p ${PWD}/api/bin/entrypoint
+	chmod 0755 ${PWD}/api/bin/entrypoint
 	docker run -v ${PWD}/api:/go/src/app:rw -w /go/src/app/cmd/entrypoint ${IMAGE_TAG_GO} sh -c 'GOARCH=arm64 GOOS=linux go build -o ../../bin/entrypoint/bootstrap'
-	ls -lah ${PWD}/api/bin/entrypoint
 	zip -j ${PWD}/api/bin/entrypoint/bootstrap.zip ${PWD}/api/bin/entrypoint/bootstrap
 
 docker_build_tag_push:
