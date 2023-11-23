@@ -1,33 +1,33 @@
-const initConnection = (url: string): WebSocket => {
-    return new WebSocket(url)
-}
+const reg: Map<string, WebSocket>  = new Map()
 
-const connect = (url: string, persist: boolean = true): WebSocket => {
-    const ws = initConnection(url)
+type OnOpen = (this: WebSocket, ev: Event) => any
+type OnMessage = (this: WebSocket, ev: MessageEvent) => any
 
-    const reconnect = ((ws: WebSocket, persist: boolean, url: string) => () => {
-        if (persist) {
-            setTimeout(() => ws = initConnection(url), 1000)
-        }
-    })(ws, persist, url)
+const connect = (url: string, onOpen: OnOpen, onMessage: OnMessage): WebSocket => {
+    const ws = new WebSocket(url)
 
-    ws.onopen =  (e: Event) => {
-        console.log('Socket open.', e)
+    reg.set(url, ws)
+
+    ws.onopen = onOpen
+    ws.onmessage = onMessage
+
+    ws.onclose = (e: CloseEvent) => {
+        console.log('Socket is closed. Reconnect will be attempted in 1 second.')
+        setTimeout(() => connect(url, onOpen, onMessage), 500)
     }
 
-    ws.onclose = ((reconnect: Function) => (e: CloseEvent) => {
-        console.log('Socket is closed. Reconnect will be attempted in 1 second.', e)
-        reconnect()
-    })(reconnect)
-
-    ws.onerror = ((reconnect: Function) => (e: Event) => {
-        console.log('Socket has errord. Reconnect will be attempted in 1 second.', e)
-        reconnect()
-    })(reconnect)
+    ws.onerror = (e: Event) => {
+        console.log('Socket has errord. Reconnect will be attempted in 1 second.')
+        setTimeout(() => connect(url, onOpen, onMessage), 500)
+    }
 
     return ws
 }
 
+const getWS = (url: string, onOpen: OnOpen, onMessage: OnMessage): WebSocket => {
+    return reg.get(url) || connect(url, onOpen, onMessage)
+}
+
 export {
-    connect
+    getWS
 }

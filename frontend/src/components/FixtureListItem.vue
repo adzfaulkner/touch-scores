@@ -24,10 +24,18 @@ const scoreClasses = (stage: string, defaults: string[]): string[] => {
 
   const s = stage.toLowerCase()
 
-  if (s.substring(0, 4) === 'cup ') {
-    ret.push('bg-cup')
+  if (s.substring(0, 9) === 'cup final') {
+    ret.push('bg-cup-f')
+  } else if (s.substring(0, 8) === '3rd/4th ') {
+    ret.push('bg-cup-po')
+  } else if (s.substring(0, 4) === 'cup ') {
+    ret.push('bg-cup-sf')
+  } else if (s.substring(0, 11) === 'plate final') {
+    ret.push('bg-plate-f')
+  } else if (s.substring(0, 8) === '7th/8th ') {
+    ret.push('bg-plate-po')
   } else if (s.substring(0, 6) === 'plate ') {
-    ret.push('bg-plate')
+    ret.push('bg-plate-sf')
   } else {
     ret.push('bg-default')
   }
@@ -133,43 +141,31 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
   height: 60px;
 }
 
-.score-cup-major {
-  background-color: #ffd966;
+.bg-cup-f {
+  background-color: #ffd74c;
 }
 
-.score-cup-minor {
-  background-color: #ffe598;
+.bg-cup-po {
+  background-color: #ffe48e;
 }
 
-.score-plate-final {
-  background-color: #999999;
+.bg-cup-sf {
+  background-color: #fff2c7;
 }
 
-.score-bowl-major {
-  background-color: #cd4025;
+.bg-plate-f {
+  background-color: #cccccc;
 }
 
-.score-bowl-minor {
-  background-color: #dd7e6b;
+.bg-plate-po {
+  background-color: #d9d9da;
 }
 
-.score-plate-major {
-  background-color: #999999;
-}
-
-.score-plate-minor {
-  background-color: #b7b7b7;
-}
-
-.bg-cup {
-  background-color: #fff3cc;
-}
-
-.bg-plate {
+.bg-plate-sf {
   background-color: #efefef;
 }
 
 .bg-default {
-  background-color: #d0e2f3;
+  background-color: #cce3f6;
 }
 </style>
