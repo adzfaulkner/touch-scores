@@ -60,7 +60,6 @@ docker_pull_images:
 
 create_env:
 	sh bin/envs.sh
-	cat .env.production
 
 deploy_api:
 	make serverless_run_command cmd='serverless deploy'
