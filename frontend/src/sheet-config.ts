@@ -10,7 +10,7 @@ const sheetConfigs: SheetConfig[] = [
         'Standings - Pool One!A12:U15',
         'Standings - Pool TWO!A12:U15'
       ],
-      slotInfo: 'Schedule!C10:Q10',
+      slotInfo: 'Schedule!C9:R9',
       refAllocations: null
     },
     competition: 'seds'
