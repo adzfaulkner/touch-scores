@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.1.0",
+    "aws-rum-web": "^1.16.0",
     "escape-string-regexp": "^5.0.0",
     "luxon": "^3.3.0",
     "pinia": "^2.0.35",
