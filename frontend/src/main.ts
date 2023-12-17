@@ -57,7 +57,6 @@ const fixtureStore = useFixtureStore()
 const ws = (): WebSocket => getWS(
   'wss://9yyvd90hs1.execute-api.eu-west-2.amazonaws.com/dev',
   (e: Event) => {
-    console.log('Socket opened')
     requestFixtures()
    },
   (e: MessageEvent) => {

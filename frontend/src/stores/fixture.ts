@@ -139,7 +139,7 @@ export const useFixtureStore = defineStore('fixture', {
               await batchUpdateSheetValues(
                 sheetId,
                 updates.map((update: SheetUpdate) => ({
-                  range: update.range,
+                  range: `Schedule!${update.range}`,
                   values: [[update.value]]
                 }))
               )

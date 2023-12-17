@@ -2,13 +2,12 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
-    sheetId: '1DrMWVeR4z5OCnvzYmvBh7RQRDS-eNdD-s5iyCxq9q7I',
-    date: '2023-11-25T00:00:00+00:00',
+    sheetId: '1qiJrETpYfEES9TUkfVtu4L9yTrRyaUHRYCcb_SnRnX4',
+    date: '2023-12-18T00:00:00+00:00',
     ranges: {
       schedule: 'Schedule!A10:Q',
       standings: [
-        'Standings - Pool One!A12:U15',
-        'Standings - Pool TWO!A12:U15'
+        'Standings!A12:U15'
       ],
       slotInfo: 'Schedule!C9:R9',
       refAllocations: null
