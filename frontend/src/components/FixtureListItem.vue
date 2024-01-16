@@ -36,6 +36,12 @@ const scoreClasses = (stage: string, defaults: string[]): string[] => {
     ret.push('bg-plate-po')
   } else if (s.substring(0, 6) === 'plate ') {
     ret.push('bg-plate-sf')
+  } else if (s.substring(0, 10) === 'bowl final') {
+    ret.push('bg-bowl-f')
+  } else if (s.substring(0, 10) === '11th/12th ') {
+    ret.push('bg-bowl-po')
+  } else if (s.substring(0, 5) === 'bowl ') {
+    ret.push('bg-bowl-sf')
   } else {
     ret.push('bg-default')
   }
@@ -164,6 +170,19 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
 .bg-plate-sf {
   background-color: #efefef;
 }
+
+.bg-bowl-f {
+  background-color: #ec7866;
+}
+
+.bg-bowl-po {
+  background-color: #f89498;
+}
+
+.bg-bowl-sf {
+  background-color: #fec9cb;
+}
+
 
 .bg-default {
   background-color: #cce3f6;

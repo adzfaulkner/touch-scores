@@ -2,14 +2,17 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
-    sheetId: '1qiJrETpYfEES9TUkfVtu4L9yTrRyaUHRYCcb_SnRnX4',
-    date: '2023-12-18T00:00:00+00:00',
+    sheetId: '1-QZFrjHCBu9qBbkAc2CBNvTWMKISiIcEM_1HCNewnQk',
+    date: '2024-01-20T00:00:00+00:00',
     ranges: {
-      schedule: 'Schedule!A10:Q',
+      schedule: 'Schedule!A14:Q',
       standings: [
-        'Standings!A12:U15'
+        'Standings - Pool One!A10:U12',
+        'Standings - Pool Two!A10:U12',
+        'Standings - Pool Three!A10:U12',
+        'Standings - Pool Four!A10:U12',
       ],
-      slotInfo: 'Schedule!C9:R9',
+      slotInfo: 'Schedule!C13:R13',
       refAllocations: null
     },
     competition: 'seds'
