@@ -58,7 +58,7 @@ func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFu
 
 			var ret events.APIGatewayProxyResponse
 
-			ret = handleGetFixtures(getSheetVals, log, r["body"].(string))
+			ret = handleGetFixtures(getSheetVals, log, b)
 
 			return &ret
 		}
