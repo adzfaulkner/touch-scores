@@ -19,12 +19,6 @@ import { makeAPICall } from '@/support/google-clients'
 
 const fromCellRegex = /(\d+):/
 
-export interface SheetUpdate {
-  sheetId: string
-  value: string
-  range: string
-}
-
 export const useFixtureStore = defineStore('fixture', {
   state: (): FixtureState => {
     return {

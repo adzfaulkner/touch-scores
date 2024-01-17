@@ -114,3 +114,9 @@ export interface FixturesByCompetitionDate {
   totalCount: number
   times: Map<string, Fixture[]>
 }
+
+export interface SheetUpdate {
+  sheetId: string
+  value: string
+  range: string
+}

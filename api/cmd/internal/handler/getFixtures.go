@@ -41,7 +41,7 @@ type respBody struct {
 	Data  []respBodyData `json:"data"`
 }
 
-func handleMessage(getSheetVals goog.GetSheetValuesFunc, log logger, body string) events.APIGatewayProxyResponse {
+func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body string) events.APIGatewayProxyResponse {
 	var reqBs []reqBody
 	err := json.Unmarshal([]byte(body), &reqBs)
 

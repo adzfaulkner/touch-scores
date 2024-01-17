@@ -3,7 +3,7 @@ import { createPinia } from 'pinia'
 import { AwsRum } from 'aws-rum-web'
 
 import type { AwsRumConfig } from 'aws-rum-web'
-import type { SheetConfig } from '@/types'
+import type { SheetConfig, SheetUpdate } from '@/types'
 
 import App from './App.vue'
 import router from './router'
@@ -86,7 +86,10 @@ app.provide('requestFixtures', requestFixtures)
 initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
 initApiClient(getEnv('VITE_API_KEY'), [getEnv('VITE_DISCOVERY_DOC')], authenticationStore.token)
 
-const updateSheet = fixtureStore.updateSheet(batchUpdateSheetValues)
+const updateSheet = (updates: SheetUpdate[]) => {
+    ws().send(JSON.stringify(updates))
+}
+
 app.provide('updateSheet', updateSheet)
 
 app.mount('#app')

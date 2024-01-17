@@ -2,6 +2,7 @@ package goog
 
 import (
 	"encoding/json"
+
 	"google.golang.org/api/sheets/v4"
 )
 
@@ -17,7 +18,12 @@ type BatchGetValues struct {
 	} `json:"valueRanges"`
 }
 
+type BatchUpdateValues struct {
+	TotalUpdatedCells int64
+}
+
 type GetSheetValuesFunc func(sid string, rs []string) (*BatchGetValues, error)
+type UpdateSheetValuesFunc func(sid string, vrs map[string][][]interface{}) (*BatchUpdateValues, error)
 
 func GetSheetValues(srv *sheets.Service) GetSheetValuesFunc {
 	return func(sid string, rs []string) (*BatchGetValues, error) {
@@ -49,6 +55,42 @@ func GetSheetValues(srv *sheets.Service) GetSheetValuesFunc {
 
 		if err != nil {
 			return nil, err
+		}
+
+		return &ret, nil
+	}
+}
+
+func UpdateSheetValues(srv *sheets.Service) UpdateSheetValuesFunc {
+	return func(sid string, vrs map[string][][]interface{}) (*BatchUpdateValues, error) {
+		var data []*sheets.ValueRange
+
+		for r, v := range vrs {
+			vr := &sheets.ValueRange{
+				Range:  r,
+				Values: v,
+			}
+
+			data = append(data, vr)
+		}
+
+		ur := sheets.BatchUpdateValuesRequest{
+			Data: data,
+		}
+
+		req := srv.Spreadsheets.Values.BatchUpdate(
+			sid,
+			&ur,
+		)
+
+		res, err := req.Do()
+
+		if err != nil {
+			return nil, err
+		}
+
+		ret := BatchUpdateValues{
+			TotalUpdatedCells: res.TotalUpdatedCells,
 		}
 
 		return &ret, nil

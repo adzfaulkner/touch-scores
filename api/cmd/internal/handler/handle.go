@@ -2,25 +2,26 @@ package handler
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"github.com/adzfaulkner/touch-scores/internal/persistence"
 	"github.com/adzfaulkner/touch-scores/internal/wsconnection"
-	"go.uber.org/zap"
-
 	"github.com/aws/aws-lambda-go/events"
+	"go.uber.org/zap"
 )
 
-func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, getSheetVals goog.GetSheetValuesFunc, log logger) func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
+func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, log logger) func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
 	return func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
 		log.Info("request", zap.Reflect("r", r))
 
-		res := handleWebsocketProxyRequest(createConnection, getSheetVals, log, r)
+		res := handleWebsocketProxyRequest(createConnection, getSheetVals, updateSheetVals, log, r)
 
 		if res != nil {
 			return *res, nil
 		}
 
-		res = handleProxyRequest(getAllConnections, postConnection, getSheetVals, log, r)
+		res = handleProxyRequest(getAllConnections, postConnection, log, r)
 
 		if res != nil {
 			return *res, nil
@@ -33,7 +34,7 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 	}
 }
 
-func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFunc, getSheetVals goog.GetSheetValuesFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
+func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
 	rc, ok := r["requestContext"].(map[string]interface{})
 
 	if !ok {
@@ -55,7 +56,16 @@ func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFu
 				StatusCode: 200,
 			}
 		case "MESSAGE":
-			ret := handleMessage(getSheetVals, log, r["body"].(string))
+			b := r["body"].(string)
+
+			var ret events.APIGatewayProxyResponse
+
+			if strings.HasPrefix(b, "[") {
+				ret = handleUpdateFixtures(updateSheetVals, log, r["body"].(string))
+			} else {
+				ret = handleGetFixtures(getSheetVals, log, r["body"].(string))
+			}
+
 			return &ret
 		}
 	}
@@ -63,7 +73,7 @@ func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFu
 	return nil
 }
 
-func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, getSheetVals goog.GetSheetValuesFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
+func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
 	res, ok := r["resource"]
 
 	if !ok {
