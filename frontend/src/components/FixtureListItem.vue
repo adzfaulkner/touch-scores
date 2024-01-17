@@ -2,9 +2,9 @@
 import type {Competition, Fixture} from '@/types'
 import type { PropType, Ref } from 'vue'
 
-import type { SheetUpdate } from '@/stores/fixture'
-
 import { inject } from 'vue'
+
+import type { SheetUpdate } from '@/types'
 
 import { debounce } from '@/support/debounce'
 

@@ -3,12 +3,11 @@ import type { Ref } from 'vue'
 
 import { ref, inject, provide } from 'vue'
 
-import type { FixturesByCompetitionDate } from '@/types'
+import type { FixturesByCompetitionDate, SheetUpdate } from '@/types'
 
 import FixtureListItem from '@/components/FixtureListItem.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useFixtureStore } from '@/stores/fixture'
-import type { SheetUpdate } from '@/stores/fixture'
 
 const fixtureStore = useFixtureStore()
 const authenticatedStore = useAuthenticationStore()
