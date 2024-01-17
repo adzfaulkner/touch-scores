@@ -6,7 +6,8 @@ import type {
   FixtureState,
   FixtureParamsBySpreadsheet,
   FixturesByCompetitionDate,
-  Filters
+  Filters,
+  SheetUpdate
 } from '@/types'
 
 import { sheetConfigMap } from '@/sheet-config'
