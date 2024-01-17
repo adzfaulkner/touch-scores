@@ -2,8 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"github.com/adzfaulkner/touch-scores/internal/persistence"
 	"github.com/adzfaulkner/touch-scores/internal/wsconnection"
@@ -60,11 +58,7 @@ func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFu
 
 			var ret events.APIGatewayProxyResponse
 
-			if strings.HasPrefix(b, "[") {
-				ret = handleUpdateFixtures(updateSheetVals, log, r["body"].(string))
-			} else {
-				ret = handleGetFixtures(getSheetVals, log, r["body"].(string))
-			}
+			ret = handleGetFixtures(getSheetVals, log, r["body"].(string))
 
 			return &ret
 		}
