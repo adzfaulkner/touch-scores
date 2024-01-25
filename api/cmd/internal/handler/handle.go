@@ -71,11 +71,14 @@ func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFu
 				}
 			}
 
-			log.Info("Msg body received", zap.Reflect("msgBody", mb))
-
 			var ret events.APIGatewayProxyResponse
 
-			ret = handleGetFixtures(getSheetVals, log, b)
+			switch b {
+			case "UPDATE_FIXTURES":
+				ret = handleUpdateFixtures(updateSheetVals, log, b)
+			default:
+				ret = handleGetFixtures(getSheetVals, log, b)
+			}
 
 			return &ret
 		}

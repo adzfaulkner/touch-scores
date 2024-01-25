@@ -92,7 +92,12 @@ app.provide('requestFixtures', requestFixtures)
 initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
 initApiClient(getEnv('VITE_API_KEY'), [getEnv('VITE_DISCOVERY_DOC')], authenticationStore.token)
 
-const updateSheet = fixtureStore.updateSheet(batchUpdateSheetValues)
+//const updateSheet = fixtureStore.updateSheet(batchUpdateSheetValues)
+
+const updateSheet = (updates: SheetUpdate[]) => ws().send(JSON.stringify({
+    action: 'UPDATE_FIXTURES',
+    updates,
+}))
 
 app.provide('updateSheet', updateSheet)
 
