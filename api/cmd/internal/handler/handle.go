@@ -11,7 +11,7 @@ import (
 )
 
 type msgBody struct {
-	Type string `json:"type"`
+	Action string `json:"action"`
 }
 
 func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, log logger) func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
@@ -73,9 +73,10 @@ func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFu
 
 			var ret events.APIGatewayProxyResponse
 
-			switch b {
+			switch mb.Action {
 			case "UPDATE_FIXTURES":
 				ret = handleUpdateFixtures(updateSheetVals, log, b)
+				break
 			default:
 				ret = handleGetFixtures(getSheetVals, log, b)
 			}
