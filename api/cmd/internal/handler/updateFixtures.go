@@ -30,11 +30,13 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 	agg := map[string]map[string][][]string{}
 
 	for _, upd := range reqB.Updates {
-		_, ok := agg[upd.SheetId][upd.Range]
+		_, ok := agg[upd.SheetId]
 
 		if !ok {
-			agg[upd.SheetId][upd.Range] = [][]string{{upd.Value}}
+			agg[upd.SheetId] = map[string][][]string{}
 		}
+
+		agg[upd.SheetId][upd.Range] = [][]string{{upd.Value}}
 	}
 
 	log.Error("Agg", zap.Reflect("agg", agg))
