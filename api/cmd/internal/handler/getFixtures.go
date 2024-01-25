@@ -15,9 +15,13 @@ type reqBodyRanges struct {
 	SlotInfo  string   `json:"slotInfo"`
 }
 
-type reqBody struct {
+type reqConfig struct {
 	SheetId string        `json:"sheetId"`
 	Ranges  reqBodyRanges `json:"ranges"`
+}
+
+type reqBody struct {
+	Configs []reqConfig `json:"configs"`
 }
 
 type respBodyDataRange struct {
@@ -42,26 +46,26 @@ type respBody struct {
 }
 
 func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body string) events.APIGatewayProxyResponse {
-	var reqBs []reqBody
-	err := json.Unmarshal([]byte(body), &reqBs)
+	var reqB reqBody
+	err := json.Unmarshal([]byte(body), &reqB)
 
 	if err != nil {
 		log.Error("Unable to decode request body", zap.Error(err))
 		return *generateResponse(500, "Check logs")
 	}
 
-	log.Info("ReqBs", zap.Reflect("reqBs", reqBs))
+	log.Info("ReqBs", zap.Reflect("reqBs", reqB))
 
 	var data []respBodyData
 
-	for _, reqB := range reqBs {
-		ranges := []string{reqB.Ranges.Schedule, reqB.Ranges.SlotInfo}
+	for _, reqC := range reqB.Configs {
+		ranges := []string{reqC.Ranges.Schedule, reqC.Ranges.SlotInfo}
 
-		for _, r := range reqB.Ranges.Standings {
+		for _, r := range reqC.Ranges.Standings {
 			ranges = append(ranges, r)
 		}
 
-		vs, err := gsheets.GetValues(getSheetVals, reqB.SheetId, ranges)
+		vs, err := gsheets.GetValues(getSheetVals, reqC.SheetId, ranges)
 
 		if err != nil {
 			log.Error("Error received whilst querying google sheets", zap.Error(err))
@@ -69,7 +73,7 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 		}
 
 		var standings []respBodyDataRange
-		for _, r := range reqB.Ranges.Standings {
+		for _, r := range reqC.Ranges.Standings {
 			standings = append(standings, respBodyDataRange{
 				Range:  r,
 				Values: vs.Values[r],
@@ -80,13 +84,13 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 			SheetId: vs.SpreadsheetId,
 			Ranges: respBodyDataRanges{
 				Schedule: respBodyDataRange{
-					Range:  reqB.Ranges.Schedule,
-					Values: vs.Values[reqB.Ranges.Schedule],
+					Range:  reqC.Ranges.Schedule,
+					Values: vs.Values[reqC.Ranges.Schedule],
 				},
 				Standings: standings,
 				SlotInfo: respBodyDataRange{
-					Range:  reqB.Ranges.SlotInfo,
-					Values: vs.Values[reqB.Ranges.SlotInfo],
+					Range:  reqC.Ranges.SlotInfo,
+					Values: vs.Values[reqC.Ranges.SlotInfo],
 				},
 			},
 		})

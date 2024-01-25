@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"github.com/adzfaulkner/touch-scores/internal/persistence"
@@ -8,6 +9,10 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"go.uber.org/zap"
 )
+
+type msgBody struct {
+	Type string `json:"type"`
+}
 
 func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, log logger) func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
 	return func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
@@ -55,6 +60,18 @@ func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFu
 			}
 		case "MESSAGE":
 			b := r["body"].(string)
+
+			var mb msgBody
+			err := json.Unmarshal([]byte(b), &mb)
+
+			if err != nil {
+				return &events.APIGatewayProxyResponse{
+					StatusCode: 400,
+					Body:       "Invalid message body received",
+				}
+			}
+
+			log.Info("Msg body received", zap.Reflect("msgBody", mb))
 
 			var ret events.APIGatewayProxyResponse
 

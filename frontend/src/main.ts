@@ -65,7 +65,10 @@ const ws = (): WebSocket => getWS(
     switch (event) {
       case 'UPDATE_RECEIVED':
         if (!authenticationStore.isAuthenticated && !filtersStore.isFilteringInProgress && sheetConfigMap.has(data.spreadsheetId)) {
-          ws().send(JSON.stringify([sheetConfigMap.get(data.spreadsheetId)]))
+          ws().send(JSON.stringify({
+              action: 'GET_FIXTURES',
+              configs: [sheetConfigMap.get(data.spreadsheetId)],
+          }))
         }
         break;
       case 'FIXTURES_RETRIEVED':
@@ -78,7 +81,10 @@ const ws = (): WebSocket => getWS(
 ws()
 
 const requestFixtures = ((ws: Function, sheetConfigs: SheetConfig[]) => () => {
-  ws().send(JSON.stringify(sheetConfigs))
+    ws().send(JSON.stringify({
+        action: 'GET_FIXTURES',
+        configs: sheetConfigs,
+    }))
 })(ws, sheetConfigs)
 
 app.provide('requestFixtures', requestFixtures)
@@ -86,9 +92,7 @@ app.provide('requestFixtures', requestFixtures)
 initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
 initApiClient(getEnv('VITE_API_KEY'), [getEnv('VITE_DISCOVERY_DOC')], authenticationStore.token)
 
-const updateSheet = (updates: SheetUpdate[]) => {
-    ws().send(JSON.stringify(updates))
-}
+const updateSheet = fixtureStore.updateSheet(batchUpdateSheetValues)
 
 app.provide('updateSheet', updateSheet)
 
