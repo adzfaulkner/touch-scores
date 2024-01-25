@@ -27,19 +27,34 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 		return *generateResponse(500, "Check logs")
 	}
 
-	agg := map[string]map[string][][]string{}
+	agg := map[string]map[string][][]interface{}{}
 
 	for _, upd := range reqB.Updates {
 		_, ok := agg[upd.SheetId]
 
 		if !ok {
-			agg[upd.SheetId] = map[string][][]string{}
+			agg[upd.SheetId] = map[string][][]interface{}{}
 		}
 
-		agg[upd.SheetId][upd.Range] = [][]string{{upd.Value}}
+		vv := make([]interface{}, 1)
+		vv[0] = upd.Value
+
+		v := make([][]interface{}, 1)
+		v[0] = vv
+		
+		agg[upd.SheetId][upd.Range] = v
 	}
 
-	log.Error("Agg", zap.Reflect("agg", agg))
+	for sid, v := range agg {
+		res, err := updateSheetVals(sid, v)
 
-	return *generateResponse(200, "Acknowledged")
+		if err != nil {
+			log.Error("Error updating sheet", zap.Error(err))
+			continue
+		}
+
+		log.Info("Sheet update result", zap.Reflect("res", res))
+	}
+
+	return *generateResponse(200, "Updated")
 }
