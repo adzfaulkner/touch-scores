@@ -15,9 +15,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
       AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       AWS_CF_DISTRIBUTION_ID: ${{ secrets.AWS_CF_DISTRIBUTION_ID }}
-      VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
       VITE_CLIENT_ID: ${{ secrets.VITE_CLIENT_ID }}
-
     steps:
       - uses: actions/checkout@v2
       - name: Login to GitHub Container Registry
