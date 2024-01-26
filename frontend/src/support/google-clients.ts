@@ -3,18 +3,6 @@ interface AuthenticationClient {
   requestAccessToken(config: any): void
 }
 
-interface APIClient {
-  init: Function
-  setToken: Function
-  sheets: {
-    spreadsheets: {
-      values: {
-        batchUpdate: Function
-      }
-    }
-  }
-}
-
 interface AccessToken {
   access_token: string
 }
@@ -44,22 +32,10 @@ const signIn = (cb: Function): void => {
 const signOut = (token: AccessToken): void => {
   // @ts-ignore
   window.google.accounts.oauth2.revoke(token.access_token)
-  resetApiClientToken()
-}
-
-const getAPIClient = (): APIClient => {
-  // @ts-ignore
-  return window.gapi.client as APIClient
-}
-
-const resetApiClientToken = (): void => {
-  // @ts-ignore
-  getAPIClient().setToken('')
 }
 
 export {
   initSignInClient,
   signIn,
   signOut,
-  resetApiClientToken,
 }
