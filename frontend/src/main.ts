@@ -10,9 +10,7 @@ import router from './router'
 import { sheetConfigs, sheetConfigMap } from '@/sheet-config'
 import { getEnv } from '@/support/env'
 import {
-  initApiClient,
   initSignInClient,
-  batchUpdateSheetValues
 } from '@/support/google-clients'
 import { getWS } from "@/support/websocket";
 import { useAuthenticationStore } from '@/stores/authentication'
@@ -44,6 +42,8 @@ try {
     // Ignore errors thrown during CloudWatch RUM web client initialization
 }
 
+initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
+
 const pinia = createPinia()
 const app = createApp(App)
 
@@ -55,7 +55,7 @@ const filtersStore = useFilterStore()
 const fixtureStore = useFixtureStore()
 
 const ws = (): WebSocket => getWS(
-  'wss://9yyvd90hs1.execute-api.eu-west-2.amazonaws.com/dev',
+  getEnv('VITE_API_WS_URL'),
   (e: Event) => {
     requestFixtures()
    },
@@ -88,11 +88,6 @@ const requestFixtures = ((ws: Function, sheetConfigs: SheetConfig[]) => () => {
 })(ws, sheetConfigs)
 
 app.provide('requestFixtures', requestFixtures)
-
-initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
-initApiClient(getEnv('VITE_API_KEY'), [getEnv('VITE_DISCOVERY_DOC')], authenticationStore.token)
-
-//const updateSheet = fixtureStore.updateSheet(batchUpdateSheetValues)
 
 const updateSheet = (updates: SheetUpdate[]) => ws().send(JSON.stringify({
     action: 'UPDATE_FIXTURES',

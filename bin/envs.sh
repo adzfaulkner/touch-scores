@@ -2,6 +2,6 @@
 
 cp ./frontend/.env.example ./frontend/.env.production
 
-REPLACED=$(sed "/^VITE_CLIENT_ID/s/'[^']*'/'$VITE_CLIENT_ID'/g" ./frontend/.env.production | sed "/^VITE_API_KEY/s/'[^']*'/'$VITE_API_KEY'/g" )
+REPLACED=$(sed "/^VITE_API_KEY/s/'[^']*'/'$VITE_API_KEY'/g" ./frontend/.env.production)
 
 echo "$REPLACED" > ./frontend/.env.production

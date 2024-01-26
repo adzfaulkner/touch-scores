@@ -18,6 +18,11 @@ type updateReqBody struct {
 	Updates []update `json:"updates"`
 }
 
+type updateRespBody struct {
+	Event   string `json:"event"`
+	Success bool   `json:"success"`
+}
+
 func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger, body string) events.APIGatewayProxyResponse {
 	var reqB updateReqBody
 	err := json.Unmarshal([]byte(body), &reqB)
@@ -41,20 +46,29 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 
 		v := make([][]interface{}, 1)
 		v[0] = vv
-		
+
 		agg[upd.SheetId][upd.Range] = v
 	}
 
+	success := true
 	for sid, v := range agg {
 		res, err := updateSheetVals(sid, v)
 
 		if err != nil {
 			log.Error("Error updating sheet", zap.Error(err))
+			success = false
 			continue
 		}
 
 		log.Info("Sheet update result", zap.Reflect("res", res))
 	}
 
-	return *generateResponse(200, "Updated")
+	resB := updateRespBody{
+		Event:   "FIXTURES_UPDATED",
+		Success: success,
+	}
+
+	b, _ := json.Marshal(resB)
+
+	return *generateResponse(200, string(b))
 }

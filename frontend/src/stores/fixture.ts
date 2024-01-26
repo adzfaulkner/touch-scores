@@ -6,17 +6,13 @@ import type {
   FixtureState,
   FixtureParamsBySpreadsheet,
   FixturesByCompetitionDate,
-  Filters,
-  SheetUpdate
+  Filters
 } from '@/types'
 
 import { sheetConfigMap } from '@/sheet-config'
 import { aggregateRawData, filterFixtures, pivotOnVSeds } from '@/support/fixtures'
-import { useAuthenticationStore } from '@/stores/authentication'
 import { useFilterStore } from '@/stores/filters'
-import { useNotificationStore } from '@/stores/notification'
 import { useStandingsStore } from '@/stores/standings'
-import { makeAPICall } from '@/support/google-clients'
 
 const fromCellRegex = /(\d+):/
 
@@ -114,42 +110,6 @@ export const useFixtureStore = defineStore('fixture', {
         this.events.set(sid, {
           ...params,
           filtered: result,
-        })
-      }
-    },
-    updateSheet(batchUpdateSheetValues: Function): Function {
-      return async (updates: SheetUpdate[]): Promise<void> => {
-        const groupedBySheet: Map<string, SheetUpdate[]> = new Map()
-        for (const l of updates) {
-          if (!groupedBySheet.has(l.sheetId)) {
-            groupedBySheet.set(l.sheetId, [])
-          }
-
-          groupedBySheet.get(l.sheetId)?.push(l)
-        }
-
-        groupedBySheet.forEach((updates: SheetUpdate[], sheetId: string) => {
-          makeAPICall(
-            async () => {
-              await batchUpdateSheetValues(
-                sheetId,
-                updates.map((update: SheetUpdate) => ({
-                  range: `Schedule!${update.range}`,
-                  values: [[update.value]]
-                }))
-              )
-            },
-            () => {
-              const authenticationStore = useAuthenticationStore()
-              const notificationStore = useNotificationStore()
-
-              authenticationStore.expiredToken()
-              notificationStore.setNotification(
-                false,
-                'Signed out due to expired token. Please sign-in again'
-              )
-            }
-          )
         })
       }
     }

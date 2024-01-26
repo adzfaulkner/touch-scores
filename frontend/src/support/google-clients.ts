@@ -52,62 +52,14 @@ const getAPIClient = (): APIClient => {
   return window.gapi.client as APIClient
 }
 
-const initApiClient = (apiKey: string, discoveryDocs: string[], token: string): void => {
-  const googleScript = document.createElement('script')
-  googleScript.setAttribute('src', 'https://apis.google.com/js/api.js')
-  document.head.appendChild(googleScript)
-
-  googleScript.onload = () => {
-    // @ts-ignore
-    window.gapi.load('client', function () {
-      const client = getAPIClient()
-
-      client.init({
-        apiKey: apiKey,
-        discoveryDocs: discoveryDocs
-      })
-
-      client.setToken(token)
-    })
-  }
-}
-
 const resetApiClientToken = (): void => {
   // @ts-ignore
   getAPIClient().setToken('')
 }
 
-const makeAPICall = async (call: Function, handleE: Function) => {
-  try {
-    return await call()
-  } catch (e: unknown) {
-    // @ts-ignore
-    if (e.status === 401) {
-      return await handleE()
-    }
-
-    throw e
-  }
-}
-
-const batchUpdateSheetValues =
-  async (spreadsheetId: string, data: string[][]): Promise<void> => {
-    const apiClient = getAPIClient()
-    await apiClient.sheets.spreadsheets.values.batchUpdate({
-      spreadsheetId,
-      resource: {
-        data,
-        valueInputOption: 'RAW'
-      }
-    })
-  }
-
 export {
   initSignInClient,
-  initApiClient,
   signIn,
   signOut,
   resetApiClientToken,
-  makeAPICall,
-  batchUpdateSheetValues
 }
