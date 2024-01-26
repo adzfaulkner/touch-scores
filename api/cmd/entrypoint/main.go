@@ -43,6 +43,7 @@ func main() {
 	gcrdsenc := getSmmParamVal(ssmsvc, "/TouchScores/GOOGLE_CREDS")
 
 	gcrds, err := base64.StdEncoding.DecodeString(gcrdsenc)
+
 	if err != nil {
 		panic(err)
 	}
@@ -55,6 +56,7 @@ func main() {
 	postConnection := wsconnection.PostConnection(sess)
 
 	config, err := google.JWTConfigFromJSON(gcrds, "https://www.googleapis.com/auth/spreadsheets")
+
 	if err != nil {
 		panic(err.Error())
 	}

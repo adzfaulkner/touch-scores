@@ -75,7 +75,8 @@ func UpdateSheetValues(srv *sheets.Service) UpdateSheetValuesFunc {
 		}
 
 		ur := sheets.BatchUpdateValuesRequest{
-			Data: data,
+			Data:             data,
+			ValueInputOption: "RAW",
 		}
 
 		req := srv.Spreadsheets.Values.BatchUpdate(
