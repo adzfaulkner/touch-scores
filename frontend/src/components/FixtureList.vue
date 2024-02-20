@@ -60,7 +60,7 @@ const infoSplit = (info: string): string[] => {
   return [
       ...first.split(':'),
       ...parts
-  ]
+  ].map(s => s.trim())
 }
 </script>
 
