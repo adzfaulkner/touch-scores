@@ -52,13 +52,11 @@ export const useFixtureStore = defineStore('fixture', {
         const config = sheetConfigMap.get(comp.sheetId)
         const readFromCell = config.ranges.schedule.match(fromCellRegex)
 
-        console.log(comp)
-
         const competition: Competition = {
           sheetId: config.sheetId,
           name: config.competition,
           info: comp.ranges.slotInfo.values[0][0],
-          playoffInfo: comp.ranges.playOffSlotInfo.values[0][0],
+          playoffInfo: comp.ranges.playOffSlotInfo.values !== null ? comp.ranges.playOffSlotInfo.values[0][0] : null,
         }
 
         const date =

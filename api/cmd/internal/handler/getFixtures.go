@@ -61,7 +61,11 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 	var data []respBodyData
 
 	for _, reqC := range reqB.Configs {
-		ranges := []string{reqC.Ranges.Schedule, reqC.Ranges.SlotInfo}
+		ranges := []string{reqC.Ranges.Schedule, reqC.Ranges.SlotInfo, reqC.Ranges.PlayOffSlotInfo}
+
+		if reqC.Ranges.PlayOffSlotInfo != "" {
+			ranges = append(ranges, reqC.Ranges.PlayOffSlotInfo)
+		}
 
 		for _, r := range reqC.Ranges.Standings {
 			ranges = append(ranges, r)
