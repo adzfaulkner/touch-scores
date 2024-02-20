@@ -9,6 +9,7 @@ export interface SheetConfig {
     standings: string[]
     refAllocations: null | string
     slotInfo: string
+    playOffSlotInfo: null | string
   }
   competition: string
 }
@@ -54,6 +55,7 @@ export interface Competition {
   sheetId: string
   name: string
   info: string
+  playoffInfo: null | string
 }
 
 export interface Fixture {

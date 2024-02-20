@@ -10,9 +10,10 @@ import (
 )
 
 type reqBodyRanges struct {
-	Schedule  string   `json:"schedule"`
-	Standings []string `json:"standings"`
-	SlotInfo  string   `json:"slotInfo"`
+	Schedule        string   `json:"schedule"`
+	Standings       []string `json:"standings"`
+	SlotInfo        string   `json:"slotInfo"`
+	PlayOffSlotInfo string   `json:"playOffSlotInfo"`
 }
 
 type reqConfig struct {
@@ -30,9 +31,10 @@ type respBodyDataRange struct {
 }
 
 type respBodyDataRanges struct {
-	Schedule  respBodyDataRange   `json:"schedule"`
-	Standings []respBodyDataRange `json:"standings"`
-	SlotInfo  respBodyDataRange   `json:"slotInfo"`
+	Schedule        respBodyDataRange   `json:"schedule"`
+	Standings       []respBodyDataRange `json:"standings"`
+	SlotInfo        respBodyDataRange   `json:"slotInfo"`
+	PlayOffSlotInfo respBodyDataRange   `json:"playOffSlotInfo"`
 }
 
 type respBodyData struct {
@@ -91,6 +93,10 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 				SlotInfo: respBodyDataRange{
 					Range:  reqC.Ranges.SlotInfo,
 					Values: vs.Values[reqC.Ranges.SlotInfo],
+				},
+				PlayOffSlotInfo: respBodyDataRange{
+					Range:  reqC.Ranges.PlayOffSlotInfo,
+					Values: vs.Values[reqC.Ranges.PlayOffSlotInfo],
 				},
 			},
 		})

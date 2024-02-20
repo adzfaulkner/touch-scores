@@ -12,6 +12,7 @@ const sheetConfigs: SheetConfig[] = [
         'Standings - Bowl!A16:U21',
       ],
       slotInfo: 'C11:AX11',
+      playOffSlotInfo: 'C43:AW43',
       refAllocations: null
     },
     competition: 'seds'
