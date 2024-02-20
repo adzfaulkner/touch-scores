@@ -92,7 +92,7 @@ const fixtureUpdated = () => {
                   </div>
                 </div>
               </div>
-              <div class="mb-4">
+              <div class="mb-4" v-if="fixtureDate.competition.playoffInfo !== null">
                 <div class="row g-2 ps-3 pe-3 pt-4 pb-4 bg-playoff text-white">
                   <div class="col m-0 text-center">
                     <h5 class="m-0">
