@@ -16,15 +16,20 @@ const requestFixtures = inject('requestFixtures') as Function
 const filtersStore = useFilterStore()
 const fixtureStore = useFixtureStore()
 
-const showModal: Ref<boolean> = ref(false)
+const showFilterModal: Ref<boolean> = ref(false)
+const showPitchMapModal: Ref<boolean> = ref(false)
 const showActivityModal: Ref<boolean> = ref(false)
 
 const noOfResults = (): number => {
   return fixtureStore.totalFixturesFound
 }
 
-const toggleModal = (): void => {
-  showModal.value = !showModal.value
+const toggleFilterModal = (): void => {
+  showFilterModal.value = !showFilterModal.value
+}
+
+const togglePitchMapModal = (): void => {
+  showPitchMapModal.value = !showPitchMapModal.value
 }
 
 const refreshFixtures = async (): Promise<void> => {
@@ -37,22 +42,30 @@ const refreshFixtures = async (): Promise<void> => {
 <template>
   <div class="actionbar-container sticky-top bg-white">
     <ActionBar>
-      <button class="btn btn-lg text-primary fw-bold border-0" type="button" @click="toggleModal">
-        <i class="bi bi-filter me-1"></i>Filter
+      <button class="btn btn-lg text-primary fw-bold border-0" type="button" @click="toggleFilterModal">
+        <i class="bi bi-filter me-1"></i> Filter
+      </button>
+      <button class="btn btn-lg text-primary fw-bold border-0" type="button" @click="togglePitchMapModal">
+        <i class="bi bi-map me-1"></i> Pitch Layout
       </button>
       <button
         class="btn btn-lg text-primary fw-bold border-0"
         type="button"
         @click="refreshFixtures"
       >
-        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+        <i class="bi bi-arrow-clockwise me-1"></i> Refresh
       </button>
     </ActionBar>
   </div>
   <div class="container">
     <FixtureList />
   </div>
-  <ModalView :id="'filterModal'" :open="showModal" @close="toggleModal">
+  <ModalView :id="'pitchMapModal'" :open="showPitchMapModal" @close="togglePitchMapModal">
+    <template #default>
+      <img src="@/assets/seds_pitches.png" class="img-fluid" alt="Pitch Map" />
+    </template>
+  </ModalView>
+  <ModalView :id="'filterModal'" :open="showFilterModal" @close="toggleFilterModal">
     <template #header>
       Filter Fixtures&nbsp;-&nbsp;<span :class="noOfResults() > 0 ? 'text-success' : 'text-danger'"
         >{{ noOfResults() }} {{ noOfResults() === 1 ? 'result' : 'results' }} found</span
@@ -65,13 +78,13 @@ const refreshFixtures = async (): Promise<void> => {
       <button class="btn btn-secondary" @click="filtersStore.resetFilters">
         <i class="bi bi-backspace-fill"></i> Reset Filters
       </button>
-      <button class="btn btn-primary" @click="toggleModal">
+      <button class="btn btn-primary" @click="toggleFilterModal">
         <i class="bi bi-eye-fill"></i> View Results
       </button>
     </template>
   </ModalView>
   <ActivityMonitor :open="showActivityModal" />
-  <ModalBackdrop :open="showModal || showActivityModal" />
+  <ModalBackdrop :open="showFilterModal || showPitchMapModal || showActivityModal" />
 </template>
 
 <style scoped>

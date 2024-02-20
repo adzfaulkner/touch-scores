@@ -26,13 +26,13 @@ const scoreClasses = (stage: string, defaults: string[]): string[] => {
 
   if (s.substring(0, 9) === 'cup final') {
     ret.push('bg-cup-f')
-  } else if (s.substring(0, 8) === '3rd/4th ') {
+  } else if (s.substring(0, 10) === '3rd / 4th ') {
     ret.push('bg-cup-po')
-  } else if (s.substring(0, 4) === 'cup ') {
+  } else if (s.substring(0, 15) === 'cup semi final ') {
     ret.push('bg-cup-sf')
   } else if (s.substring(0, 11) === 'plate final') {
     ret.push('bg-plate-f')
-  } else if (s.substring(0, 8) === '7th/8th ') {
+  } else if (s.substring(0, 10) === '7th / 8th ') {
     ret.push('bg-plate-po')
   } else if (s.substring(0, 6) === 'plate ') {
     ret.push('bg-plate-sf')
