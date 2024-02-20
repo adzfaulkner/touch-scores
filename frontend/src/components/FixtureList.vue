@@ -52,6 +52,16 @@ const fixtureUpdated = () => {
   updateSheet(Array.from(updates.value.values()))
   updates.value.clear()
 }
+
+const infoSplit = (info: string): string[] => {
+  let parts = info.split('|')
+  let first = parts.shift() ?? ''
+
+  return [
+      ...first.split(':'),
+      ...parts
+  ]
+}
 </script>
 
 <template>
@@ -87,7 +97,7 @@ const fixtureUpdated = () => {
                 <div class="row g-2 ps-3 pe-3 pt-4 pb-4 bg-secondary text-white">
                   <div class="col m-0 text-center">
                     <h5 class="m-0">
-                      <span v-for="(i, k) in fixtureDate.competition.info.split('\n')" v-bind:key="k">{{i}}<br></span>
+                      <span v-for="(i, k) in infoSplit(fixtureDate.competition.info)" v-bind:key="k">{{i}}<br></span>
                     </h5>
                   </div>
                 </div>
@@ -96,7 +106,7 @@ const fixtureUpdated = () => {
                 <div class="row g-2 ps-3 pe-3 pt-4 pb-4 bg-playoff text-white">
                   <div class="col m-0 text-center">
                     <h5 class="m-0">
-                      <span v-for="(i, k) in fixtureDate.competition.playoffInfo.split('\n')" v-bind:key="k">{{i}}<br></span>
+                      <span v-for="(i, k) in infoSplit(fixtureDate.competition.playoffInfo)" v-bind:key="k">{{i}}<br></span>
                     </h5>
                   </div>
                 </div>
