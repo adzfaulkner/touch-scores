@@ -5,7 +5,7 @@ import * as aggregators from '@/support/fixture'
 
 const dateRegex = /^MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY/i
 const timeRegex = /^\d+:\d+$/
-const pitchRegex = /^Field|Pitch|AGP|FOD|Roadside /i
+const pitchRegex = /^Field|Pitch|AGP|FOD|Roadside|Farside/i
 
 const isDateValue = (
   (dateRegex: RegExp) =>

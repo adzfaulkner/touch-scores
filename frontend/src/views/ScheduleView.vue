@@ -63,7 +63,7 @@ const refreshFixtures = async (): Promise<void> => {
   <ModalView :id="'pitchMapModal'" :open="showPitchMapModal" @close="togglePitchMapModal">
     <template #header></template>
     <template #default>
-      <img src="@/assets/seds_pitches.png" class="img-fluid" alt="Pitch Map" />
+      <img src="@/assets/seds_pitches_2.png" class="img-fluid" alt="Pitch Map" />
     </template>
   </ModalView>
   <ModalView :id="'filterModal'" :open="showFilterModal" @close="toggleFilterModal">
