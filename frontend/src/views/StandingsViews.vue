@@ -41,9 +41,9 @@ const refreshStandings = async (): Promise<void> => {
           <tr class="">
             <th class="pos">&nbsp;</th>
             <th class="team">Team</th>
-            <th class="pts text-center">Pts</th>
-            <th class="td text-center">TD</th>
-            <th class="td2 text-center">TS</th>
+            <th class="pts text-center">TD</th>
+            <th class="td text-center">TS</th>
+            <th class="td2 text-center">PTS</th>
           </tr>
         </thead>
         <tbody>
