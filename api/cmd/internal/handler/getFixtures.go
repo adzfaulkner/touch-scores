@@ -14,6 +14,7 @@ type reqBodyRanges struct {
 	Standings       []string `json:"standings"`
 	SlotInfo        string   `json:"slotInfo"`
 	PlayOffSlotInfo string   `json:"playOffSlotInfo"`
+	RefAllocations  string   `json:"refAllocations"`
 }
 
 type reqConfig struct {
@@ -35,6 +36,7 @@ type respBodyDataRanges struct {
 	Standings       []respBodyDataRange `json:"standings"`
 	SlotInfo        respBodyDataRange   `json:"slotInfo"`
 	PlayOffSlotInfo respBodyDataRange   `json:"playOffSlotInfo"`
+	RefAllocations  respBodyDataRange   `json:"refAllocations"`
 }
 
 type respBodyData struct {
@@ -61,15 +63,21 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 	var data []respBodyData
 
 	for _, reqC := range reqB.Configs {
-		ranges := []string{reqC.Ranges.Schedule, reqC.Ranges.SlotInfo, reqC.Ranges.PlayOffSlotInfo}
+		ranges := []string{reqC.Ranges.Schedule, reqC.Ranges.SlotInfo}
 
 		if reqC.Ranges.PlayOffSlotInfo != "" {
 			ranges = append(ranges, reqC.Ranges.PlayOffSlotInfo)
 		}
 
+		if reqC.Ranges.RefAllocations != "" {
+			ranges = append(ranges, reqC.Ranges.RefAllocations)
+		}
+
 		for _, r := range reqC.Ranges.Standings {
 			ranges = append(ranges, r)
 		}
+
+		log.Info("Ranges", zap.Reflect("ranges", ranges))
 
 		vs, err := gsheets.GetValues(getSheetVals, reqC.SheetId, ranges)
 
@@ -101,6 +109,10 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 				PlayOffSlotInfo: respBodyDataRange{
 					Range:  reqC.Ranges.PlayOffSlotInfo,
 					Values: vs.Values[reqC.Ranges.PlayOffSlotInfo],
+				},
+				RefAllocations: respBodyDataRange{
+					Range:  reqC.Ranges.RefAllocations,
+					Values: vs.Values[reqC.Ranges.RefAllocations],
 				},
 			},
 		})
