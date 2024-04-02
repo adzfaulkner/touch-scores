@@ -45,9 +45,11 @@ const refreshFixtures = async (): Promise<void> => {
       <button class="btn btn text-primary fw-bold border-0 m-0" type="button" @click="toggleFilterModal">
         <i class="bi bi-filter me-1"></i>Filter
       </button>
+      <!--
       <button class="btn btn text-primary fw-bold border-0 m-0" type="button" @click="togglePitchMapModal">
         <i class="bi bi-map me-1"></i>Pitch Layout
       </button>
+      -->
       <button
         class="btn text-primary fw-bold border-0 m-0"
         type="button"
