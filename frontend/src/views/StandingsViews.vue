@@ -41,7 +41,7 @@ const refreshStandings = async (): Promise<void> => {
     <div class="row mb-4">
       <div class="col">
         <select class="form-select" @change="handleDateChange">
-          <option v-for="[sheetId, { isLive, date }] of standingsStore.standingsByStage" :value="sheetId" :selected="isLive">Standings for {{ date.toFormat('cccc d MMMM y') }}</option>
+          <option v-for="[sheetId, { isLive, date }] of standingsStore.standingsByStage" :value="sheetId" :selected="isLive" :key="sheetId">Standings for {{ date.toFormat('cccc d MMMM y') }}</option>
         </select>
       </div>
     </div>

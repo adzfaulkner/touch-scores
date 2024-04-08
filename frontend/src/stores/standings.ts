@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 
 import type { Standing, StandingsState } from '@/types'
 
-import {sheetConfigMap, sheetConfigs} from '@/sheet-config'
+import { sheetConfigMap } from '@/sheet-config'
 
 interface StandingsByStage {
   stage: string
@@ -30,7 +30,7 @@ export const useStandingsStore = defineStore('standings', {
       const ret: Map<string, StandingsByCompetition>  = new Map()
       const nowStr = DateTime.now().toFormat('d MMMM y')
 
-      for (let [sheetId, standings] of state.standingsSheetIdMap) {
+      for (const [sheetId, standings] of state.standingsSheetIdMap) {
         const date = DateTime.fromISO(sheetConfigMap.get(sheetId).date)
 
         ret.set(sheetId, {
