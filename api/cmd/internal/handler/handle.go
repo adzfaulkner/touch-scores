@@ -102,6 +102,10 @@ func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, pos
 		return &ret
 	case "/get":
 		log.Info("get", zap.Reflect("r", r))
+		return &events.APIGatewayProxyResponse{
+			Body:       "Retrieved",
+			StatusCode: 200,
+		}
 	}
 
 	return nil
