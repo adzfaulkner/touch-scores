@@ -2,20 +2,25 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
-    sheetId: '1Zwl3XQ4h9ZE3UZMLOLWWZjXboZTgmJCxSWiLfLw464g',
-    date: '2024-02-24T00:00:00+00:00',
+    sheetId: '1u61dHirCp0cLAhFhswJ5Sghh_97ii8rrhzFz_c8YYfc',
+    date: '2024-04-14T00:00:00+00:00',
     ranges: {
-      schedule: 'A11:AX',
+      schedule: 'A14:R74',
       standings: [
-        'Standings - Cup/Plate Pool 1!A12:U15',
-        'Standings - Cup/Plate Pool 2!A12:U15',
-        'Standings - Bowl!A16:U21',
+        'Pool A!B15:AA24',
+        'Pool B!B15:AA24',
+        'Pool C!B15:AA24',
+        'Pool D!B15:AA24',
+        'Pool E!B13:W20',
+        'Pool F!B13:W20',
+        'M Shield Pool 1!B11:S16',
+        'M Shield Pool 2!B11:S16',
       ],
-      slotInfo: 'C11:AX11',
-      playOffSlotInfo: 'C43:AW43',
-      refAllocations: null
+      slotInfo: 'B13:AE13',
+      playOffSlotInfo: null,
+      refAllocations: 'Ref Allocations!A2:Q62',
     },
-    competition: 'seds'
+    competition: 'mw_nts'
   }
 ]
 

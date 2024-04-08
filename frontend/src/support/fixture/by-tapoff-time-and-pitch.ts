@@ -62,7 +62,7 @@ export const byTapoffTimeAndPitch =
 
     const filterVal = (val: undefined | string): string => String(val).trim()
     const lookupRef = (r: number, c: number): string =>
-      refAllocations[r][c] !== undefined ? normalizeRefName(refAllocations[r][c]) : ''
+      refAllocations[r] !== undefined && refAllocations[r][c] !== undefined ? normalizeRefName(refAllocations[r][c]) : ''
 
     // loop through times and pitches to generate the fixture list
     for (const row of tapOffTimeMap.keys()) {

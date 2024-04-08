@@ -14,6 +14,10 @@ const showActivityModal: Ref<boolean> = ref(false)
 
 const requestFixtures = inject('requestFixtures') as Function
 
+const handleDateChange = (e: any) => {
+  console.log(e)
+}
+
 const refreshStandings = async (): Promise<void> => {
   showActivityModal.value = true
   await requestFixtures()
@@ -34,28 +38,41 @@ const refreshStandings = async (): Promise<void> => {
     </ActionBar>
   </div>
   <div class="container">
-    <div class="standings-container" v-for="s in standingsStore.standingsByStage" :key="s.stage">
-      <h5>{{ s.stage }}</h5>
-      <table class="table mt-3">
-        <thead class="table-light">
-          <tr class="">
-            <th class="pos">&nbsp;</th>
-            <th class="team">Team</th>
-            <th class="pts text-center">TD</th>
-            <th class="td text-center">TS</th>
-            <th class="td2 text-center">PTS</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="standing in s.standings" :key="standing.team">
-            <td class="text-center">{{ standing.position }}</td>
-            <td>{{ standing.team }}</td>
-            <td class="text-center">{{ standing.points }}</td>
-            <td class="text-center">{{ standing.tdDiff }}</td>
-            <td class="text-center">{{ standing.tdFor }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="row mb-4">
+      <div class="col">
+        <select class="form-select" @change="handleDateChange">
+          <option v-for="[sheetId, { isLive, date }] of standingsStore.standingsByStage" :value="sheetId" :selected="isLive">Standings for {{ date.toFormat('cccc d MMMM y') }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div v-for="[sheetId, { standings }] of standingsStore.standingsByStage" :key="sheetId">
+          <div class="standings-container" v-for="s in standings" :key="s.stage">
+            <h5>{{ s.stage }}</h5>
+            <table class="table mt-3">
+              <thead class="table-light">
+                <tr class="">
+                  <th class="pos">&nbsp;</th>
+                  <th class="team">Team</th>
+                  <th class="pts text-center">PTS</th>
+                  <th class="td text-center">TD</th>
+                  <th class="td2 text-center">TF</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="standing in s.standings" :key="standing.team">
+                  <td class="text-center">{{ standing.position }}</td>
+                  <td>{{ standing.team }}</td>
+                  <td class="text-center">{{ standing.points }}</td>
+                  <td class="text-center">{{ standing.tdDiff }}</td>
+                  <td class="text-center">{{ standing.tdFor }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <ActivityMonitor :open="showActivityModal" />

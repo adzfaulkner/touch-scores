@@ -44,7 +44,11 @@ export interface StandingsState {
   standings: {
     range: string,
     values: string[][],
-  }[]
+  }[],
+  standingsSheetIdMap: Map<string, {
+    range: string,
+    values: string[][],
+  }[]>
 }
 
 export interface NotificationState {

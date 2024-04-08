@@ -77,8 +77,6 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 			ranges = append(ranges, r)
 		}
 
-		log.Info("Ranges", zap.Reflect("ranges", ranges))
-
 		vs, err := gsheets.GetValues(getSheetVals, reqC.SheetId, ranges)
 
 		if err != nil {

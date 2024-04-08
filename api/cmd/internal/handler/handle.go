@@ -100,6 +100,8 @@ func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, pos
 		body := r["body"].(string)
 		ret := handleUpdate(getAllConnections, postConnection, log, body)
 		return &ret
+	case "/get":
+		log.Info("get", zap.Reflect("r", r))
 	}
 
 	return nil

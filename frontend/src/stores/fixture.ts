@@ -10,7 +10,7 @@ import type {
 } from '@/types'
 
 import { sheetConfigMap } from '@/sheet-config'
-import { aggregateRawData, filterFixtures, pivotOnVSeds } from '@/support/fixtures'
+import { aggregateRawData, filterFixtures, byTapoffTimeAndPitch } from '@/support/fixtures'
 import { useFilterStore } from '@/stores/filters'
 import { useStandingsStore } from '@/stores/standings'
 
@@ -66,7 +66,7 @@ export const useFixtureStore = defineStore('fixture', {
 
         const { fixtures, dates, pitches, refs, teams, times, stages } =
             aggregateRawData(
-                pivotOnVSeds(comp.ranges.schedule.values, Number(readFromCell?.[1] ?? 0), date)
+                byTapoffTimeAndPitch(comp.ranges.schedule.values, comp.ranges.refAllocations.values, Number(readFromCell?.[1] ?? 0), date)
             )
         
         const { result, total } = filterFixtures(fixtures, filtersStore.filters)
@@ -90,6 +90,7 @@ export const useFixtureStore = defineStore('fixture', {
         comps.add(competition.name)
 
         standingsStore.standings = comp.ranges.standings
+        standingsStore.standingsSheetIdMap.set(comp.sheetId, comp.ranges.standings)
       }
 
       this.events = events
