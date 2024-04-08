@@ -74,6 +74,9 @@ functions:
       - http:
           path: update
           method: put
+      - http:
+          path: get
+          method: get
 
 resources:
   Resources:

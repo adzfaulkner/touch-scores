@@ -81,6 +81,8 @@ const ws = (): WebSocket => getWS(
 ws()
 
 const requestFixtures = ((ws: Function, sheetConfigs: SheetConfig[]) => () => {
+    console.log(JSON.stringify(sheetConfigs))
+
     ws().send(JSON.stringify({
         action: 'GET_FIXTURES',
         configs: sheetConfigs,
