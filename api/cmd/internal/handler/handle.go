@@ -103,8 +103,16 @@ func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, get
 		ret := handleUpdate(getAllConnections, postConnection, log, body)
 		return &ret
 	case "/get":
-		q := r["queryStringParameters"].(map[string]string)["q"]
+		qsp := r["queryStringParameters"].(map[string]interface{})
+		q, ok := qsp["q"].(string)
 
+		if !ok {
+			return &events.APIGatewayProxyResponse{
+				StatusCode: 400,
+				Body:       "q is a mandatory param",
+			}
+		}
+		
 		decoded, err := base64.StdEncoding.DecodeString(q)
 		if err != nil {
 			return &events.APIGatewayProxyResponse{
