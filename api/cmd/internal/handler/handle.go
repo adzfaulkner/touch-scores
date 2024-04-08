@@ -112,8 +112,11 @@ func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, get
 				Body:       "q is a mandatory param",
 			}
 		}
-		
+
 		decoded, err := base64.StdEncoding.DecodeString(q)
+
+		log.Info("decoded", zap.String("q", string(decoded)))
+		
 		if err != nil {
 			return &events.APIGatewayProxyResponse{
 				StatusCode: 400,
