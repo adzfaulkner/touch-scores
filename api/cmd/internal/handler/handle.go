@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+
 	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"github.com/adzfaulkner/touch-scores/internal/persistence"
 	"github.com/adzfaulkner/touch-scores/internal/wsconnection"
@@ -24,7 +26,7 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 			return *res, nil
 		}
 
-		res = handleProxyRequest(getAllConnections, postConnection, log, r)
+		res = handleProxyRequest(getAllConnections, getSheetVals, postConnection, log, r)
 
 		if res != nil {
 			return *res, nil
@@ -88,7 +90,7 @@ func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFu
 	return nil
 }
 
-func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
+func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, getSheetVals goog.GetSheetValuesFunc, postConnection wsconnection.PostConnectionFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
 	res, ok := r["resource"]
 
 	if !ok {
@@ -101,11 +103,18 @@ func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, pos
 		ret := handleUpdate(getAllConnections, postConnection, log, body)
 		return &ret
 	case "/get":
-		log.Info("get", zap.Reflect("r", r))
-		return &events.APIGatewayProxyResponse{
-			Body:       "Retrieved",
-			StatusCode: 200,
+		q := r["queryStringParameters"].(map[string]string)["q"]
+
+		decoded, err := base64.StdEncoding.DecodeString(q)
+		if err != nil {
+			return &events.APIGatewayProxyResponse{
+				StatusCode: 400,
+				Body:       "Invalid q received",
+			}
 		}
+
+		ret := handleGetFixtures(getSheetVals, log, string(decoded))
+		return &ret
 	}
 
 	return nil
