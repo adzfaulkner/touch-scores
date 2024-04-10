@@ -57,6 +57,7 @@ func handleUpdate(getAllConnections persistence.GetAllConnectionsFunc, postConne
 func generateResponse(sc int, body string) *events.APIGatewayProxyResponse {
 	headers := map[string]string{}
 	headers["Content-Type"] = "application/json"
+	headers["Access-Control-Allow-Origin"] = "*"
 
 	return &events.APIGatewayProxyResponse{
 		Body:       body,
