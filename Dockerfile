@@ -1,4 +1,4 @@
-FROM node:20-alpine as js
+FROM node:21-alpine as js
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN npm install --quiet --unsafe-perm=true --allow-root \
     && mkdir -p node_modules/.cache \
     && chmod -R 777 node_modules/.cache
 
-FROM golang:1.21.3-alpine as go
+FROM golang:1.22-alpine as go
 
 WORKDIR /go/src/app
 COPY ./api/* ./
