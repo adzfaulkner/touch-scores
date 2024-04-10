@@ -32,7 +32,7 @@ const accordionButtonClasses = (date: string, comp: string, totalCount: number):
   let classes = ['accordion-button', 'bg-gradient', 'fw-bold']
 
   if (totalCount > 0) {
-    classes = [...classes, 'bg-dark-subtle', 'text-black']
+    classes = [...classes, 'accordion-button-bg-' + comp, 'text-black']
   } else {
     classes = [...classes, 'bg-body-tertiary', 'text-black-50']
   }
@@ -45,7 +45,7 @@ const accordionButtonClasses = (date: string, comp: string, totalCount: number):
 }
 
 const accordionBgClasses = (): string[] => {
-  return ['accordion-body', 'bg-primary-subtle']
+  return ['accordion-body', 'accordion-bg']
 }
 
 const fixtureUpdated = () => {
@@ -146,21 +146,20 @@ const infoSplit = (info: string): string[] => {
 </template>
 
 <style scoped>
-.bg-playoff {
-  background-color: #a70000;
-}
-
 .slide-item {
   transition: all 1s;
 }
+
 .slide-enter {
   opacity: 0;
   transform: translateY(10px);
 }
+
 .slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
 }
+
 .slide-leave-active {
   position: absolute;
 }
@@ -205,73 +204,33 @@ const infoSplit = (info: string): string[] => {
   background-image: url('@/assets/comps/seds.png');
 }
 
+.img-mw_nts_12 {
+  background-image: url('@/assets/comps/mw_nts_12.png');
+}
+
+.img-mw_nts_34 {
+  background-image: url('@/assets/comps/mw_nts_34.png');
+}
+
 .button-nts {
   background-color: #c4bd97;
   color: black;
 }
 
+.accordion-button-bg-mw_nts_12 {
+  background-color: #c4ad74;
+}
+
+.accordion-button-bg-mw_nts_34 {
+  background-color: #ff5189;
+}
+
+.accordion-bg {
+  background-color: #3373ca;
+}
+ff5189
+
 .accordion-button:after {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000000'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
-}
-
-.button-dts {
-  background-color: #1c4585;
-  color: white;
-}
-
-.button-nationals {
-  background-color: #3d85c6;
-  color: white;
-}
-
-.button-mw_nts {
-  background-color: #dbe4f0;
-  color: black;
-}
-
-.button-mixed_nts {
-  background-color: #dbe4f0;
-  color: black;
-}
-
-.button-mixed_nts:after,
-.button-nationals:after {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
-}
-
-.bg-dts {
-  background-color: #a0c5e8;
-}
-
-.bg-nts {
-  background-color: #93c47d;
-}
-
-.bg-nationals {
-  background-color: #8db3e2;
-}
-
-.bg-mw_nts {
-  background-color: #8cb3e3;
-}
-
-.bg-mixed_nts {
-  background-color: #8cb3e3;
-}
-
-.bg-khaki {
-  background-color: #c4bd97;
-}
-
-.bg-green {
-  background-color: #93c47d;
-}
-
-.bg-red {
-  background-color: #e06666;
-}
-
-.bg-blue {
-  background-color: #70a7dc;
 }
 </style>

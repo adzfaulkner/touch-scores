@@ -1,18 +1,18 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { AwsRum } from 'aws-rum-web'
+import axios from 'axios'
 
 import type { AwsRumConfig } from 'aws-rum-web'
 import type { SheetConfig, SheetUpdate } from '@/types'
 
 import App from './App.vue'
 import router from './router'
-import { sheetConfigs, sheetConfigMap } from '@/sheet-config'
+import { sheetConfigs } from '@/sheet-config'
 import { getEnv } from '@/support/env'
 import {
   initSignInClient,
 } from '@/support/google-clients'
-import { getWS } from "@/support/websocket";
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useFixtureStore } from '@/stores/fixture'
 import { useFilterStore } from '@/stores/filters'
@@ -54,6 +54,27 @@ const authenticationStore = useAuthenticationStore()
 const filtersStore = useFilterStore()
 const fixtureStore = useFixtureStore()
 
+const requestFixtures = async () => {
+    const resp = await axios.get(getEnv('VITE_API_URL') + '/get', {
+        params: {
+            q: btoa(JSON.stringify({
+                action: 'GET_FIXTURES',
+                configs: sheetConfigs,
+            })),
+        }
+    })
+
+    fixtureStore.setFixtures(resp.data.data)
+}
+
+requestFixtures()
+setInterval(() => {
+    if (!authenticationStore.isAuthenticated && !filtersStore.isFilteringInProgress) {
+        requestFixtures()
+    }
+}, 10000)
+
+/*
 const ws = (): WebSocket => getWS(
   getEnv('VITE_API_WS_URL'),
   (e: Event) => {
@@ -81,20 +102,16 @@ const ws = (): WebSocket => getWS(
 ws()
 
 const requestFixtures = ((ws: Function, sheetConfigs: SheetConfig[]) => () => {
-    console.log(JSON.stringify(sheetConfigs))
-
     ws().send(JSON.stringify({
         action: 'GET_FIXTURES',
         configs: sheetConfigs,
     }))
 })(ws, sheetConfigs)
+ */
 
 app.provide('requestFixtures', requestFixtures)
 
-const updateSheet = (updates: SheetUpdate[]) => ws().send(JSON.stringify({
-    action: 'UPDATE_FIXTURES',
-    updates,
-}))
+const updateSheet = (updates: SheetUpdate[]) => {}
 
 app.provide('updateSheet', updateSheet)
 

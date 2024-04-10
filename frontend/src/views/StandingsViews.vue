@@ -10,12 +10,29 @@ import { useStandingsStore } from '@/stores/standings'
 
 const standingsStore = useStandingsStore()
 
+const showStanding: Ref<string | null> = ref<string | null>(
+    ((standingsByStage): string| null => {
+      let firstSheetId = null
+
+      for (let [sheetId, { isLive, date }] of standingsByStage) {
+        firstSheetId = firstSheetId ?? sheetId
+
+        if (isLive) {
+          return sheetId
+        }
+      }
+
+      return firstSheetId
+    })(standingsStore.standingsByStage)
+)
+
 const showActivityModal: Ref<boolean> = ref(false)
 
 const requestFixtures = inject('requestFixtures') as Function
 
-const handleDateChange = (e: any) => {
-  console.log(e)
+const handleDateChange = (e: Event) => {
+  const el = e.target as HTMLInputElement
+  showStanding.value = el.value
 }
 
 const refreshStandings = async (): Promise<void> => {
@@ -48,10 +65,11 @@ const refreshStandings = async (): Promise<void> => {
     <div class="row">
       <div class="col">
         <div v-for="[sheetId, { standings }] of standingsStore.standingsByStage" :key="sheetId">
-          <div class="standings-container" v-for="s in standings" :key="s.stage">
-            <h5>{{ s.stage }}</h5>
-            <table class="table mt-3">
-              <thead class="table-light">
+          <div v-if="sheetId === showStanding">
+            <div class="standings-container" v-for="s in standings" :key="s.stage">
+              <h5>{{ s.stage }}</h5>
+              <table class="table mt-3">
+                <thead class="table-light">
                 <tr class="">
                   <th class="pos">&nbsp;</th>
                   <th class="team">Team</th>
@@ -59,8 +77,8 @@ const refreshStandings = async (): Promise<void> => {
                   <th class="td text-center">TD</th>
                   <th class="td2 text-center">TF</th>
                 </tr>
-              </thead>
-              <tbody>
+                </thead>
+                <tbody>
                 <tr v-for="standing in s.standings" :key="standing.team">
                   <td class="text-center">{{ standing.position }}</td>
                   <td>{{ standing.team }}</td>
@@ -68,8 +86,9 @@ const refreshStandings = async (): Promise<void> => {
                   <td class="text-center">{{ standing.tdDiff }}</td>
                   <td class="text-center">{{ standing.tdFor }}</td>
                 </tr>
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
