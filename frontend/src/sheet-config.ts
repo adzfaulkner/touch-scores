@@ -5,7 +5,7 @@ const sheetConfigs: SheetConfig[] = [
     sheetId: '1-tWu4JtkZLRxkR6I8bpAKAjc4tREqSV3nfGfxzQlE28',
     date: '2024-04-13T00:00:00+00:00',
     ranges: {
-      schedule: 'A16:U52',
+      schedule: 'Schedule!A16:X93',
       standings: [
         'Pool A!B13:W20',
         'Pool B!B13:W20',
@@ -15,7 +15,7 @@ const sheetConfigs: SheetConfig[] = [
         'Pool F!B13:W20',
         'Pool G!B13:W20',
       ],
-      slotInfo: 'B15:AE15',
+      slotInfo: 'Schedule!B15:AE15',
       playOffSlotInfo: null,
       refAllocations: 'Ref Allocations!A2:Q38',
     },
@@ -25,7 +25,7 @@ const sheetConfigs: SheetConfig[] = [
     sheetId: '1u61dHirCp0cLAhFhswJ5Sghh_97ii8rrhzFz_c8YYfc',
     date: '2024-04-14T00:00:00+00:00',
     ranges: {
-      schedule: 'A14:R74',
+      schedule: 'Schedule!A14:R74',
       standings: [
         'Pool A!B15:AA24',
         'Pool B!B15:AA24',
@@ -36,7 +36,7 @@ const sheetConfigs: SheetConfig[] = [
         'M Shield Pool 1!B11:S16',
         'M Shield Pool 2!B11:S16',
       ],
-      slotInfo: 'B13:AE13',
+      slotInfo: 'Schedule!B13:AE13',
       playOffSlotInfo: null,
       refAllocations: 'Ref Allocations!A2:Q62',
     },

@@ -1,21 +1,12 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { AwsRum } from 'aws-rum-web'
-import axios from 'axios'
 
 import type { AwsRumConfig } from 'aws-rum-web'
-import type { SheetConfig, SheetUpdate } from '@/types'
 
 import App from './App.vue'
 import router from './router'
-import { sheetConfigs } from '@/sheet-config'
-import { getEnv } from '@/support/env'
-import {
-  initSignInClient,
-} from '@/support/google-clients'
-import { useAuthenticationStore } from '@/stores/authentication'
-import { useFixtureStore } from '@/stores/fixture'
-import { useFilterStore } from '@/stores/filters'
+import { initApiClient } from '@/support/api_client'
 
 try {
     const config: AwsRumConfig = {
@@ -42,7 +33,7 @@ try {
     // Ignore errors thrown during CloudWatch RUM web client initialization
 }
 
-initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
+//initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
 
 const pinia = createPinia()
 const app = createApp(App)
@@ -50,69 +41,9 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 
-const authenticationStore = useAuthenticationStore()
-const filtersStore = useFilterStore()
-const fixtureStore = useFixtureStore()
-
-const requestFixtures = async () => {
-    const resp = await axios.get(getEnv('VITE_API_URL') + '/get', {
-        params: {
-            q: btoa(JSON.stringify({
-                action: 'GET_FIXTURES',
-                configs: sheetConfigs,
-            })),
-        }
-    })
-
-    fixtureStore.setFixtures(resp.data.data)
-}
-
-requestFixtures()
-setInterval(() => {
-    if (!authenticationStore.isAuthenticated && !filtersStore.isFilteringInProgress) {
-        requestFixtures()
-    }
-}, 10000)
-
-/*
-const ws = (): WebSocket => getWS(
-  getEnv('VITE_API_WS_URL'),
-  (e: Event) => {
-    requestFixtures()
-   },
-  (e: MessageEvent) => {
-    const { event, data } = JSON.parse(e.data)
-
-    switch (event) {
-      case 'UPDATE_RECEIVED':
-        if (!authenticationStore.isAuthenticated && !filtersStore.isFilteringInProgress && sheetConfigMap.has(data.spreadsheetId)) {
-          ws().send(JSON.stringify({
-              action: 'GET_FIXTURES',
-              configs: [sheetConfigMap.get(data.spreadsheetId)],
-          }))
-        }
-        break;
-      case 'FIXTURES_RETRIEVED':
-        fixtureStore.setFixtures(data)
-        break;
-    }
-  }
-)
-
-ws()
-
-const requestFixtures = ((ws: Function, sheetConfigs: SheetConfig[]) => () => {
-    ws().send(JSON.stringify({
-        action: 'GET_FIXTURES',
-        configs: sheetConfigs,
-    }))
-})(ws, sheetConfigs)
- */
+const { requestFixtures, updateSheet } = initApiClient()
 
 app.provide('requestFixtures', requestFixtures)
-
-const updateSheet = (updates: SheetUpdate[]) => {}
-
 app.provide('updateSheet', updateSheet)
 
 app.mount('#app')

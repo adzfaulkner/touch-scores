@@ -68,7 +68,7 @@ export const useFixtureStore = defineStore('fixture', {
             aggregateRawData(
                 byTapoffTimeAndPitch(comp.ranges.schedule.values, comp.ranges.refAllocations.values, Number(readFromCell?.[1] ?? 0), date)
             )
-        
+
         const { result, total } = filterFixtures(fixtures, filtersStore.filters)
 
         totalFixtures.set(comp.sheetId, total)
