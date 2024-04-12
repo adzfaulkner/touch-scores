@@ -5,7 +5,7 @@ const sheetConfigs: SheetConfig[] = [
     sheetId: '1-tWu4JtkZLRxkR6I8bpAKAjc4tREqSV3nfGfxzQlE28',
     date: '2024-04-13T00:00:00+00:00',
     ranges: {
-      schedule: 'Schedule!A16:X93',
+      schedule: 'Schedule!A16:U52',
       standings: [
         'Pool A!B13:W20',
         'Pool B!B13:W20',
