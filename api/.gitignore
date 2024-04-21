@@ -3,3 +3,4 @@
 credentials.json
 bin/**
 node_modules
+.profile.cov

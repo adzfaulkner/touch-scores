@@ -3,14 +3,16 @@ import type { DateTime } from 'luxon'
 
 export interface SheetConfig {
   sheetId: string
-  date: string
-  ranges: {
-    schedule: string
-    standings: string[]
-    refAllocations: null | string
-    slotInfo: string
-    playOffSlotInfo: null | string
-  }
+  schedule: {
+    date: string,
+    ranges: {
+      fixtures: string,
+      refAllocations: null | string
+      slotInfo: string
+      playOffSlotInfo: null | string
+    }
+  }[]
+  standingRanges: string[]
   competition: string
 }
 

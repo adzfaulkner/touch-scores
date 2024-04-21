@@ -26,12 +26,14 @@ jobs:
           password: ${{ secrets.CR_PAT }}
       - name: Pull docker images
         run: make docker_pull_images
-      - name: Create env file
-        run: make create_env
+      - name Run Go tests
+        run: make go_run_test
       - name: Build API image
         run: make build_api
       - name: Deploy API
         run: make deploy_api
+      - name: Create env file
+        run: make create_env
       - name: Run JS tests
         run: make js_run_unit_tests
       - name: Run JS linting

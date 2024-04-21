@@ -2,55 +2,39 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/adzfaulkner/touch-scores/cmd/internal/gsheets"
-	"github.com/adzfaulkner/touch-scores/internal/goog"
 
+	"github.com/adzfaulkner/touch-scores/cmd/internal/gsheets"
+	"github.com/adzfaulkner/touch-scores/internal/fixture_aggregate"
+	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"github.com/aws/aws-lambda-go/events"
 	"go.uber.org/zap"
 )
 
-type reqBodyRanges struct {
-	Schedule        string   `json:"schedule"`
-	Standings       []string `json:"standings"`
-	SlotInfo        string   `json:"slotInfo"`
-	PlayOffSlotInfo string   `json:"playOffSlotInfo"`
-	RefAllocations  string   `json:"refAllocations"`
+type reqBodyConfig struct {
+	SheetId  string `json:"sheetId"`
+	Schedule []struct {
+		Date   string `json:"date"`
+		Ranges struct {
+			Fixtures        string `json:"fixtures"`
+			SlotInfo        string `json:"slotInfo"`
+			PlayOffSlotInfo string `json:"playOffSlotInfo"`
+			RefAllocations  string `json:"refAllocations"`
+		} `json:"ranges"`
+	} `json:"schedule"`
+	StandingRanges []string `json:"standingRanges"`
 }
 
-type reqConfig struct {
-	SheetId string        `json:"sheetId"`
-	Ranges  reqBodyRanges `json:"ranges"`
+type reqBodyGetFixtures struct {
+	Configs []reqBodyConfig `json:"configs"`
 }
 
-type reqBody struct {
-	Configs []reqConfig `json:"configs"`
-}
-
-type respBodyDataRange struct {
-	Range  string     `json:"range"`
-	Values [][]string `json:"values"`
-}
-
-type respBodyDataRanges struct {
-	Schedule        respBodyDataRange   `json:"schedule"`
-	Standings       []respBodyDataRange `json:"standings"`
-	SlotInfo        respBodyDataRange   `json:"slotInfo"`
-	PlayOffSlotInfo respBodyDataRange   `json:"playOffSlotInfo"`
-	RefAllocations  respBodyDataRange   `json:"refAllocations"`
-}
-
-type respBodyData struct {
-	SheetId string             `json:"sheetId"`
-	Ranges  respBodyDataRanges `json:"ranges"`
-}
-
-type respBody struct {
-	Event string         `json:"event"`
-	Data  []respBodyData `json:"data"`
+type respBodyGetFixtures struct {
+	Event string                             `json:"event"`
+	Data  []*fixture_aggregate.ProcessResult `json:"data"`
 }
 
 func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body string) events.APIGatewayProxyResponse {
-	var reqB reqBody
+	var reqB reqBodyGetFixtures
 	err := json.Unmarshal([]byte(body), &reqB)
 
 	if err != nil {
@@ -60,22 +44,10 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 
 	log.Info("ReqBs", zap.Reflect("reqBs", reqB))
 
-	var data []respBodyData
+	var pRess []*fixture_aggregate.ProcessResult
 
 	for _, reqC := range reqB.Configs {
-		ranges := []string{reqC.Ranges.Schedule, reqC.Ranges.SlotInfo}
-
-		if reqC.Ranges.PlayOffSlotInfo != "" {
-			ranges = append(ranges, reqC.Ranges.PlayOffSlotInfo)
-		}
-
-		if reqC.Ranges.RefAllocations != "" {
-			ranges = append(ranges, reqC.Ranges.RefAllocations)
-		}
-
-		for _, r := range reqC.Ranges.Standings {
-			ranges = append(ranges, r)
-		}
+		ranges := defineQryRanges(&reqC)
 
 		vs, err := gsheets.GetValues(getSheetVals, reqC.SheetId, ranges)
 
@@ -84,44 +56,97 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 			return *generateResponse(500, "Check logs")
 		}
 
-		var standings []respBodyDataRange
-		for _, r := range reqC.Ranges.Standings {
-			standings = append(standings, respBodyDataRange{
-				Range:  r,
-				Values: vs.Values[r],
-			})
-		}
+		pReq := buildProcessRequest(vs, &reqC)
 
-		data = append(data, respBodyData{
-			SheetId: vs.SpreadsheetId,
-			Ranges: respBodyDataRanges{
-				Schedule: respBodyDataRange{
-					Range:  reqC.Ranges.Schedule,
-					Values: vs.Values[reqC.Ranges.Schedule],
-				},
-				Standings: standings,
-				SlotInfo: respBodyDataRange{
-					Range:  reqC.Ranges.SlotInfo,
-					Values: vs.Values[reqC.Ranges.SlotInfo],
-				},
-				PlayOffSlotInfo: respBodyDataRange{
-					Range:  reqC.Ranges.PlayOffSlotInfo,
-					Values: vs.Values[reqC.Ranges.PlayOffSlotInfo],
-				},
-				RefAllocations: respBodyDataRange{
-					Range:  reqC.Ranges.RefAllocations,
-					Values: vs.Values[reqC.Ranges.RefAllocations],
-				},
-			},
-		})
+		pRes := fixture_aggregate.Processor(pReq)
+
+		pRess = append(pRess, pRes)
 	}
 
-	resB := respBody{
+	resB := respBodyGetFixtures{
 		Event: "FIXTURES_RETRIEVED",
-		Data:  data,
+		Data:  pRess,
 	}
 
 	b, _ := json.Marshal(resB)
 
 	return *generateResponse(200, string(b))
+}
+
+func defineQryRanges(c *reqBodyConfig) []string {
+	var rgs []string
+
+	add := func(v string) {
+		if v != "" {
+			rgs = append(rgs, v)
+		}
+	}
+
+	for _, sched := range c.Schedule {
+		add(sched.Ranges.Fixtures)
+		add(sched.Ranges.SlotInfo)
+
+		if sched.Ranges.RefAllocations != "" {
+			add(sched.Ranges.RefAllocations)
+		}
+
+		if sched.Ranges.PlayOffSlotInfo != "" {
+			add(sched.Ranges.PlayOffSlotInfo)
+		}
+	}
+
+	for _, sr := range c.StandingRanges {
+		add(sr)
+	}
+
+	return rgs
+}
+
+func buildProcessRequest(gVals *gsheets.Values, c *reqBodyConfig) *fixture_aggregate.ProcessRequest {
+	var stands []*fixture_aggregate.ProcessRangeValues
+	for _, sr := range c.StandingRanges {
+		prv := fixture_aggregate.ProcessRangeValues{
+			Range:  sr,
+			Values: gVals.Values[sr],
+		}
+
+		stands = append(stands, &prv)
+	}
+
+	var scheds []*fixture_aggregate.ProcessSchedulesByDate
+	for _, s := range c.Schedule {
+		rs := fixture_aggregate.ProcessScheduleRanges{
+			Fixtures: &fixture_aggregate.ProcessRangeValues{
+				Range:  s.Ranges.Fixtures,
+				Values: gVals.Values[s.Ranges.Fixtures],
+			},
+			RefAllocations: &fixture_aggregate.ProcessRangeValues{
+				Range:  s.Ranges.RefAllocations,
+				Values: gVals.Values[s.Ranges.RefAllocations],
+			},
+			SlotInfo: &fixture_aggregate.ProcessRangeValues{
+				Range:  s.Ranges.SlotInfo,
+				Values: gVals.Values[s.Ranges.SlotInfo],
+			},
+			PlayOffSlotInfo: &fixture_aggregate.ProcessRangeValues{
+				Range:  s.Ranges.PlayOffSlotInfo,
+				Values: gVals.Values[s.Ranges.PlayOffSlotInfo],
+			},
+		}
+
+		psbd := fixture_aggregate.ProcessSchedulesByDate{
+			Date:   s.Date,
+			Ranges: &rs,
+		}
+
+		scheds = append(scheds, &psbd)
+	}
+
+	pReq := fixture_aggregate.ProcessRequest{
+		SheetId:   c.SheetId,
+		Schedules: scheds,
+		Standings: stands,
+	}
+
+	return &pReq
 }

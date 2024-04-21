@@ -1,6 +1,7 @@
 IMAGE_TAG_JS=touch-scores_js
 IMAGE_TAG_GO=touch-scores_go
 IMAGE_TAG_SERVERLESS=touch-scores_serverless
+GO_TEST_ARGS=-v -coverprofile .profile.cov -coverpkg=./...
 
 js_build_docker_image:
 	docker build --target js --tag ${IMAGE_TAG_JS} .
@@ -16,6 +17,9 @@ js_run_command:
 
 go_run_command:
 	docker run -v ${PWD}/api:/go/src/app -v /go/src/app/node_modules ${IMAGE_TAG_GO} ${cmd}
+
+go_run_test:
+	make go_run_command cmd='env CGO_ENABLED=0 go test ${GO_TEST_ARGS} ./...'
 
 serverless_run_command:
 	docker run -v ${PWD}/api:/app:rw \

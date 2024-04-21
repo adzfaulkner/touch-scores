@@ -32,14 +32,8 @@ func (h *Handler) Sync() error {
 	return nil
 }
 
-func NewHandler() (*Handler, error) {
-	logger, err := zap.NewProduction()
-
-	if err != nil {
-		return nil, fmt.Errorf("could not create zap logger: %w", err)
-	}
-
+func NewHandler(logger wrapperLogger) *Handler {
 	return &Handler{
 		wrapLogger: logger,
-	}, nil
+	}
 }

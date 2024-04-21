@@ -8,6 +8,7 @@ import (
 	"github.com/adzfaulkner/touch-scores/internal/logger"
 	"github.com/adzfaulkner/touch-scores/internal/persistence"
 	"github.com/adzfaulkner/touch-scores/internal/wsconnection"
+	"go.uber.org/zap"
 	"os"
 
 	"github.com/aws/aws-lambda-go/lambda"
@@ -26,11 +27,13 @@ func main() {
 	region := os.Getenv("AWS_REGION")
 	tblName := os.Getenv("DB_TBL_NAME")
 
-	log, err := logger.NewHandler()
+	l, err := zap.NewProduction()
 
 	if err != nil {
 		panic(err.Error())
 	}
+
+	log := logger.NewHandler(l)
 
 	awsConfig := aws.Config{
 		Region: aws.String(region),
