@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.CR_PAT }}
       - name: Pull docker images
         run: make docker_pull_images
-      - name Run Go tests
+      - name: Run Go tests
         run: make go_run_test
       - name: Build API image
         run: make build_api
