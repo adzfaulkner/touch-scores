@@ -8,14 +8,13 @@ import (
 )
 
 func processEtaSheet(teams, referees, pitches, stages map[string]bool, times map[string]bool) ProcessAggregation {
-	return func(schedule, refAllocs [][]string, scheduleRange string) ([]*FixturesByTime, int) {
+	return func(schedule, refAllocs [][]string, scheduleRange string) []*FixturesByTime {
 		schedulePitchMap, refPitchMap, tapOffTimeMap, refTimeMap := generateBaseMaps(schedule, refAllocs)
 
 		var stage string
 		timeFixsMap := map[string]map[string]*Fixture{}
 		ttimes := map[string]bool{}
 		ppitches := map[string]bool{}
-		fixtureCount := 0
 
 		scheduleSheet, scheduleFromCell := extractSheetAndReadFromFromRange(scheduleRange)
 
@@ -48,8 +47,6 @@ func processEtaSheet(teams, referees, pitches, stages map[string]bool, times map
 				}
 
 				timeFixsMap[fix.Time][fix.Pitch] = &fix
-
-				fixtureCount++
 
 				addValToFiler(teams, fix.HomeTeam)
 				addValToFiler(teams, fix.AwayTeam)
@@ -84,7 +81,7 @@ func processEtaSheet(teams, referees, pitches, stages map[string]bool, times map
 			fixsByTime = append(fixsByTime, &fixByTime)
 		}
 
-		return fixsByTime, fixtureCount
+		return fixsByTime
 	}
 }
 

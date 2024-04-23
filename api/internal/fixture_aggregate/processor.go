@@ -15,14 +15,13 @@ func Processor(p *ProcessRequest) *ProcessResult {
 
 	var sbds []*ScheduleByDate
 	for _, s := range p.Schedules {
-		fbt, count := aggFixturesByTime(s.Ranges.Fixtures.Values, s.Ranges.RefAllocations.Values, s.Ranges.Fixtures.Range)
+		fbt := aggFixturesByTime(s.Ranges.Fixtures.Values, s.Ranges.RefAllocations.Values, s.Ranges.Fixtures.Range)
 
 		sbd := ScheduleByDate{
 			Date:            s.Date,
 			FixturesByTime:  fbt,
 			SlotInfo:        pluckValue(s.Ranges.SlotInfo.Values, 0, 0),
 			PlayOffSlotInfo: pluckValue(s.Ranges.PlayOffSlotInfo.Values, 0, 0),
-			FixtureCount:    count,
 		}
 
 		sbds = append(sbds, &sbd)

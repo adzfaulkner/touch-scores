@@ -32,7 +32,6 @@ type ScheduleByDate struct {
 	FixturesByTime  []*FixturesByTime `json:"fixturesByTime"`
 	SlotInfo        string            `json:"slotInfo"`
 	PlayOffSlotInfo string            `json:"playOffSlotInfo"`
-	FixtureCount    int               `json:"fixtureCount"`
 }
 
 type PoolStandings struct {
@@ -55,7 +54,7 @@ type ProcessResult struct {
 	PoolStandings   []*PoolStandings  `json:"poolStandings"`
 }
 
-type ProcessAggregation func(schedule, refAllocs [][]string, scheduleRange string) ([]*FixturesByTime, int)
+type ProcessAggregation func(schedule, refAllocs [][]string, scheduleRange string) []*FixturesByTime
 
 type ProcessRangeValues struct {
 	Range  string     `json:"range"`

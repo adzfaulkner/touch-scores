@@ -33,15 +33,12 @@ func Test_ProcessEtaSheet(t *testing.T) {
 
 	processor := processEtaSheet(teams, referees, pitches, stages, times)
 
-	totalCount := 0
 	for _, sched := range ts.Data {
 		for _, psbd := range sched.Schedules {
-			_, count := processor(psbd.Ranges.Fixtures.Values, psbd.Ranges.RefAllocations.Values, psbd.Ranges.Fixtures.Range)
-			totalCount += count
+			_ = processor(psbd.Ranges.Fixtures.Values, psbd.Ranges.RefAllocations.Values, psbd.Ranges.Fixtures.Range)
 		}
 	}
 
-	assert.Equal(t, 126, totalCount)
 	assert.Equal(t, 57, len(teams))
 	assert.Equal(t, 65, len(referees))
 	assert.Equal(t, 21, len(times))
