@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {Competition, Fixture} from '@/types'
+import type { Fixture } from '@/types'
 import type { PropType, Ref } from 'vue'
 
 import { inject } from 'vue'
@@ -14,7 +14,7 @@ defineProps({
   canEdit: Boolean,
   referees: { type: Set as PropType<Set<string>>, required: true },
   fixture: { type: Object as PropType<Fixture>, required: true },
-  competition: { type: Object as PropType<Competition>, required: true }
+  sheetId: { type: Object as PropType<string>, required: true }
 })
 
 const updates = inject('updates') as Ref<Map<string, SheetUpdate>>
@@ -75,7 +75,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
               type="number"
               :class="scoreClasses(fixture.stage, ['form-control', 'score-input'])"
               :value="fixture.homeTeamScore"
-              @keyup="(e: Event) => fixtureUpdate(e, competition.sheetId, fixture.homeTeamScoreRange)"
+              @keyup="(e: Event) => fixtureUpdate(e, sheetId, fixture.homeTeamScoreRange)"
               v-if="canEdit"
             />
             <div :class="scoreClasses(fixture.stage, ['score'])" v-else>
@@ -92,7 +92,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
               type="number"
               :class="scoreClasses(fixture.stage, ['form-control', 'score-input'])"
               :value="fixture.awayTeamScore"
-              @keyup="(e: Event) => fixtureUpdate(e, competition.sheetId, fixture.awayTeamScoreRange)"
+              @keyup="(e: Event) => fixtureUpdate(e, sheetId, fixture.awayTeamScoreRange)"
               v-if="canEdit"
             />
             <div :class="scoreClasses(fixture.stage, ['score'])" v-else>
@@ -112,7 +112,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
             <select
               class="form-select"
               :value="fixture.ref1"
-              @change="(e: Event) => fixtureUpdate(e, competition.sheetId, fixture.ref1Range)"
+              @change="(e: Event) => fixtureUpdate(e, sheetId, fixture.ref1Range)"
               v-if="canEdit"
             >
               <option v-for="referee in referees" :key="referee">{{ referee }}</option>
@@ -123,7 +123,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
             <select
               class="form-select"
               :value="fixture.ref2"
-              @change="(e: Event) => fixtureUpdate(e, competition.sheetId, fixture.ref2Range)"
+              @change="(e: Event) => fixtureUpdate(e, sheetId, fixture.ref2Range)"
               v-if="canEdit"
             >
               <option v-for="referee in referees" :key="referee">{{ referee }}</option>
@@ -134,7 +134,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
             <select
                 class="form-select"
                 :value="fixture.ref3"
-                @change="(e: Event) => fixtureUpdate(e, competition.sheetId, fixture.ref3Range)"
+                @change="(e: Event) => fixtureUpdate(e, sheetId, fixture.ref3Range)"
                 v-if="canEdit"
             >
               <option v-for="referee in referees" :key="referee">{{ referee }}</option>

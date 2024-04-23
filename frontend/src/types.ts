@@ -1,6 +1,8 @@
 import type { RemovableRef } from '@vueuse/core'
 import type { DateTime } from 'luxon'
 
+import type { FixturesRetrieved, FixtureByTime, FixtureFilters, PoolStanding } from './types-api'
+
 export interface SheetConfig {
   sheetId: string
   schedule: {
@@ -14,6 +16,7 @@ export interface SheetConfig {
   }[]
   standingRanges: string[]
   competition: string
+  label: string
 }
 
 export interface FixtureParamsBySpreadsheet {
@@ -23,34 +26,22 @@ export interface FixtureParamsBySpreadsheet {
 }
 
 export interface FixtureState {
-  initialized: boolean,
-  events: Map<string, FixtureParamsBySpreadsheet>
-  competitions: Set<string>
-  totalFixtures: Map<string, number>
-  dates: Set<string>
-  times: Set<string>
-  pitches:Set<string>
-  stages: Set<string>
-  teams: Set<string>
-  refs: Set<string>
-  competition: Set<string>
+  initialized: Boolean
+  sheetIdFixturesRetrievedMap: Map<string, number>
+  fixturesRetrieved: FixturesRetrieved[]
+  fixturesRetrievedFiltered: FixturesRetrieved[]
 }
 
 export interface FilterState {
   filteringInProgress: boolean
+  values: FixtureFilters
   globalValue: RemovableRef<string>
   filters: RemovableRef<Filters>
 }
 
 export interface StandingsState {
-  standings: {
-    range: string,
-    values: string[][],
-  }[],
-  standingsSheetIdMap: Map<string, {
-    range: string,
-    values: string[][],
-  }[]>
+  standings: StandingsBySheet[]
+  sheetIdStandingsMap: Map<string, number>
 }
 
 export interface NotificationState {
@@ -65,7 +56,6 @@ export interface Competition {
 }
 
 export interface Fixture {
-  date: string
   time: string
   stage: string
   pitch: string
@@ -81,14 +71,6 @@ export interface Fixture {
   ref2Range: string
   ref3: string
   ref3Range: string
-}
-
-export interface Standing {
-  position: number
-  team: string
-  points: number
-  tdDiff: number
-  tdFor: number
 }
 
 export interface Notification {
@@ -115,12 +97,21 @@ export enum FilterBy {
   Global = 'global'
 }
 
-export interface FixturesByCompetitionDate {
+export interface FixturesBySheetDate {
+  comp: string
+  sheetId: string
   date: DateTime
   isToday: boolean
-  competition: Competition
   totalCount: number
-  times: Map<string, Fixture[]>
+  fixturesByTime: FixtureByTime[]
+  slotInfo: string
+  playOffSlotInfo: string
+}
+
+export interface StandingsBySheet {
+  sheetId: string
+  competition: string
+  standings: PoolStanding[]
 }
 
 export interface SheetUpdate {

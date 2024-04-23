@@ -6,6 +6,7 @@ import { sheetConfigs, sheetConfigMap } from '@/sheet-config'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useFilterStore } from '@/stores/filters'
 import { useFixtureStore } from '@/stores/fixture'
+import { useStandingsStore } from '@/stores/standings'
 import { getWS } from '@/support/websocket'
 import { getEnv } from '@/support/env'
 
@@ -13,6 +14,7 @@ const initWs = () => {
     const authenticationStore = useAuthenticationStore()
     const filtersStore = useFilterStore()
     const fixtureStore = useFixtureStore()
+    const standingsStore = useStandingsStore()
 
     const ws = (): WebSocket => getWS(
         getEnv('VITE_API_WS_URL'),
@@ -32,8 +34,10 @@ const initWs = () => {
                     }
                     break;
                 case 'FIXTURES_RETRIEVED':
-                    fixtureStore.setFixtures(data)
-                    break;
+                    fixtureStore.intFixtures(data)
+                    filtersStore.setValues(data)
+                    standingsStore.setValues(data)
+                    break
             }
         }
     )
@@ -62,6 +66,7 @@ const initPolling = () => {
     const authenticationStore = useAuthenticationStore()
     const filtersStore = useFilterStore()
     const fixtureStore = useFixtureStore()
+    const standingsStore = useStandingsStore()
 
     const requestFixtures = async () => {
         const resp = await axios.get(getEnv('VITE_API_URL') + '/get', {
@@ -73,7 +78,9 @@ const initPolling = () => {
             }
         })
 
-        fixtureStore.setFixtures(resp.data.data)
+        fixtureStore.intFixtures(resp.data.data)
+        filtersStore.setValues(resp.data.data)
+        standingsStore.setValues(resp.data.data)
     }
 
     requestFixtures()

@@ -17,18 +17,18 @@ try {
         telemetries: ["performance","errors","http"],
         allowCookies: false,
         enableXRay: false
-    };
+    }
 
-    const APPLICATION_ID: string = '4d3d9fff-1af0-49d0-966f-ec8fd3e92c12';
-    const APPLICATION_VERSION: string = '1.0.0';
-    const APPLICATION_REGION: string = 'eu-west-2';
+    const APPLICATION_ID: string = '4d3d9fff-1af0-49d0-966f-ec8fd3e92c12'
+    const APPLICATION_VERSION: string = '1.0.0'
+    const APPLICATION_REGION: string = 'eu-west-2'
 
     new AwsRum(
         APPLICATION_ID,
         APPLICATION_VERSION,
         APPLICATION_REGION,
         config
-    );
+    )
 } catch (error) {
     // Ignore errors thrown during CloudWatch RUM web client initialization
 }

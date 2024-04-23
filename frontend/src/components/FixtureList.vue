@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 
 import { ref, inject, provide } from 'vue'
 
-import type { FixturesByCompetitionDate, SheetUpdate } from '@/types'
+import type {FixturesBySheetDate, SheetUpdate} from '@/types'
 
 import FixtureListItem from '@/components/FixtureListItem.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
@@ -18,7 +18,7 @@ const updates: Ref<Map<string, SheetUpdate>> = ref(new Map())
 
 provide('updates', updates)
 
-const todayFixture = fixtureStore.fixturesByCompetitionDate.find((fbd: FixturesByCompetitionDate) => fbd.isToday)
+const todayFixture: FixturesBySheetDate | undefined = fixtureStore.fixturesBySheetDates.find((fbd: FixturesBySheetDate) => fbd.isToday)
 
 const openAccordion: Ref<string | null> = ref<string | null>(
   todayFixture ? todayFixture.date.toFormat('d MMMM y') : null
@@ -70,68 +70,68 @@ const infoSplit = (info: string): string[] => {
     <div class="accordion" v-else>
       <div
         class="accordion-item"
-        v-for="fixtureDate in fixtureStore.fixturesByCompetitionDate"
-        :key="fixtureDate.date.toFormat('d MMMM y')"
+        v-for="fixturesBySheetDate of fixtureStore.fixturesBySheetDates"
+        :key="fixturesBySheetDate.date.toFormat('d MMMM y')"
       >
         <h2 class="accordion-header">
           <button
             :class="
               accordionButtonClasses(
-                fixtureDate.date.toFormat('d MMMM y'),
-                fixtureDate.competition.name,
-                fixtureDate.totalCount
+                fixturesBySheetDate.date.toFormat('d MMMM y'),
+                fixturesBySheetDate.comp,
+                fixturesBySheetDate.totalCount
               )
             "
             type="button"
-            @click="() => toggleAccordion(fixtureDate.date.toFormat('d MMMM y'))"
+            @click="() => toggleAccordion(fixturesBySheetDate.date.toFormat('d MMMM y'))"
           >
-            <div :class="['img', `img-${fixtureDate.competition.name}`, 'me-2']"></div>
-            {{ fixtureDate.date.toFormat('EEEE d MMMM y') }} ({{ fixtureDate.totalCount }})
+            <div :class="['img', `img-${fixturesBySheetDate.comp}`, 'me-2']"></div>
+            {{ fixturesBySheetDate.date.toFormat('EEEE d MMMM y') }} ({{ fixturesBySheetDate.totalCount }})
           </button>
         </h2>
-        <div v-if="openAccordion === fixtureDate.date.toFormat('d MMMM y')">
+        <div v-if="openAccordion === fixturesBySheetDate.date.toFormat('d MMMM y')">
           <div :class="accordionBgClasses()">
-            <h6 v-if="fixtureDate.totalCount < 1">No fixtures found matching filter criteria</h6>
+            <h6 v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
             <div v-else>
               <div class="mb-4">
                 <div class="row g-2 ps-3 pe-3 pt-4 pb-4 bg-secondary text-white">
                   <div class="col m-0 text-center">
                     <h5 class="m-0">
-                      <span v-for="(i, k) in infoSplit(fixtureDate.competition.info)" v-bind:key="k">{{i}}<br></span>
+                      <span v-for="(i, k) in infoSplit(fixturesBySheetDate.slotInfo)" v-bind:key="k">{{i}}<br></span>
                     </h5>
                   </div>
                 </div>
               </div>
-              <div class="mb-4" v-if="fixtureDate.competition.playoffInfo !== null">
+              <div class="mb-4" v-if="fixturesBySheetDate.playOffSlotInfo !== ''">
                 <div class="row g-2 ps-3 pe-3 pt-4 pb-4 bg-playoff text-white">
                   <div class="col m-0 text-center">
                     <h5 class="m-0">
-                      <span v-for="(i, k) in infoSplit(fixtureDate.competition.playoffInfo)" v-bind:key="k">{{i}}<br></span>
+                      <span v-for="(i, k) in infoSplit(fixturesBySheetDate.playOffSlotInfo)" v-bind:key="k">{{i}}<br></span>
                     </h5>
                   </div>
                 </div>
               </div>
               <div
                 class="mb-4"
-                v-for="[time, fixtures] in fixtureDate.times"
-                :key="time"
+                v-for="fixturesByTime of fixturesBySheetDate.fixturesByTime"
+                :key="fixturesByTime.time"
               >
                 <div class="row g-2 mb-2 bg-danger-subtle">
                   <div class="col text-center">
-                    <h3>{{ time }}</h3>
+                    <h3>{{ fixturesByTime.time }}</h3>
                   </div>
                 </div>
                 <div class="row row-cols-1 row-cols-lg-2 g-2">
                   <div
                     class="col"
-                    v-for="fixture in fixtures"
-                    :key="fixture.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
+                    v-for="fixture of fixturesByTime.fixtures"
+                    :key="fixturesBySheetDate.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
                   >
                     <FixtureListItem
                       :fixture="fixture"
                       :can-edit="authenticatedStore.isAuthenticated"
                       :referees="fixtureStore.refs"
-                      :competition="fixtureDate.competition"
+                      :sheet-id="fixturesBySheetDate.sheetId"
                       @fixtureUpdated="fixtureUpdated"
                     />
                   </div>

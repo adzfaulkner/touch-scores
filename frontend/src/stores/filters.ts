@@ -1,5 +1,7 @@
 import type { FilterState, Filters, FilterBy } from '@/types'
 
+import type { FixtureFilters, FixturesRetrieved } from '@/types-api'
+
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
 
@@ -22,6 +24,13 @@ export const useFilterStore = defineStore('filter', {
   state: (): FilterState => {
     return {
       filteringInProgress: false,
+      values: {
+        teams: [],
+        referees: [],
+        times: [],
+        pitches: [],
+        stages: [],
+      },
       globalValue: useStorage(`fixtures/${storageUid}/globalValue`, ''),
       filters: useStorage(
         `fixtures/${storageUid}/filters`,
@@ -34,6 +43,23 @@ export const useFilterStore = defineStore('filter', {
     }
   },
   actions: {
+    setValues(data: FixturesRetrieved[]): void  {
+      const vals: FixtureFilters = {
+        ...this.values
+      }
+
+      const ff = data.map((rf: FixturesRetrieved) => rf.fixtureFilters)
+
+      this.values = ff.reduce((acc: FixtureFilters, v: FixtureFilters): FixtureFilters => {
+        acc.referees = Array.from(new Set([...acc.referees, ...v.referees])).sort()
+        acc.pitches = Array.from(new Set([...acc.pitches, ...v.pitches])).sort()
+        acc.stages = Array.from(new Set([...acc.stages, ...v.stages])).sort()
+        acc.teams = Array.from(new Set([...acc.teams, ...v.teams])).sort()
+        acc.times = Array.from(new Set([...acc.times, ...v.times])).sort()
+
+        return acc
+      }, vals)
+    },
     filterBy(filterBy: FilterBy, value: string[]): void {
       this.filters = {
         ...this.filters,

@@ -14,16 +14,12 @@ const showStanding: Ref<string | null> = ref<string | null>(
     ((standingsByStage): string| null => {
       let firstSheetId = null
 
-      for (let [sheetId, { isLive, date }] of standingsByStage) {
+      for (const {sheetId} of standingsByStage) {
         firstSheetId = firstSheetId ?? sheetId
-
-        if (isLive) {
-          return sheetId
-        }
       }
 
       return firstSheetId
-    })(standingsStore.standingsByStage)
+    })(standingsStore.standings)
 )
 
 const showActivityModal: Ref<boolean> = ref(false)
@@ -39,6 +35,26 @@ const refreshStandings = async (): Promise<void> => {
   showActivityModal.value = true
   await requestFixtures()
   showActivityModal.value = false
+}
+
+const filterHeaderVal = (val: string): string => {
+  const headValMap: Map<string, string> = new Map([
+      ['Position', ''],
+      ['Points', 'Pts'],
+      ['Try Diff', 'TD'],
+      ['Tries For', 'TF'],
+  ])
+
+  return headValMap.has(val) ? String(headValMap.get(val)) : val
+}
+
+const filterLineVal = (val: string): string => {
+  return val.replace(/^(\d+)([st|nd|rd|th]+\s.*)/gm, '$1')
+}
+
+const dd = (val: any) => {
+  console.log(val)
+  return val
 }
 </script>
 
@@ -58,35 +74,23 @@ const refreshStandings = async (): Promise<void> => {
     <div class="row mb-4">
       <div class="col">
         <select class="form-select" @change="handleDateChange">
-          <option v-for="[sheetId, { isLive, date }] of standingsStore.standingsByStage" :value="sheetId" :selected="isLive" :key="sheetId">Standings for {{ date.toFormat('cccc d MMMM y') }}</option>
+          <option v-for="{sheetId, competition} in standingsStore.standings" :value="sheetId" :key="sheetId">Standings for {{ competition }}</option>
         </select>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <div v-for="[sheetId, { standings }] of standingsStore.standingsByStage" :key="sheetId">
-          <div v-if="sheetId === showStanding">
-            <div class="standings-container" v-for="s in standings" :key="s.stage">
-              <h5>{{ s.stage }}</h5>
+        <div v-for="{sheetId, standings} in standingsStore.standings" :key="sheetId">
+          <div v-if="dd(sheetId) === dd(showStanding)">
+            <div class="standings-container" v-for="poolStanding in dd(standings)" :key="poolStanding.pool">
+              <h5>{{ poolStanding.pool }}</h5>
               <table class="table mt-3">
-                <thead class="table-light">
-                <tr class="">
-                  <th class="pos">&nbsp;</th>
-                  <th class="team">Team</th>
-                  <th class="pts text-center">PTS</th>
-                  <th class="td text-center">TD</th>
-                  <th class="td2 text-center">TF</th>
+                <tr>
+                  <th v-for="(th, i) in poolStanding.standings[0]" :key="i">{{ filterHeaderVal(th) }}</th>
                 </tr>
-                </thead>
-                <tbody>
-                <tr v-for="standing in s.standings" :key="standing.team">
-                  <td class="text-center">{{ standing.position }}</td>
-                  <td>{{ standing.team }}</td>
-                  <td class="text-center">{{ standing.points }}</td>
-                  <td class="text-center">{{ standing.tdDiff }}</td>
-                  <td class="text-center">{{ standing.tdFor }}</td>
+                <tr v-for="(line, i) in [...poolStanding.standings[1]]" :key="i">
+                  <td v-for="(td, i) in line" :key="i">{{ filterLineVal(td) }}</td>
                 </tr>
-                </tbody>
               </table>
             </div>
           </div>

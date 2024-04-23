@@ -6,7 +6,7 @@ const sheetConfigs: SheetConfig[] = [
     schedule: [{
       date: '2024-04-13T00:00:00+00:00',
       ranges: {
-        fixtures: 'Schedule!A16:X93',
+        fixtures: 'Schedule!A16:U52',
         slotInfo: 'Schedule!B15:AE15',
         playOffSlotInfo: null,
         refAllocations: 'Ref Allocations!A2:Q38',
@@ -22,6 +22,7 @@ const sheetConfigs: SheetConfig[] = [
       'Pool G!B12:W20',
     ],
     competition: 'mw_nts_12',
+    label: 'MW NTS 24 Div 1&2 R1',
   },
   {
     sheetId: '1u61dHirCp0cLAhFhswJ5Sghh_97ii8rrhzFz_c8YYfc',
@@ -44,11 +45,12 @@ const sheetConfigs: SheetConfig[] = [
       'M Shield Pool 1!B10:S16',
       'M Shield Pool 2!B10:S16',
     ],
-    competition: 'mw_nts_34'
+    competition: 'mw_nts_34',
+    label: 'MW NTS 24 Div 3&4 R1',
   },
 ]
 
-const sheetConfigMap = new Map()
+const sheetConfigMap: Map<string, SheetConfig> = new Map()
 sheetConfigs.forEach((sc: SheetConfig) => sheetConfigMap.set(sc.sheetId, sc))
 
 export {

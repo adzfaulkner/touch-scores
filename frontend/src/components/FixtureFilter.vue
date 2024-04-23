@@ -13,7 +13,6 @@ const globalSearchSuggestionsList = ref<HTMLDivElement>()
 const globalSearchResetBtn = ref<HTMLInputElement>()
 
 const filtersStore = useFilterStore()
-const fixtureStore = useFixtureStore()
 
 const globalSuggestions: Ref<string[]> = ref([])
 const showGlobalSuggestions: Ref<boolean> = ref(false)
@@ -45,11 +44,11 @@ const findSuggestions = (e: Event): void => {
   }
 
   const potentials = [
-    ...fixtureStore.teams,
-    ...fixtureStore.refs,
-    ...fixtureStore.stages,
-    ...fixtureStore.pitches,
-    ...fixtureStore.times
+    ...filtersStore.values.teams,
+    ...filtersStore.values.referees,
+    ...filtersStore.values.stages,
+    ...filtersStore.values.pitches,
+    ...filtersStore.values.times,
   ]
 
   const searchForRegExp = new RegExp(escapeStringRegexp(value), 'i')
@@ -144,7 +143,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByTeam)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in Array.from(fixtureStore.teams).sort()"
+            v-for="option in Array.from(filtersStore.values.teams)"
             :key="option"
             :selected="filtersStore.filtersApplied.team.includes(option)"
           >
@@ -159,7 +158,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByRef)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in Array.from(fixtureStore.refs).sort()"
+            v-for="option in Array.from(filtersStore.values.referees)"
             :key="option"
             :selected="filtersStore.filtersApplied.ref.includes(option)"
           >
@@ -174,7 +173,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByTime)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in timesSorted(fixtureStore.times)"
+            v-for="option in timesSorted(filtersStore.values.times)"
             :key="option"
             :selected="filtersStore.filtersApplied.time.includes(option)"
           >
@@ -189,7 +188,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByPitch)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in Array.from(fixtureStore.pitches).sort()"
+            v-for="option in Array.from(filtersStore.values.pitches)"
             :key="option"
             :selected="filtersStore.filtersApplied.pitch.includes(option)"
           >
@@ -204,7 +203,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByStage)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in Array.from(fixtureStore.stages).sort()"
+            v-for="option in Array.from(filtersStore.values.stages)"
             :key="option"
             :selected="filtersStore.filtersApplied.stage.includes(option)"
           >
