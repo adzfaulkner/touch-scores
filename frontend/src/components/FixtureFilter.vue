@@ -143,7 +143,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByTeam)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in Array.from(filtersStore.values.teams)"
+            v-for="option in filtersStore.values.teams"
             :key="option"
             :selected="filtersStore.filtersApplied.team.includes(option)"
           >
@@ -158,7 +158,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByRef)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in Array.from(filtersStore.values.referees)"
+            v-for="option in filtersStore.values.referees"
             :key="option"
             :selected="filtersStore.filtersApplied.ref.includes(option)"
           >
@@ -173,7 +173,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByTime)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in timesSorted(filtersStore.values.times)"
+            v-for="option in filtersStore.values.times"
             :key="option"
             :selected="filtersStore.filtersApplied.time.includes(option)"
           >
@@ -188,7 +188,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByPitch)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in Array.from(filtersStore.values.pitches)"
+            v-for="option in filtersStore.values.pitches"
             :key="option"
             :selected="filtersStore.filtersApplied.pitch.includes(option)"
           >
@@ -203,7 +203,7 @@ document.addEventListener('click', (event: Event) => {
         <select class="form-select" @change="(e: Event) => filterFixtures(e, filterByStage)">
           <option value="">--ALL--</option>
           <option
-            v-for="option in Array.from(filtersStore.values.stages)"
+            v-for="option in filtersStore.values.stages"
             :key="option"
             :selected="filtersStore.filtersApplied.stage.includes(option)"
           >

@@ -26,7 +26,7 @@ export interface FixtureParamsBySpreadsheet {
 }
 
 export interface FixtureState {
-  initialized: Boolean
+  initialized: boolean
   sheetIdFixturesRetrievedMap: Map<string, number>
   fixturesRetrieved: FixturesRetrieved[]
   fixturesRetrievedFiltered: FixturesRetrieved[]

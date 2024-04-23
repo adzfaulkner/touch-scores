@@ -12,7 +12,7 @@ const emit = defineEmits(['fixtureUpdated'])
 
 defineProps({
   canEdit: Boolean,
-  referees: { type: Set as PropType<Set<string>>, required: true },
+  referees: { type: Array as PropType<string[]>, required: true },
   fixture: { type: Object as PropType<Fixture>, required: true },
   sheetId: { type: Object as PropType<string>, required: true }
 })

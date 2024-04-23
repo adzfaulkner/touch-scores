@@ -8,9 +8,11 @@ import type {FixturesBySheetDate, SheetUpdate} from '@/types'
 import FixtureListItem from '@/components/FixtureListItem.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useFixtureStore } from '@/stores/fixture'
+import { useFilterStore } from '@/stores/filters'
 
 const fixtureStore = useFixtureStore()
 const authenticatedStore = useAuthenticationStore()
+const filterStore = useFilterStore()
 
 const updateSheet = inject('updateSheet') as Function
 
@@ -130,7 +132,7 @@ const infoSplit = (info: string): string[] => {
                     <FixtureListItem
                       :fixture="fixture"
                       :can-edit="authenticatedStore.isAuthenticated"
-                      :referees="fixtureStore.refs"
+                      :referees="filterStore.values.referees"
                       :sheet-id="fixturesBySheetDate.sheetId"
                       @fixtureUpdated="fixtureUpdated"
                     />

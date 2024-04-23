@@ -58,7 +58,6 @@ export const pivotOnVSeds =
         }
 
         const tmp: Fixture = {
-          date: latestDate,
           time: timesArr[timesArr.length - 1].trim(),
           stage: data[r - 1][c - 3].trim(),
           pitch: String(pitchMap.get(c - 3)),
