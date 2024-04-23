@@ -88,7 +88,7 @@ const dd = (val: any) => {
                 <tr>
                   <th v-for="(th, i) in poolStanding.standings[0]" :key="i">{{ filterHeaderVal(th) }}</th>
                 </tr>
-                <tr v-for="(line, i) in [...poolStanding.standings[1]]" :key="i">
+                <tr v-for="(line, i) in poolStanding.standings.slice(1)" :key="i">
                   <td v-for="(td, i) in line" :key="i">{{ filterLineVal(td) }}</td>
                 </tr>
               </table>
