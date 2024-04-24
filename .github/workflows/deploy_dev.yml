@@ -3,7 +3,7 @@ name: deploy
 on:
   push:
     branches:
-      - 'main'
+      - 'feature/**'
 
 jobs:
   Deploy:
@@ -31,14 +31,4 @@ jobs:
       - name: Build API image
         run: make build_api
       - name: Deploy API
-        run: make deploy_api
-      - name: Create env file
-        run: make create_env
-      - name: Run JS tests
-        run: make js_run_unit_tests
-      - name: Run JS linting
-        run: make js_run_lint
-      - name: Build package for FE deployment
-        run: make js_run_build
-      - name: Deploy FE
-        run: make deploy_fe
+        run: make deploy_api stage='dev'

@@ -66,7 +66,7 @@ create_env:
 	sh bin/envs.sh
 
 deploy_api:
-	make serverless_run_command cmd='serverless deploy'
+	make serverless_run_command cmd='serverless deploy --stage ${stage}'
 
 deploy_fe:
 	docker run -v ${PWD}/frontend:/aws -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} amazon/aws-cli s3 sync dist/ s3://${AWS_BUCKET_NAME} --region eu-west-2
