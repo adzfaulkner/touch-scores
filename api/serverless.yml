@@ -16,6 +16,7 @@ package:
 
 provider:
   name: aws
+  stage: ${opt:stage, 'dev'}
   runtime: provided.al2
   architecture: arm64
   region: eu-west-2
@@ -85,7 +86,7 @@ resources:
       Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Retain
       Properties:
-        TableName: ${self:service}-ws-connections
+        TableName: ${self:service}-ws-connections-${self:provider.stage}
         PointInTimeRecoverySpecification:
           PointInTimeRecoveryEnabled: true
         SSESpecification:
@@ -107,4 +108,4 @@ resources:
     ObjectStorage:
       Type: "AWS::S3::Bucket"
       Properties:
-        BucketName: touchscores-api
+        BucketName: touchscores-api-${self:provider.stage}
