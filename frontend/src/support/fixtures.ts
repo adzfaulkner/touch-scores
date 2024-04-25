@@ -73,12 +73,7 @@ const aggregateRawData = (aggregate: Aggregated): AggregateRawDataReturns => {
   }
 }
 
-interface filterFixturesReturn {
-  result: Map<string, Map<string, Fixture[]>>,
-  total: number,
-}
-
-const filterFixtures = (fixturesByDateAndTime: Map<string, Map<string, Fixture[]>>, filters: Filters): filterFixturesReturn => {
+const filterFixtures = (fixtures: Fixture[], filters: Filters): Fixture[] => {
   const globalSearch = (term: string[], fixture: Fixture): boolean => {
     const t = term[0].toLowerCase()
 
@@ -94,41 +89,22 @@ const filterFixtures = (fixturesByDateAndTime: Map<string, Map<string, Fixture[]
     )
   }
 
-  const result: Map<string, Map<string, Fixture[]>> = new Map()
-  let timeMap: Map<string, Fixture[]>
-  let filtered: Fixture[]
-  let total: number = 0
-
-  for (const [date, times] of  fixturesByDateAndTime.entries()) {
-    timeMap = new Map()
-
-    for (const [time, fixtures] of times.entries()) {
-      filtered = fixtures.filter((fix: Fixture): boolean => {
-        return (
-            (filters.time.length === 0 || filters.time.includes(fix.time)) &&
-            (filters.pitch.length === 0 || filters.pitch.includes(fix.pitch)) &&
-            (filters.stage.length === 0 || filters.stage.includes(fix.stage)) &&
-            (filters.team.length === 0 ||
-                filters.team.includes(fix.homeTeam) ||
-                filters.team.includes(fix.awayTeam)) &&
-            (filters.ref.length === 0 ||
-                filters.ref.includes(fix.ref1) ||
-                filters.ref.includes(fix.ref2) ||
-                filters.ref.includes(fix.ref3)) &&
-            (filters.global.length === 0 || globalSearch(filters.global, fix))
-        )
-      })
-
-      timeMap.set(time, filtered)
-      total += filtered.length
-    }
-
-    result.set(date, timeMap)
-  }
-
-  return { result, total }
+  return fixtures.filter((fix: Fixture): boolean => {
+    return (
+        (filters.time.length === 0 || filters.time.includes(fix.time)) &&
+        (filters.pitch.length === 0 || filters.pitch.includes(fix.pitch)) &&
+        (filters.stage.length === 0 || filters.stage.includes(fix.stage)) &&
+        (filters.team.length === 0 ||
+            filters.team.includes(fix.homeTeam) ||
+            filters.team.includes(fix.awayTeam)) &&
+        (filters.ref.length === 0 ||
+            filters.ref.includes(fix.ref1) ||
+            filters.ref.includes(fix.ref2) ||
+            filters.ref.includes(fix.ref3)) &&
+        (filters.global.length === 0 || globalSearch(filters.global, fix))
+    )
+  })
 }
-
 
 export {
   aggregateRawData,

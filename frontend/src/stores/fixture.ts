@@ -8,10 +8,12 @@ import type {
 
 import type {
   FixtureByTime,
-  FixturesRetrieved
+  FixturesRetrieved, ScheduleByDate
 } from '@/types-api'
 
 import { sheetConfigMap } from '@/sheet-config'
+import { useFilterStore } from '@/stores/filters'
+import { filterFixtures } from '@/support/fixtures'
 
 export const useFixtureStore = defineStore('fixture', {
   state: (): FixtureState => {
@@ -27,13 +29,36 @@ export const useFixtureStore = defineStore('fixture', {
       const sheetIdFixturesRetrievedMap = new Map()
       data.map(({sheetId}, i) => sheetIdFixturesRetrievedMap.set(sheetId, i), data)
 
+      const filterStore = useFilterStore()
+
       this.sheetIdFixturesRetrievedMap = sheetIdFixturesRetrievedMap
       this.fixturesRetrieved = data
-      this.fixturesRetrievedFiltered = data
+      this.newFiltersApplied(filterStore.filtersApplied)
       this.initialized = true
     },
     newFiltersApplied(filters: Filters): void {
+      this.fixturesRetrievedFiltered = this.fixturesRetrieved.map((fr: FixturesRetrieved): FixturesRetrieved => {
+        return {
+          ...fr,
+          schedulesByDate: fr.schedulesByDate.map((sbd: ScheduleByDate): ScheduleByDate => {
+            return {
+              ...sbd,
+              fixturesByTime: sbd.fixturesByTime.map((fbd: FixtureByTime): FixtureByTime | null => {
+                const fixtures = filterFixtures(fbd.fixtures, filters)
 
+                if (fixtures.length === 0) {
+                  return null
+                }
+
+                return {
+                  ...fbd,
+                  fixtures,
+                } as FixtureByTime
+              }).filter((v: FixtureByTime | null): boolean => v !== null)
+            } as ScheduleByDate
+          })
+        } as FixturesRetrieved
+      })
     }
   },
   getters: {
