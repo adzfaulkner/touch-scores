@@ -30,7 +30,7 @@ type reqBodyGetFixtures struct {
 
 type respBodyGetFixtures struct {
 	Event string                           `json:"event"`
-	Data  *fixture_aggregate.ProcessResult `json:"values"`
+	Data  *fixture_aggregate.ProcessResult `json:"data"`
 }
 
 func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body string) events.APIGatewayProxyResponse {
