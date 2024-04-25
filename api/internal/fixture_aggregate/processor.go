@@ -4,7 +4,7 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-func Processor(p *ProcessRequest) *ProcessResult {
+func Processor(pReqs []*ProcessRequest) *ProcessResult {
 	teams := map[string]bool{}
 	referees := map[string]bool{}
 	times := map[string]bool{}
@@ -13,35 +13,46 @@ func Processor(p *ProcessRequest) *ProcessResult {
 
 	aggFixturesByTime := processEtaSheet(teams, referees, pitches, stages, times)
 
-	var sbds []*ScheduleByDate
-	for _, s := range p.Schedules {
-		fbt := aggFixturesByTime(s.Ranges.Fixtures.Values, s.Ranges.RefAllocations.Values, s.Ranges.Fixtures.Range)
+	var scheds []*Schedule
 
-		sbd := ScheduleByDate{
-			Date:            s.Date,
-			FixturesByTime:  fbt,
-			SlotInfo:        pluckValue(s.Ranges.SlotInfo.Values, 0, 0),
-			PlayOffSlotInfo: pluckValue(s.Ranges.PlayOffSlotInfo.Values, 0, 0),
+	for _, p := range pReqs {
+		var sbds []*ScheduleByDate
+		for _, s := range p.Schedules {
+			fbt := aggFixturesByTime(s.Ranges.Fixtures.Values, s.Ranges.RefAllocations.Values, s.Ranges.Fixtures.Range)
+
+			sbd := ScheduleByDate{
+				Date:            s.Date,
+				FixturesByTime:  fbt,
+				SlotInfo:        pluckValue(s.Ranges.SlotInfo.Values, 0, 0),
+				PlayOffSlotInfo: pluckValue(s.Ranges.PlayOffSlotInfo.Values, 0, 0),
+			}
+
+			sbds = append(sbds, &sbd)
 		}
 
-		sbds = append(sbds, &sbd)
-	}
+		var stands []*PoolStandings
+		for _, s := range p.Standings {
+			pool, _ := extractSheetAndReadFromFromRange(s.Range)
 
-	var stands []*PoolStandings
-	for _, s := range p.Standings {
-		pool, _ := extractSheetAndReadFromFromRange(s.Range)
+			ps := PoolStandings{
+				Pool:      pool,
+				Standings: filterStandings(s.Values),
+			}
 
-		ps := PoolStandings{
-			Pool:      pool,
-			Standings: filterStandings(s.Values),
+			stands = append(stands, &ps)
 		}
 
-		stands = append(stands, &ps)
+		s := Schedule{
+			SheetId:         p.SheetId,
+			SchedulesByDate: sbds,
+			PoolStandings:   stands,
+		}
+
+		scheds = append(scheds, &s)
 	}
 
 	res := ProcessResult{
-		SheetId:         p.SheetId,
-		SchedulesByDate: sbds,
+		Schedules: scheds,
 		FixturesFilters: &FixtureFilters{
 			Teams:    sortStringSlice(maps.Keys(teams)),
 			Referees: sortStringSlice(maps.Keys(referees)),
@@ -49,7 +60,6 @@ func Processor(p *ProcessRequest) *ProcessResult {
 			Pitches:  sortStringSlice(maps.Keys(pitches)),
 			Stages:   sortStringSlice(maps.Keys(stages)),
 		},
-		PoolStandings: stands,
 	}
 
 	return &res

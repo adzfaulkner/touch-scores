@@ -29,8 +29,8 @@ type reqBodyGetFixtures struct {
 }
 
 type respBodyGetFixtures struct {
-	Event string                             `json:"event"`
-	Data  []*fixture_aggregate.ProcessResult `json:"data"`
+	Event string                           `json:"event"`
+	Data  *fixture_aggregate.ProcessResult `json:"values"`
 }
 
 func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body string) events.APIGatewayProxyResponse {
@@ -44,7 +44,7 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 
 	log.Info("ReqBs", zap.Reflect("reqBs", reqB))
 
-	var pRess []*fixture_aggregate.ProcessResult
+	var pReqs []*fixture_aggregate.ProcessRequest
 
 	for _, reqC := range reqB.Configs {
 		ranges := defineQryRanges(&reqC)
@@ -58,14 +58,14 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 
 		pReq := buildProcessRequest(vs, &reqC)
 
-		pRes := fixture_aggregate.Processor(pReq)
-
-		pRess = append(pRess, pRes)
+		pReqs = append(pReqs, pReq)
 	}
+
+	pRes := fixture_aggregate.Processor(pReqs)
 
 	resB := respBodyGetFixtures{
 		Event: "FIXTURES_RETRIEVED",
-		Data:  pRess,
+		Data:  pRes,
 	}
 
 	b, _ := json.Marshal(resB)
