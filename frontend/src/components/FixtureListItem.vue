@@ -14,7 +14,7 @@ defineProps({
   canEdit: Boolean,
   referees: { type: Array as PropType<string[]>, required: true },
   fixture: { type: Object as PropType<Fixture>, required: true },
-  sheetId: { type: Object as PropType<string>, required: true }
+  sheetId: { type: String as PropType<string>, required: true }
 })
 
 const updates = inject('updates') as Ref<Map<string, SheetUpdate>>
