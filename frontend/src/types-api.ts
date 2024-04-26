@@ -44,6 +44,5 @@ export interface PoolStanding {
 export interface FixturesRetrieved {
     sheetId: string
     schedulesByDate: ScheduleByDate[]
-    fixtureFilters: FixtureFilters
     poolStandings: PoolStanding[]
 }
