@@ -36,43 +36,6 @@ export type Aggregated = (
   dateFixtureCount: Map<string, number>,
 ) => void
 
-interface AggregateRawDataReturns {
-  fixtures: Map<string, Map<string, Fixture[]>>,
-  dates: Set<string>
-  times: Set<string>
-  pitches: Set<string>
-  stages: Set<string>
-  teams: Set<string>
-  refs: Set<string>
-  dateFixtureCount: Map<string, number>
-}
-
-const aggregateRawData = (aggregate: Aggregated): AggregateRawDataReturns => {
-  const dates = new Set<string>()
-  const times = new Set<string>()
-  const pitches = new Set<string>()
-  const stages = new Set<string>()
-  const teams = new Set<string>()
-  const refs = new Set<string>()
-  const fixtures: Map<string, Map<string, Fixture[]>> = new Map()
-  const dateFixtureCount: Map<string, number> = new Map()
-
-  aggregate(dates, times, pitches, fixtures, teams, stages, refs, dateFixtureCount)
-
-  return {
-    fixtures,
-    dates,
-    times,
-    pitches,
-    teams,
-    refs: new Set(Array.from(refs.values()).filter(
-      (ref: string|null|undefined): boolean => ![null, '', undefined].includes(ref)
-    )),
-    stages,
-    dateFixtureCount
-  }
-}
-
 const filterFixtures = (fixtures: Fixture[], filters: Filters): Fixture[] => {
   const globalSearch = (term: string[], fixture: Fixture): boolean => {
     const t = term[0].toLowerCase()
@@ -107,7 +70,6 @@ const filterFixtures = (fixtures: Fixture[], filters: Filters): Fixture[] => {
 }
 
 export {
-  aggregateRawData,
   filterFixtures,
   isDateValue,
   isPitchValue,

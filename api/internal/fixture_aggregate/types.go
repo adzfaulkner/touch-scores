@@ -47,11 +47,15 @@ type FixtureFilters struct {
 	Stages   []string `json:"stages"`
 }
 
-type ProcessResult struct {
+type Schedule struct {
 	SheetId         string            `json:"sheetId"`
 	SchedulesByDate []*ScheduleByDate `json:"schedulesByDate"`
-	FixturesFilters *FixtureFilters   `json:"fixtureFilters"`
 	PoolStandings   []*PoolStandings  `json:"poolStandings"`
+}
+
+type ProcessResult struct {
+	Schedules       []*Schedule     `json:"schedules"`
+	FixturesFilters *FixtureFilters `json:"fixtureFilters"`
 }
 
 type ProcessAggregation func(schedule, refAllocs [][]string, scheduleRange string) []*FixturesByTime

@@ -22,21 +22,21 @@ const initWs = () => {
             requestFixtures()
         },
         (e: MessageEvent) => {
-            const { event, data } = JSON.parse(e.data)
+            const { event, data: { data: { schedules, fixtureFilters } }  } = JSON.parse(e.data)
 
             switch (event) {
                 case 'UPDATE_RECEIVED':
-                    if (!authenticationStore.isAuthenticated && !filtersStore.isFilteringInProgress && sheetConfigMap.has(data.spreadsheetId)) {
+                    if (!authenticationStore.isAuthenticated && !filtersStore.isFilteringInProgress && sheetConfigMap.has(schedules[0].spreadsheetId)) {
                         ws().send(JSON.stringify({
                             action: 'GET_FIXTURES',
-                            configs: [sheetConfigMap.get(data.spreadsheetId)],
+                            configs: [sheetConfigMap.get(schedules[0].spreadsheetId)],
                         }))
                     }
                     break;
                 case 'FIXTURES_RETRIEVED':
-                    fixtureStore.intFixtures(data)
-                    filtersStore.setValues(data)
-                    standingsStore.setValues(data)
+                    fixtureStore.intFixtures(schedules)
+                    filtersStore.setValues(fixtureFilters)
+                    standingsStore.setValues(schedules)
                     break
             }
         }
@@ -69,7 +69,7 @@ const initPolling = () => {
     const standingsStore = useStandingsStore()
 
     const requestFixtures = async () => {
-        const resp = await axios.get(getEnv('VITE_API_URL') + '/get', {
+        const { data: { data: { schedules, fixtureFilters } } } = await axios.get(getEnv('VITE_API_URL') + '/get', {
             params: {
                 q: btoa(JSON.stringify({
                     action: 'GET_FIXTURES',
@@ -78,9 +78,9 @@ const initPolling = () => {
             }
         })
 
-        fixtureStore.intFixtures(resp.data.data)
-        filtersStore.setValues(resp.data.data)
-        standingsStore.setValues(resp.data.data)
+        fixtureStore.intFixtures(schedules)
+        filtersStore.setValues(fixtureFilters)
+        standingsStore.setValues(schedules)
     }
 
     requestFixtures()
