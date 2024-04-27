@@ -2,51 +2,50 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
-    sheetId: '1-tWu4JtkZLRxkR6I8bpAKAjc4tREqSV3nfGfxzQlE28',
-    schedule: [{
-      date: '2024-04-13T00:00:00+00:00',
-      ranges: {
-        fixtures: 'Schedule!A16:U52',
-        slotInfo: 'Schedule!B15:AE15',
-        playOffSlotInfo: null,
-        refAllocations: 'Ref Allocations!A2:Q38',
-      }
-    }],
-    standingRanges: [
-      'Pool A!B12:W20',
-      'Pool B!B12:W20',
-      'Pool C!B16:AE28',
-      'Pool D!B12:W20',
-      'Pool E!B12:W20',
-      'Pool F!B12:W20',
-      'Pool G!B12:W20',
+    sheetId: '1qRWyJx0R50PDtM6opQCd5mflergsXhzxo4aTotGeepM',
+    schedule: [
+      {
+        date: '2024-05-04T00:00:00+00:00',
+        ranges: {
+          fixtures: 'Schedule!A17:X57',
+          slotInfo: 'Schedule!B16:Y16',
+          playOffSlotInfo: null,
+          refAllocations: null,
+        },
+      },
+      {
+        date: '2024-05-05T00:00:00+00:00',
+        ranges: {
+          fixtures: 'Schedule!A62:X101',
+          slotInfo: 'Schedule!B58:Y58',
+          playOffSlotInfo: null,
+          refAllocations: null,
+        },
+      },
+      {
+        date: '2024-05-06T00:00:00+00:00',
+        ranges: {
+          fixtures: 'Schedule!A106:X141',
+          slotInfo: 'Schedule!B102:Y102',
+          playOffSlotInfo: null,
+          refAllocations: null,
+        },
+      },
     ],
-    competition: 'mw_nts_12',
-    label: 'MW NTS 24 Div 1&2 R1',
-  },
-  {
-    sheetId: '1u61dHirCp0cLAhFhswJ5Sghh_97ii8rrhzFz_c8YYfc',
-    schedule: [{
-      date: '2024-04-14T00:00:00+00:00',
-      ranges: {
-        fixtures: 'Schedule!A14:R74',
-        refAllocations: 'Ref Allocations!A2:Q62',
-        slotInfo: 'Schedule!B13:AE13',
-        playOffSlotInfo: null,
-      }
-    }],
     standingRanges: [
-      'Pool A!B14:AA24',
-      'Pool B!B14:AA24',
-      'Pool C!B14:AA24',
-      'Pool D!B14:AA24',
-      'Pool E!B12:W20',
-      'Pool F!B12:W20',
-      'M Shield Pool 1!B10:S16',
-      'M Shield Pool 2!B10:S16',
+      'Mens Open!B16:AE28',
+      'Womens Open!B16:AE28',
+      'Mixed Open!B18:AI32',
+      'Womens Open!B12:W20',
+      'Mens 30s!B16:AE28',
+      'Womens 35s!B8:AE12',
+      'Womens 40s!B12:W20',
+      'Mens 40s!B10:AE16',
+      'Mens 45s!B10:AE16',
+      'Mens 50s!B10:AE16',
     ],
-    competition: 'mw_nts_34',
-    label: 'MW NTS 24 Div 3&4 R1',
+    competition: 'nationals',
+    label: 'Nationals',
   },
 ]
 
