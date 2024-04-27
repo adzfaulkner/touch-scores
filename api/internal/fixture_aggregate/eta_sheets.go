@@ -91,15 +91,19 @@ func generateBaseMaps(schedule, refAllocs [][]string) (map[int]string, map[strin
 	tapOffTimeMap := map[int]string{}
 	refTimeMap := map[string]int{}
 
-	for i := 0; i < len(schedule[0]); i++ {
-		if isPitchValue(schedule[0][i]) {
-			schedulePitchMap[i] = strings.TrimSpace(schedule[0][i])
+	if len(schedule) >= 1 {
+		for i := 0; i < len(schedule[0]); i++ {
+			if isPitchValue(schedule[0][i]) {
+				schedulePitchMap[i] = strings.TrimSpace(schedule[0][i])
+			}
 		}
 	}
 
-	for i := 0; i < len(refAllocs[0]); i++ {
-		if isPitchValue(refAllocs[0][i]) {
-			refPitchMap[strings.TrimSpace(refAllocs[0][i])] = i
+	if len(refAllocs) >= 1 {
+		for i := 0; i < len(refAllocs[0]); i++ {
+			if isPitchValue(refAllocs[0][i]) {
+				refPitchMap[strings.TrimSpace(refAllocs[0][i])] = i
+			}
 		}
 	}
 
