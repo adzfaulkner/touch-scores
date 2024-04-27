@@ -16,6 +16,7 @@ type reqBodyConfig struct {
 		Date   string `json:"date"`
 		Ranges struct {
 			Fixtures        string `json:"fixtures"`
+			FixturePitches  string `json:"fixturePitches"`
 			SlotInfo        string `json:"slotInfo"`
 			PlayOffSlotInfo string `json:"playOffSlotInfo"`
 			RefAllocations  string `json:"refAllocations"`
@@ -62,7 +63,7 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 	}
 
 	log.Info("pReqs", zap.Reflect("pReqs", pReqs))
-	
+
 	pRes := fixture_aggregate.Processor(pReqs)
 
 	resB := respBodyGetFixtures{
@@ -86,6 +87,7 @@ func defineQryRanges(c *reqBodyConfig) []string {
 
 	for _, sched := range c.Schedule {
 		add(sched.Ranges.Fixtures)
+		add(sched.Ranges.FixturePitches)
 		add(sched.Ranges.SlotInfo)
 
 		if sched.Ranges.RefAllocations != "" {
@@ -121,6 +123,10 @@ func buildProcessRequest(gVals *gsheets.Values, c *reqBodyConfig) *fixture_aggre
 			Fixtures: &fixture_aggregate.ProcessRangeValues{
 				Range:  s.Ranges.Fixtures,
 				Values: gVals.Values[s.Ranges.Fixtures],
+			},
+			FixturePitches: &fixture_aggregate.ProcessRangeValues{
+				Range:  s.Ranges.FixturePitches,
+				Values: gVals.Values[s.Ranges.FixturePitches],
 			},
 			RefAllocations: &fixture_aggregate.ProcessRangeValues{
 				Range:  s.Ranges.RefAllocations,

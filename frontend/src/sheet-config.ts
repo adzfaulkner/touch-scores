@@ -8,6 +8,7 @@ const sheetConfigs: SheetConfig[] = [
         date: '2024-05-04T00:00:00+00:00',
         ranges: {
           fixtures: 'Schedule!A17:X57',
+          fixturePitches: 'Schedule!A17:X17',
           slotInfo: 'Schedule!B16:Y16',
           playOffSlotInfo: null,
           refAllocations: null,
@@ -17,6 +18,7 @@ const sheetConfigs: SheetConfig[] = [
         date: '2024-05-05T00:00:00+00:00',
         ranges: {
           fixtures: 'Schedule!A62:X101',
+          fixturePitches: 'Schedule!A17:X17',
           slotInfo: 'Schedule!B58:Y58',
           playOffSlotInfo: null,
           refAllocations: null,
@@ -26,6 +28,7 @@ const sheetConfigs: SheetConfig[] = [
         date: '2024-05-06T00:00:00+00:00',
         ranges: {
           fixtures: 'Schedule!A106:X141',
+          fixturePitches: 'Schedule!A17:X17',
           slotInfo: 'Schedule!B102:Y102',
           playOffSlotInfo: null,
           refAllocations: null,

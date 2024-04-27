@@ -18,7 +18,8 @@ func Processor(pReqs []*ProcessRequest) *ProcessResult {
 	for _, p := range pReqs {
 		var sbds []*ScheduleByDate
 		for _, s := range p.Schedules {
-			fbt := aggFixturesByTime(s.Ranges.Fixtures.Values, s.Ranges.RefAllocations.Values, s.Ranges.Fixtures.Range)
+			schedulePitchMap := produceSchedulePitchMap(s.Ranges.FixturePitches.Values)
+			fbt := aggFixturesByTime(s.Ranges.Fixtures.Values, s.Ranges.RefAllocations.Values, s.Ranges.Fixtures.Range, schedulePitchMap)
 
 			sbd := ScheduleByDate{
 				Date:            s.Date,

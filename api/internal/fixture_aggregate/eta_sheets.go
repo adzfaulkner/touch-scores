@@ -2,14 +2,14 @@ package fixture_aggregate
 
 import (
 	"fmt"
-	"strings"
-
 	"golang.org/x/exp/maps"
 )
 
-func processEtaSheet(teams, referees, pitches, stages map[string]bool, times map[string]bool) ProcessAggregation {
-	return func(schedule, refAllocs [][]string, scheduleRange string) []*FixturesByTime {
-		schedulePitchMap, refPitchMap, tapOffTimeMap, refTimeMap := generateBaseMaps(schedule, refAllocs)
+func processEtaSheet(teams, referees, pitches, stages, times map[string]bool) ProcessAggregation {
+	return func(schedule, refAllocs [][]string, scheduleRange string, schedulePitchMap map[int]string) []*FixturesByTime {
+		tapOffTimeMap := produceTapOffTimeMap(schedule)
+		refPitchMap := produceRefPitchMap(refAllocs)
+		refTimeMap := produceRefTimeMap(refAllocs)
 
 		var stage string
 		timeFixsMap := map[string]map[string]*Fixture{}
@@ -83,41 +83,4 @@ func processEtaSheet(teams, referees, pitches, stages map[string]bool, times map
 
 		return fixsByTime
 	}
-}
-
-func generateBaseMaps(schedule, refAllocs [][]string) (map[int]string, map[string]int, map[int]string, map[string]int) {
-	schedulePitchMap := map[int]string{}
-	refPitchMap := map[string]int{}
-	tapOffTimeMap := map[int]string{}
-	refTimeMap := map[string]int{}
-
-	if len(schedule) >= 1 {
-		for i := 0; i < len(schedule[0]); i++ {
-			if isPitchValue(schedule[0][i]) {
-				schedulePitchMap[i] = strings.TrimSpace(schedule[0][i])
-			}
-		}
-	}
-
-	if len(refAllocs) >= 1 {
-		for i := 0; i < len(refAllocs[0]); i++ {
-			if isPitchValue(refAllocs[0][i]) {
-				refPitchMap[strings.TrimSpace(refAllocs[0][i])] = i
-			}
-		}
-	}
-
-	for i := 0; i < len(schedule); i++ {
-		if len(schedule[i]) > 0 && isTimeValue(schedule[i][0]) {
-			tapOffTimeMap[i] = strings.TrimSpace(schedule[i][0])
-		}
-	}
-
-	for i := 0; i < len(refAllocs); i++ {
-		if len(refAllocs[i]) > 0 && isTimeValue(refAllocs[i][0]) {
-			refTimeMap[strings.TrimSpace(refAllocs[i][0])] = i
-		}
-	}
-
-	return schedulePitchMap, refPitchMap, tapOffTimeMap, refTimeMap
 }

@@ -96,3 +96,55 @@ func addValToFiler(m map[string]bool, v string) {
 		m[v] = true
 	}
 }
+
+func produceSchedulePitchMap(schedule [][]string) map[int]string {
+	schedulePitchMap := map[int]string{}
+
+	if len(schedule) >= 1 {
+		for i := 0; i < len(schedule[0]); i++ {
+			if isPitchValue(schedule[0][i]) {
+				schedulePitchMap[i] = strings.TrimSpace(schedule[0][i])
+			}
+		}
+	}
+
+	return schedulePitchMap
+}
+
+func produceRefPitchMap(refAllocs [][]string) map[string]int {
+	refPitchMap := map[string]int{}
+
+	if len(refAllocs) >= 1 {
+		for i := 0; i < len(refAllocs[0]); i++ {
+			if isPitchValue(refAllocs[0][i]) {
+				refPitchMap[strings.TrimSpace(refAllocs[0][i])] = i
+			}
+		}
+	}
+
+	return refPitchMap
+}
+
+func produceTapOffTimeMap(schedule [][]string) map[int]string {
+	tapOffTimeMap := map[int]string{}
+
+	for i := 0; i < len(schedule); i++ {
+		if len(schedule[i]) > 0 && isTimeValue(schedule[i][0]) {
+			tapOffTimeMap[i] = strings.TrimSpace(schedule[i][0])
+		}
+	}
+
+	return tapOffTimeMap
+}
+
+func produceRefTimeMap(refAllocs [][]string) map[string]int {
+	refTimeMap := map[string]int{}
+
+	for i := 0; i < len(refAllocs); i++ {
+		if len(refAllocs[i]) > 0 && isTimeValue(refAllocs[i][0]) {
+			refTimeMap[strings.TrimSpace(refAllocs[i][0])] = i
+		}
+	}
+
+	return refTimeMap
+}
