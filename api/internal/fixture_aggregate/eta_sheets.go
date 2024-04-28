@@ -61,7 +61,7 @@ func processEtaSheet(teams, referees, pitches, stages, times map[string]bool) Pr
 
 		var fixsByTime []*FixturesByTime
 
-		for _, time := range sortStringSlice(maps.Keys(ttimes)) {
+		for _, time := range sortTimes(maps.Keys(ttimes)) {
 			var fixs []*Fixture
 			times[time] = true
 

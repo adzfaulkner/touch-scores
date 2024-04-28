@@ -86,6 +86,19 @@ func extractSheetAndReadFromFromRange(subject string) (string, int) {
 	return segs[2], i
 }
 
+func sortTimes(vals []string) []string {
+	sort.Slice(vals, func(i, j int) bool {
+		l := strings.Replace(vals[i], ":", "", 1)
+		r := strings.Replace(vals[j], ":", "", 1)
+		ll, _ := strconv.Atoi(l)
+		rr, _ := strconv.Atoi(r)
+
+		return ll < rr
+	})
+
+	return vals
+}
+
 func sortStringSlice(vals []string) []string {
 	sort.Sort(sort.StringSlice(vals))
 	return vals
