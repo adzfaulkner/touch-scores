@@ -51,11 +51,6 @@ const filterHeaderVal = (val: string): string => {
 const filterLineVal = (val: string): string => {
   return val.replace(/^(\d+)([st|nd|rd|th]+\s.*)/gm, '$1')
 }
-
-const dd = (val: any) => {
-  console.log(val)
-  return val
-}
 </script>
 
 <template>
@@ -81,8 +76,8 @@ const dd = (val: any) => {
     <div class="row">
       <div class="col">
         <div v-for="{sheetId, standings} in standingsStore.standings" :key="sheetId">
-          <div v-if="dd(sheetId) === dd(showStanding)">
-            <div class="standings-container" v-for="poolStanding in dd(standings)" :key="poolStanding.pool">
+          <div v-if="sheetId === showStanding">
+            <div class="standings-container" v-for="poolStanding in standings" :key="poolStanding.pool">
               <h5>{{ poolStanding.pool }}</h5>
               <table class="table mt-3">
                 <tr>

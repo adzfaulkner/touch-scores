@@ -39,7 +39,7 @@ const sheetConfigs: SheetConfig[] = [
       'Mens Open!B16:AE28',
       'Womens Open!B16:AE28',
       'Mixed Open!B18:AI32',
-      'Womens Open!B12:W20',
+      'Womens 27s!B12:W20',
       'Mens 30s!B16:AE28',
       'Womens 35s!B8:AE12',
       'Womens 40s!B12:W20',
