@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Fixture } from '@/types'
-import type { PropType, Ref } from 'vue'
+import type { PropType, Ref, StyleValue } from 'vue'
 
 import { inject } from 'vue'
 
@@ -54,7 +54,7 @@ const compStyleMap = new Map([
   ['MENS 30s', { backgroundColor:'#b4a7d7' }],
 ])
 
-const compStyle = (fixture: Fixture): object => {
+const compStyle = (fixture: Fixture): StyleValue => {
   const m = fixture.stage.match(/^[A-Z0-9]+\s[A-Z0-9]+/gi)
 
   if (m && m.length > 0) {
