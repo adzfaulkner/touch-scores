@@ -46,8 +46,8 @@ const accordionButtonClasses = (date: string, comp: string, totalCount: number):
   return classes
 }
 
-const accordionBgClasses = (): string[] => {
-  return ['accordion-body', 'accordion-bg']
+const accordionBgClasses = (comp: string): string[] => {
+  return ['accordion-bg', 'bg-body-tertiary', 'accordion-bg-' + comp]
 }
 
 const fixtureUpdated = () => {
@@ -67,76 +67,73 @@ const infoSplit = (info: string): string[] => {
 </script>
 
 <template>
-  <div class="mb-3">
-    <h6 class="mt-4" v-if="fixtureStore.totalFixturesFound === 0">No fixtures found</h6>
-    <div class="accordion" v-else>
-      <div
-        class="accordion-item"
-        v-for="fixturesBySheetDate of fixtureStore.fixturesBySheetDates"
-        :key="fixturesBySheetDate.date.toFormat('d MMMM y')"
-      >
-        <h2 class="accordion-header">
-          <button
-            :class="
-              accordionButtonClasses(
-                fixturesBySheetDate.date.toFormat('d MMMM y'),
-                fixturesBySheetDate.comp,
-                fixturesBySheetDate.totalCount
-              )
-            "
-            type="button"
-            @click="() => toggleAccordion(fixturesBySheetDate.date.toFormat('d MMMM y'))"
-          >
-            <div :class="['img', `img-${fixturesBySheetDate.comp}`, 'me-2']"></div>
-            {{ fixturesBySheetDate.date.toFormat('EEEE d MMMM y') }} ({{ fixturesBySheetDate.totalCount }})
-          </button>
-        </h2>
-        <div v-if="openAccordion === fixturesBySheetDate.date.toFormat('d MMMM y')">
-          <div :class="accordionBgClasses()">
-            <h6 v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
-            <div v-else>
-              <div class="mb-4">
-                <div class="row g-2 ps-3 pe-3 pt-4 pb-4 bg-secondary text-white">
-                  <div class="col m-0 text-center">
-                    <h5 class="m-0">
-                      <span v-for="(i, k) in infoSplit(fixturesBySheetDate.slotInfo)" v-bind:key="k">{{i}}<br></span>
-                    </h5>
+  <div class="row">
+    <div class="col p-0">
+      <h6 class="mt-4" v-if="fixtureStore.totalFixturesFound === 0">No fixtures found</h6>
+      <div class="accordion" v-else>
+        <div
+            class="accordion-item"
+            v-for="fixturesBySheetDate of fixtureStore.fixturesBySheetDates"
+            :key="fixturesBySheetDate.date.toFormat('d MMMM y')"
+        >
+          <h2 class="accordion-header">
+            <button
+                :class="
+                  accordionButtonClasses(
+                    fixturesBySheetDate.date.toFormat('d MMMM y'),
+                    fixturesBySheetDate.comp,
+                    fixturesBySheetDate.totalCount
+                  )
+                "
+                type="button"
+                @click="() => toggleAccordion(fixturesBySheetDate.date.toFormat('d MMMM y'))"
+            >
+              <div :class="['img', `img-${fixturesBySheetDate.comp}`, 'me-2']"></div>
+              {{ fixturesBySheetDate.date.toFormat('EEEE d MMMM y') }} ({{ fixturesBySheetDate.totalCount }})
+            </button>
+          </h2>
+          <div v-if="openAccordion === fixturesBySheetDate.date.toFormat('d MMMM y')">
+            <div :class="['accordion-body', ...accordionBgClasses(fixturesBySheetDate.comp)]">
+              <h6 class="m-0" v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
+              <div class="container p-0 m-0" v-else>
+                  <div class="row bg-slotinfo text-white">
+                    <div class="col m-4 text-center">
+                      <h5 class="m-0">
+                        <span v-for="(i, k) in infoSplit(fixturesBySheetDate.slotInfo)" v-bind:key="k">{{i}}<br></span>
+                      </h5>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div class="mb-4" v-if="fixturesBySheetDate.playOffSlotInfo !== ''">
-                <div class="row g-2 ps-3 pe-3 pt-4 pb-4 bg-playoff text-white">
-                  <div class="col m-0 text-center">
-                    <h5 class="m-0">
-                      <span v-for="(i, k) in infoSplit(fixturesBySheetDate.playOffSlotInfo)" v-bind:key="k">{{i}}<br></span>
-                    </h5>
+                  <div class="row bg-playoff text-white" v-if="fixturesBySheetDate.playOffSlotInfo !== ''">
+                    <div class="col m-4 text-center">
+                      <h5 class="m-0">
+                        <span v-for="(i, k) in infoSplit(fixturesBySheetDate.playOffSlotInfo)" v-bind:key="k">{{i}}<br></span>
+                      </h5>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div
-                class="mb-4"
-                v-for="fixturesByTime of fixturesBySheetDate.fixturesByTime"
-                :key="fixturesByTime.time"
-              >
-                <div class="row g-2 mb-2 bg-danger-subtle">
-                  <div class="col text-center">
-                    <h3>{{ fixturesByTime.time }}</h3>
-                  </div>
-                </div>
-                <div class="row row-cols-1 row-cols-lg-2 g-2">
                   <div
-                    class="col"
-                    v-for="fixture of fixturesByTime.fixtures"
-                    :key="fixturesBySheetDate.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
+                      v-for="fixturesByTime of fixturesBySheetDate.fixturesByTime"
+                      :key="fixturesByTime.time"
                   >
-                    <FixtureListItem
-                      :fixture="fixture"
-                      :can-edit="authenticatedStore.isAuthenticated"
-                      :referees="filterStore.values.referees"
-                      :sheet-id="fixturesBySheetDate.sheetId"
-                      @fixtureUpdated="fixtureUpdated"
-                    />
-                  </div>
+                    <div class="row mt-2 bg-danger-subtle">
+                      <div class="col text-center">
+                        <h3 class="p-0 m-3">{{ fixturesByTime.time }}</h3>
+                      </div>
+                    </div>
+                    <div class="row mt-0 row-cols-1 row-cols-lg-2">
+                      <div
+                          class="col p-0 p-sm-1"
+                          v-for="fixture of fixturesByTime.fixtures"
+                          :key="fixturesBySheetDate.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
+                      >
+                        <FixtureListItem
+                            :fixture="fixture"
+                            :can-edit="authenticatedStore.isAuthenticated"
+                            :referees="filterStore.values.referees"
+                            :sheet-id="fixturesBySheetDate.sheetId"
+                            @fixtureUpdated="fixtureUpdated"
+                        />
+                      </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -227,12 +224,19 @@ const infoSplit = (info: string): string[] => {
   background-color: #ff5189;
 }
 
-.accordion-bg {
-  background-color: #3373ca;
+.accordion-button-bg-nationals {
+  background-color: #00b3f6;
 }
-ff5189
 
 .accordion-button:after {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000000'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+
+.bg-slotinfo {
+  background-color: #ff0000;
+}
+
+.accordion-bg-nationals {
+  //background-color: #ff0000;
 }
 </style>

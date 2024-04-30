@@ -7,30 +7,8 @@
           "date": "2024-04-13T00:00:00+00:00",
           "ranges": {
             "fixtures": {
-              "range": "Schedule!A16:U52",
+              "range": "Schedule!A17:U52",
               "values": [
-                [
-                  "TIME",
-                  "PITCH 1",
-                  "",
-                  "",
-                  "PITCH 2",
-                  "",
-                  "",
-                  "PITCH 3",
-                  "",
-                  "",
-                  "PITCH 4",
-                  "",
-                  "",
-                  "PITCH 5",
-                  "",
-                  "",
-                  "PITCH 6",
-                  "",
-                  "",
-                  "PITCH 7"
-                ],
                 [
                   "10:00",
                   "POOL E",
@@ -497,6 +475,33 @@
                   "",
                   "(W) Old Wesley",
                   "10"
+                ]
+              ]
+            },
+            "fixturePitches": {
+              "range": "Schedule!A16:U16",
+              "values": [
+                [
+                  "TIME",
+                  "PITCH 1",
+                  "",
+                  "",
+                  "PITCH 2",
+                  "",
+                  "",
+                  "PITCH 3",
+                  "",
+                  "",
+                  "PITCH 4",
+                  "",
+                  "",
+                  "PITCH 5",
+                  "",
+                  "",
+                  "PITCH 6",
+                  "",
+                  "",
+                  "PITCH 7"
                 ]
               ]
             },
@@ -2965,6 +2970,33 @@
                   "",
                   "(M) Nailsea \u0026 Bristol",
                   "0"
+                ]
+              ]
+            },
+            "fixturePitches": {
+              "range": "Schedule!A13:R13",
+              "values": [
+                [
+                  "TIME",
+                  "PITCH 1",
+                  "",
+                  "",
+                  "PITCH 2",
+                  "",
+                  "",
+                  "PITCH 3",
+                  "",
+                  "",
+                  "PITCH 4",
+                  "",
+                  "",
+                  "PITCH 5",
+                  "",
+                  "",
+                  "PITCH 6",
+                  "",
+                  "",
+                  "PITCH 7"
                 ]
               ]
             },

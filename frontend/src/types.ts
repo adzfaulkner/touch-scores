@@ -9,6 +9,7 @@ export interface SheetConfig {
     date: string,
     ranges: {
       fixtures: string,
+      fixturePitches: string
       refAllocations: null | string
       slotInfo: string
       playOffSlotInfo: null | string

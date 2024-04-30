@@ -86,6 +86,19 @@ func extractSheetAndReadFromFromRange(subject string) (string, int) {
 	return segs[2], i
 }
 
+func sortTimes(vals []string) []string {
+	sort.Slice(vals, func(i, j int) bool {
+		l := strings.Replace(vals[i], ":", "", 1)
+		r := strings.Replace(vals[j], ":", "", 1)
+		ll, _ := strconv.Atoi(l)
+		rr, _ := strconv.Atoi(r)
+
+		return ll < rr
+	})
+
+	return vals
+}
+
 func sortStringSlice(vals []string) []string {
 	sort.Sort(sort.StringSlice(vals))
 	return vals
@@ -95,4 +108,56 @@ func addValToFiler(m map[string]bool, v string) {
 	if v != "" {
 		m[v] = true
 	}
+}
+
+func produceSchedulePitchMap(schedule [][]string) map[int]string {
+	schedulePitchMap := map[int]string{}
+
+	if len(schedule) >= 1 {
+		for i := 0; i < len(schedule[0]); i++ {
+			if isPitchValue(schedule[0][i]) {
+				schedulePitchMap[i] = strings.TrimSpace(schedule[0][i])
+			}
+		}
+	}
+
+	return schedulePitchMap
+}
+
+func produceRefPitchMap(refAllocs [][]string) map[string]int {
+	refPitchMap := map[string]int{}
+
+	if len(refAllocs) >= 1 {
+		for i := 0; i < len(refAllocs[0]); i++ {
+			if isPitchValue(refAllocs[0][i]) {
+				refPitchMap[strings.TrimSpace(refAllocs[0][i])] = i
+			}
+		}
+	}
+
+	return refPitchMap
+}
+
+func produceTapOffTimeMap(schedule [][]string) map[int]string {
+	tapOffTimeMap := map[int]string{}
+
+	for i := 0; i < len(schedule); i++ {
+		if len(schedule[i]) > 0 && isTimeValue(schedule[i][0]) {
+			tapOffTimeMap[i] = strings.TrimSpace(schedule[i][0])
+		}
+	}
+
+	return tapOffTimeMap
+}
+
+func produceRefTimeMap(refAllocs [][]string) map[string]int {
+	refTimeMap := map[string]int{}
+
+	for i := 0; i < len(refAllocs); i++ {
+		if len(refAllocs[i]) > 0 && isTimeValue(refAllocs[i][0]) {
+			refTimeMap[strings.TrimSpace(refAllocs[i][0])] = i
+		}
+	}
+
+	return refTimeMap
 }
