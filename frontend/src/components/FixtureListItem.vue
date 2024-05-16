@@ -123,14 +123,14 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
           </div>
         </div>
       </div>
-      <div class="text-center mt-1" v-if="canEdit || fixture.ref1 !== '' || fixture.ref2 !== '' || fixture.ref3 !== ''">
+      <div class="text-center" v-if="canEdit || fixture.ref1 !== '' || fixture.ref2 !== '' || fixture.ref3 !== ''">
         <div class="row">
           <div class="col">
             <span class="fw-bold">Referees</span>
           </div>
         </div>
         <div class="row">
-          <div class="col col-12 col-sm-6 pt-1">
+          <div class="col col-12 col-sm-6">
             <select
               class="form-select"
               :value="fixture.ref1"
@@ -141,7 +141,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
             </select>
             <span class="text-danger fst-italic fw-bold fs-6" v-else>{{ fixture.ref1 }}</span>
           </div>
-          <div class="col col-12 col-sm-6 pt-1">
+          <div class="col col-12 col-sm-6">
             <select
               class="form-select"
               :value="fixture.ref2"
@@ -152,7 +152,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
             </select>
             <span class="text-danger fst-italic fw-bold" v-else>{{ fixture.ref2 }}</span>
           </div>
-          <div class="col col-12 col-sm-6 pt-1">
+          <div class="col col-12 col-sm-6">
             <select
                 class="form-select"
                 :value="fixture.ref3"
