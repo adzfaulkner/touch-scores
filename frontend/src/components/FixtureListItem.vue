@@ -41,29 +41,6 @@ const timePitchStyle = (fixture: Fixture): object => {
   }
 }
 
-const compStyleMap = new Map([
-  ['WOMENS 40s', { backgroundColor:'#b6d7a8' }],
-  ['MENS 45s', { backgroundColor:'#c27ba0' }],
-  ['MENS 50s', { backgroundColor:'#c27ba0' }],
-  ['WOMENS 35s', { backgroundColor:'#6aa84f' }],
-  ['MENS 40s', { backgroundColor:'#d5a6bd' }],
-  ['MIXED OPEN', { backgroundColor:'#06b0f0' }],
-  ['MENS OPEN', { backgroundColor:'#ff6161' }],
-  ['WOMENS OPEN', { backgroundColor:'#c0ae7a' }],
-  ['WOMENS 27s', { backgroundColor:'#f9cb9c' }],
-  ['MENS 30s', { backgroundColor:'#b4a7d7' }],
-])
-
-const compStyle = (fixture: Fixture): StyleValue => {
-  const m = fixture.stage.match(/^[A-Z0-9]+\s[A-Z0-9]+/gi)
-
-  if (m && m.length > 0) {
-    return compStyleMap.get(m[0]) ?? {}
-  }
-
-  return m && m.length > 0 ? compStyleMap.get(m[0]) ?? {} : {}
-}
-
 const scoreClasses = (stage: string, defaults: string[]): string[] => {
   const ret = [...defaults, 'pt-2', 'pb-2', 'text-center', 'fw-bold']
 
@@ -109,7 +86,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
   <div class="card rounded-0 mt-2">
     <div :class="['card-header', 'text-center']">{{ fixture.time }} - {{ fixture.pitch }}</div>
     <div class="card-body p-0">
-      <h6 :class="['card-title', 'text-center', 'm-0', 'p-1', 'fw-bold']" :style="compStyle(fixture)">{{ fixture.stage }}</h6>
+      <h6 :class="['card-title', 'text-center', 'm-2', 'p-1', 'fw-bold']">{{ fixture.stage }}</h6>
       <div class="ps-2 fs-5">
         <div class="d-flex">
           <div class="d-flex align-items-center flex-grow-1 me-2">
@@ -164,7 +141,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
             </select>
             <span class="text-danger fst-italic fw-bold fs-6" v-else>{{ fixture.ref1 }}</span>
           </div>
-          <div class="col col-12 col-sm-6 pt-2">
+          <div class="col col-12 col-sm-6 pt-1">
             <select
               class="form-select"
               :value="fixture.ref2"
@@ -175,7 +152,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
             </select>
             <span class="text-danger fst-italic fw-bold" v-else>{{ fixture.ref2 }}</span>
           </div>
-          <div class="col col-12 col-sm-6 pt-2">
+          <div class="col col-12 col-sm-6 pt-1">
             <select
                 class="form-select"
                 :value="fixture.ref3"
@@ -240,7 +217,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
 }
 
 .bg-default {
-  //background-color: #cce3f6;
+  /*background-color: #cce3f6;*/
   background-color: #a5a5a5;
 }
 </style>

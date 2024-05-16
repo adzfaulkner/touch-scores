@@ -2,53 +2,55 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
-    sheetId: '1qRWyJx0R50PDtM6opQCd5mflergsXhzxo4aTotGeepM',
+    sheetId: '1-tWu4JtkZLRxkR6I8bpAKAjc4tREqSV3nfGfxzQlE28',
     schedule: [
       {
-        date: '2024-05-04T00:00:00+00:00',
+        date: '2024-05-18T00:00:00+00:00',
         ranges: {
-          fixtures: 'Schedule!A17:X57',
-          fixturePitches: 'Schedule!A17:X17',
-          slotInfo: 'Schedule!B16:Y16',
+          fixtures: 'Schedule!57:91',
+          fixturePitches: 'Schedule!16:16',
+          slotInfo: 'Schedule!B55:X56',
           playOffSlotInfo: null,
-          refAllocations: null,
-        },
-      },
-      {
-        date: '2024-05-05T00:00:00+00:00',
-        ranges: {
-          fixtures: 'Schedule!A62:X101',
-          fixturePitches: 'Schedule!A17:X17',
-          slotInfo: 'Schedule!B58:Y58',
-          playOffSlotInfo: null,
-          refAllocations: null,
-        },
-      },
-      {
-        date: '2024-05-06T00:00:00+00:00',
-        ranges: {
-          fixtures: 'Schedule!A106:X141',
-          fixturePitches: 'Schedule!A17:X17',
-          slotInfo: 'Schedule!B102:Y102',
-          playOffSlotInfo: null,
-          refAllocations: null,
+          refAllocations: 'Ref Allocations!2:38',
         },
       },
     ],
     standingRanges: [
-      'Mens Open!B16:AE28',
-      'Womens Open!B16:AE28',
-      'Mixed Open!B18:AI32',
-      'Womens 27s!B12:W20',
-      'Mens 30s!B16:AE28',
-      'Womens 35s!B8:AE12',
-      'Womens 40s!B12:W20',
-      'Mens 40s!B10:AE16',
-      'Mens 45s!B10:AE16',
-      'Mens 50s!B10:AE16',
+      'Pool A!B12:W20',
+      'Pool B!B12:W20',
+      'Pool C!B16:AE28',
+      'Pool D!B12:W20',
+      'Pool E!B12:W20',
+      'Pool F!B12:W20',
+      'Pool G!B12:W20',
     ],
-    competition: 'nationals',
-    label: 'Nationals',
+    competition: 'mw_nts_12',
+    label: 'MW NTS Div 1/2 R2',
+  },
+  {
+    sheetId: '1k6MKPQyFNrb51kLliNLTsKrB-2BJwOSJt296kdESLcE',
+    schedule: [
+      {
+        date: '2024-05-19T00:00:00+00:00',
+        ranges: {
+          fixtures: 'Schedule!15:73',
+          fixturePitches: 'Schedule!14:14',
+          slotInfo: 'Schedule!B13:AE13',
+          playOffSlotInfo: null,
+          refAllocations: 'Ref Allocations!2:62',
+        },
+      },
+    ],
+    standingRanges: [
+      'Pool A!B14:AA24',
+      'Pool B!B14:AA24',
+      'Pool C!B14:AA24',
+      'Pool D!B14:AA24',
+      'Pool E!B14:AA24',
+      'Pool F!B14:AA24',
+    ],
+    competition: 'mw_nts_34',
+    label: 'MW NTS Div 3 R2',
   },
 ]
 
