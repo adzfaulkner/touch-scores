@@ -217,7 +217,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
 }
 
 .bg-default {
-  //background-color: #cce3f6;
+  /*background-color: #cce3f6;*/
   background-color: #a5a5a5;
 }
 </style>

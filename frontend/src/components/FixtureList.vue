@@ -237,6 +237,6 @@ const infoSplit = (info: string): string[] => {
 }
 
 .accordion-bg-nationals {
-  //background-color: #ff0000;
+  /*background-color: #ff0000;*/
 }
 </style>
