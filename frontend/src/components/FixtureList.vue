@@ -9,7 +9,6 @@ import FixtureListItem from '@/components/FixtureListItem.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useFixtureStore } from '@/stores/fixture'
 import { useFilterStore } from '@/stores/filters'
-import {DateTime} from "luxon";
 
 const fixtureStore = useFixtureStore()
 const authenticatedStore = useAuthenticationStore()
