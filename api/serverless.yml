@@ -12,8 +12,9 @@ custom:
       rate: rate(2 minutes)
       enabled: true
   dev:
-    rate: rate(2 minutes)
-    enabled: false
+    schedule:
+      rate: rate(2 minutes)
+      enabled: false
 
 package:
   individually: true
