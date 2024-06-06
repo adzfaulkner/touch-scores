@@ -20,7 +20,13 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 	return func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
 		log.Info("request", zap.Reflect("r", r))
 
-		res := handleWebsocketProxyRequest(createConnection, getSheetVals, updateSheetVals, log, r)
+		res := handleScheduler(log, r)
+
+		if res != nil {
+			return *res, nil
+		}
+
+		res = handleWebsocketProxyRequest(createConnection, getSheetVals, updateSheetVals, log, r)
 
 		if res != nil {
 			return *res, nil
@@ -37,6 +43,17 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 			Body:       "No request handler found",
 		}, fmt.Errorf("no request handler found: %+v", r)
 	}
+}
+
+func handleScheduler(log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
+	res, ok := r["source"]
+
+	if ok && res == "aws.schedule" {
+		ret := handleScape(log)
+		return &ret
+	}
+
+	return nil
 }
 
 func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
