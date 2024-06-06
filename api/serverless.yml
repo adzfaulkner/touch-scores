@@ -9,10 +9,12 @@ custom:
     Ref: DataTable
   prod:
     schedule:
+      method: scheduler
       rate: rate(2 minutes)
       enabled: true
   dev:
     schedule:
+      method: scheduler
       rate: rate(2 minutes)
       enabled: false
 
