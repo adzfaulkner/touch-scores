@@ -48,7 +48,7 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 func handleScheduler(log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
 	res, ok := r["source"]
 
-	if ok && res == "aws.schedule" {
+	if ok && res == "aws.scheduler" {
 		ret := handleScape(log)
 		return &ret
 	}
