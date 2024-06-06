@@ -79,7 +79,9 @@ functions:
       - http:
           path: get
           method: get
-      - schedule: cron(* * * * ? *)
+      - schedule:
+          method: scheduler
+          rate: rate(2 minutes)
 
 resources:
   Resources:
