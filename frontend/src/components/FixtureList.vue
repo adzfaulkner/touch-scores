@@ -3,12 +3,13 @@ import type { Ref } from 'vue'
 
 import { ref, inject, provide } from 'vue'
 
-import type {FixturesBySheetDate, SheetUpdate} from '@/types'
+import type { FixturesBySheetDate, SheetUpdate } from '@/types'
 
 import FixtureListItem from '@/components/FixtureListItem.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useFixtureStore } from '@/stores/fixture'
 import { useFilterStore } from '@/stores/filters'
+import {DateTime} from "luxon";
 
 const fixtureStore = useFixtureStore()
 const authenticatedStore = useAuthenticationStore()
@@ -34,7 +35,7 @@ const accordionButtonClasses = (date: string, comp: string, totalCount: number):
   let classes = ['accordion-button', 'bg-gradient', 'fw-bold']
 
   if (totalCount > 0) {
-    classes = [...classes, 'accordion-button-bg-' + comp, 'text-black']
+    classes = [...classes, 'bg-' + date.toLowerCase().replace(/\s+/g, '')]
   } else {
     classes = [...classes, 'bg-body-tertiary', 'text-black-50']
   }
@@ -48,6 +49,10 @@ const accordionButtonClasses = (date: string, comp: string, totalCount: number):
 
 const accordionBgClasses = (comp: string): string[] => {
   return ['accordion-bg', 'bg-body-tertiary', 'accordion-bg-' + comp]
+}
+
+const slotInfoClasses = (date: string): string[] => {
+  return ['slotInfo-' + date.toLowerCase().replace(/\s+/g, '')]
 }
 
 const fixtureUpdated = () => {
@@ -96,7 +101,7 @@ const infoSplit = (info: string): string[] => {
             <div :class="['accordion-body', ...accordionBgClasses(fixturesBySheetDate.comp)]">
               <h6 class="m-0" v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
               <div class="container p-0 m-0" v-else>
-                  <div class="row bg-slotinfo text-white">
+                  <div :class="['row', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]">
                     <div class="col m-4 text-center">
                       <h5 class="m-0">
                         <span v-for="(i, k) in infoSplit(fixturesBySheetDate.slotInfo)" v-bind:key="k">{{i}}<br></span>
@@ -234,6 +239,26 @@ const infoSplit = (info: string): string[] => {
 
 .bg-slotinfo {
   background-color: #ff0000;
+}
+
+.bg-8june2024 {
+  background-color: #c0ae7a;
+  color: black;
+}
+
+.bg-9june2024 {
+  background-color: #38761d;
+  color: white;
+}
+
+.slotInfo-8june2024 {
+  background-color: #a8d08d;
+  color: black;
+}
+
+.slotInfo-9june2024 {
+  background-color: #f9cb9c;
+  color: black;
 }
 
 .accordion-bg-nationals {
