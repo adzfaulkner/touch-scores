@@ -10,8 +10,10 @@ custom:
   prod:
     schedule:
       rate: rate(2 minutes)
+      enabled: true
   dev:
-    schedule:
+    rate: rate(2 minutes)
+    enabled: false
 
 package:
   individually: true
