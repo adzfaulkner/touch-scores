@@ -42,8 +42,9 @@ const timePitchStyle = (fixture: Fixture): object => {
 }
 
 const scoreClasses = (stage: string, defaults: string[]): string[] => {
-  const ret = [...defaults, 'pt-2', 'pb-2', 'text-center', 'fw-bold']
+  const ret = [...defaults, 'pt-2', 'pb-2', 'text-center', 'fw-bold', 'bg-default']
 
+  /**
   const s = stage.toLowerCase()
 
   if (s.substring(0, 9) === 'cup final') {
@@ -67,6 +68,7 @@ const scoreClasses = (stage: string, defaults: string[]): string[] => {
   } else {
     ret.push('bg-default')
   }
+   */
 
   return ret
 }
