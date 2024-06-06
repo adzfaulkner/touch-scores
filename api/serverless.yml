@@ -15,7 +15,7 @@ custom:
   dev:
     schedule:
       method: scheduler
-      rate: rate(2 minutes)
+      rate: rate(20 minutes)
       enabled: true
 
 package:
