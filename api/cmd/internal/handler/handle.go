@@ -35,7 +35,7 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 		return events.APIGatewayProxyResponse{
 			StatusCode: 404,
 			Body:       "No request handler found",
-		}, fmt.Errorf("no request handler found")
+		}, fmt.Errorf("no request handler found: %+v", r)
 	}
 }
 
@@ -116,7 +116,7 @@ func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, get
 		decoded, err := base64.StdEncoding.DecodeString(q)
 
 		log.Info("decoded", zap.String("q", string(decoded)))
-		
+
 		if err != nil {
 			return &events.APIGatewayProxyResponse{
 				StatusCode: 400,
