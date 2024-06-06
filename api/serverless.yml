@@ -7,7 +7,6 @@ custom:
     Ref: ObjectStorage
   DataTable:
     Ref: DataTable
-  stage: "${opt:stage, self:provider.stage}"
   prod:
     rate: rate(2 minutes)
   dev:
@@ -84,7 +83,7 @@ functions:
       - http:
           path: get
           method: get
-      - schedule: ${self:custom.${self:custom.stage}.schedule}
+      - schedule: ${self:custom.${opt:stage, 'dev'}.schedule}
 
 resources:
   Resources:
