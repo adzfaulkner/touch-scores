@@ -16,11 +16,11 @@ type msgBody struct {
 	Action string `json:"action"`
 }
 
-func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, log logger) func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
+func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, clearSheetVals goog.ClearSheetValuesFunc, log logger) func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
 	return func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
 		log.Info("request", zap.Reflect("r", r))
 
-		res := handleScheduler(log, r)
+		res := handleScheduler(clearSheetVals, log, r)
 
 		if res != nil {
 			return *res, nil
@@ -45,11 +45,11 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 	}
 }
 
-func handleScheduler(log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
+func handleScheduler(clearSheetVals goog.ClearSheetValuesFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
 	res, ok := r["source"]
 
 	if ok && res == "aws.scheduler" {
-		ret := handleScape(log)
+		ret := handleScape(clearSheetVals, log)
 		return &ret
 	}
 

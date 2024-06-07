@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"sort"
 	"strconv"
 	"strings"
@@ -41,7 +42,7 @@ var pitches = map[string]bool{
 	"Riverside 10": true,
 }
 
-func handleScape(log logger) events.APIGatewayProxyResponse {
+func handleScape(clearSheetVals goog.ClearSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
 	c := newCollector()
 
 	c.OnHTML(".category-list", func(e *colly.HTMLElement) {
@@ -102,6 +103,12 @@ func handleScape(log logger) events.APIGatewayProxyResponse {
 					}
 				}
 			}
+		}
+
+		err := clearSheetVals("1TWcOcSM74c3wXTh_8IDcKbaeaMccDwgr-utliWK6ARs", "Schedule")
+
+		if err != nil {
+			log.Error("Error occurred whilst clearing schedule", zap.Error(err))
 		}
 
 		log.Info("Aggregated data\n", zap.Reflect("data", data))

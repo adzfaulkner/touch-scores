@@ -78,8 +78,9 @@ func main() {
 
 	getSheetVals := goog.GetSheetValues(srv)
 	updateSheetVals := goog.UpdateSheetValues(srv)
+	clearSheetVals := goog.ClearSheetValues(srv)
 
-	lambda.Start(handler.Handle(createConnection, getAllConnections, postConnection, getSheetVals, updateSheetVals, log))
+	lambda.Start(handler.Handle(createConnection, getAllConnections, postConnection, getSheetVals, updateSheetVals, clearSheetVals, log))
 }
 
 func getSmmParamVal(ssmsvc *ssm.SSM, key string) string {

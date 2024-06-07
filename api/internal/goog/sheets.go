@@ -24,6 +24,7 @@ type BatchUpdateValues struct {
 
 type GetSheetValuesFunc func(sid string, rs []string) (*BatchGetValues, error)
 type UpdateSheetValuesFunc func(sid string, vrs map[string][][]interface{}) (*BatchUpdateValues, error)
+type ClearSheetValuesFunc func(sid, r string) error
 
 func GetSheetValues(srv *sheets.Service) GetSheetValuesFunc {
 	return func(sid string, rs []string) (*BatchGetValues, error) {
@@ -95,5 +96,15 @@ func UpdateSheetValues(srv *sheets.Service) UpdateSheetValuesFunc {
 		}
 
 		return &ret, nil
+	}
+}
+
+func ClearSheetValues(srv *sheets.Service) ClearSheetValuesFunc {
+	return func(sid, r string) error {
+		req := srv.Spreadsheets.Values.Clear(sid, r, &sheets.ClearValuesRequest{})
+
+		_, err := req.Do()
+
+		return err
 	}
 }
