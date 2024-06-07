@@ -69,6 +69,7 @@ provider:
 functions:
   entrypoint:
     handler: bootstrap
+    timeout: 90
     package:
       artifact: bin/entrypoint/bootstrap.zip
     environment:
