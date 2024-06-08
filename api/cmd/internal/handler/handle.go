@@ -20,7 +20,7 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 	return func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
 		log.Info("request", zap.Reflect("r", r))
 
-		res := handleScheduler(clearSheetVals, log, r)
+		res := handleScheduler(updateSheetVals, clearSheetVals, log, r)
 
 		if res != nil {
 			return *res, nil
@@ -45,11 +45,11 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 	}
 }
 
-func handleScheduler(clearSheetVals goog.ClearSheetValuesFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
+func handleScheduler(updateSheetVals goog.UpdateSheetValuesFunc, clearSheetVals goog.ClearSheetValuesFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
 	res, ok := r["source"]
 
 	if ok && res == "aws.scheduler" {
-		ret := handleScape(clearSheetVals, log)
+		ret := handleScape(clearSheetVals, updateSheetVals, log)
 		return &ret
 	}
 
