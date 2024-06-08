@@ -14,6 +14,10 @@ import (
 	"golang.org/x/exp/maps"
 )
 
+const InitialUrl = "https://www.internationaltouch.org/events/world-cup/2024/"
+const SheetID = "1TWcOcSM74c3wXTh_8IDcKbaeaMccDwgr-utliWK6ARs"
+const SheetName = "Schedule"
+
 type Fixture struct {
 	Date               string
 	Time               string `json:"time"`
@@ -42,7 +46,7 @@ var pitches = map[string]bool{
 	"Riverside 10": true,
 }
 
-func handleScape(clearSheetVals goog.ClearSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
+func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.UpdateSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
 	c := newCollector()
 
 	c.OnHTML(".category-list", func(e *colly.HTMLElement) {
@@ -70,9 +74,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, log logger) events.AP
 			}
 		})
 
-		log.Info("Dates times\n", zap.Reflect("dateTimes", dateTimes))
-
-		var data [][]string
+		var data [][]interface{}
 		for _, date := range sortDates(maps.Keys(dateTimes)) {
 			for _, tt := range sortTimes(maps.Keys(times)) {
 				if _, ok := dateTimes[date][tt]; !ok {
@@ -83,7 +85,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, log logger) events.AP
 					if ind, ok := fixtureByDateTimePitch[fmt.Sprintf("%s|%s|%s", date, tt, pitch)]; ok {
 						fix := fixtures[ind]
 
-						row := []string{
+						row := []interface{}{
 							fmt.Sprintf("%s, %s, %s", fix.Date, fix.Time, fix.Pitch),
 							fmt.Sprintf("%s, %s", fix.HomeTeam, fix.AwayTeam),
 							fix.Date,
@@ -98,58 +100,30 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, log logger) events.AP
 
 						data = append(data, row)
 					} else {
-						row := []string{fmt.Sprintf("%s, %s, %s", date, tt, pitch), "", date, tt, pitch}
+						row := []interface{}{fmt.Sprintf("%s, %s, %s", date, tt, pitch), "", date, tt, pitch}
 						data = append(data, row)
 					}
 				}
 			}
 		}
 
-		err := clearSheetVals("1TWcOcSM74c3wXTh_8IDcKbaeaMccDwgr-utliWK6ARs", "Schedule")
+		rs := map[string][][]interface{}{}
+		rs[SheetName] = data
+
+		err := clearSheetVals(SheetID, SheetName)
 
 		if err != nil {
 			log.Error("Error occurred whilst clearing schedule", zap.Error(err))
 		}
 
-		log.Info("Aggregated data\n", zap.Reflect("data", data))
+		_, err = updateVals(SheetID, rs)
 
-		/*
-			file, err := os.Create("fixtures.csv")
-
-			if err != nil {
-				log.Fatalf("failed creating file: %s", err)
-			}
-
-			w := csv.NewWriter(file)
-			defer w.Flush()
-
-			fmt.Printf("%+v\n", dateTimes)
-
-			var data [][]string
-			for _, date := range sortDates(maps.Keys(dateTimes)) {
-				for _, ttime := range sortTimes(maps.Keys(times)) {
-					if _, ok := dateTimes[date][ttime]; !ok {
-						continue
-					}
-
-					for _, pitch := range sortPitches(maps.Keys(pitches)) {
-						if ind, ok := fixtureByDateTimePitch[fmt.Sprintf("%s|%s|%s", date, ttime, pitch)]; ok {
-							fix := fixtures[ind]
-							row := []string{fmt.Sprintf("%s, %s, %s", fix.Date, fix.Time, fix.Pitch), fmt.Sprintf("%s, %s", fix.HomeTeam, fix.AwayTeam), fix.Date, fix.Time, fix.Pitch, fix.Stage, fix.HomeTeam, fix.HomeTeamScore, fix.AwayTeamScore, fix.AwayTeam}
-							data = append(data, row)
-						} else {
-							row := []string{fmt.Sprintf("%s, %s, %s", date, ttime, pitch), "", date, ttime, pitch}
-							data = append(data, row)
-						}
-					}
-				}
-			}
-
-			_ = w.WriteAll(data)
-		*/
+		if err != nil {
+			log.Error("Error occurred whilst updating schedule vals", zap.Error(err))
+		}
 	})
 
-	_ = c.Visit("https://www.internationaltouch.org/events/world-cup/2024/")
+	_ = c.Visit(InitialUrl)
 
 	return *generateResponse(200, "Operation complete")
 }
