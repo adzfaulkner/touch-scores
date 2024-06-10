@@ -46,24 +46,12 @@ var pitches = map[string]bool{
 	"Riverside 10": true,
 }
 
-func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.UpdateSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
+func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.UpdateSheetValuesFunc, getVals goog.GetSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
 	c := newCollector()
 
 	c.OnHTML(".category-list", func(e *colly.HTMLElement) {
 		e.ForEach("a", func(i int, h *colly.HTMLElement) {
 			cc := colly.NewCollector()
-
-			cc.OnRequest(func(r *colly.Request) {
-				fmt.Println("Visiting: ", r.URL)
-			})
-
-			cc.OnError(func(_ *colly.Response, err error) {
-				log.Error("Something went wrong: ", zap.Error(err))
-			})
-
-			cc.OnResponse(func(r *colly.Response) {
-				fmt.Println("Page visited: ", r.Request.URL)
-			})
 
 			cc.OnHTML("div.content-block", setFixtures)
 
@@ -113,16 +101,20 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 			}
 		}
 
+		bgv, _ := getVals(SheetID, []string{SheetName})
+
+		log.Info("Current values", zap.Reflect("vals", bgv.ValueRanges[0].ValueRange))
+		
 		rs := map[string][][]interface{}{}
 		rs[SheetName] = data
 
-		err := clearSheetVals(SheetID, SheetName)
+		//err := clearSheetVals(SheetID, SheetName)
 
-		if err != nil {
-			log.Error("Error occurred whilst clearing schedule", zap.Error(err))
-		}
+		//if err != nil {
+		//log.Error("Error occurred whilst clearing schedule", zap.Error(err))
+		//}
 
-		_, err = updateVals(SheetID, rs)
+		_, err := updateVals(SheetID, rs)
 
 		if err != nil {
 			log.Error("Error occurred whilst updating schedule vals", zap.Error(err))
