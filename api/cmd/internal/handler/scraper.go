@@ -75,6 +75,11 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		})
 
 		var data [][]interface{}
+
+		data = append(data, []interface{}{
+			time.Now(),
+		})
+
 		for _, date := range sortDates(maps.Keys(dateTimes)) {
 			for _, tt := range sortTimes(maps.Keys(times)) {
 				if _, ok := dateTimes[date][tt]; !ok {
