@@ -77,6 +77,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		var data [][]interface{}
 
 		data = append(data, []interface{}{
+			"Date updated:",
 			time.Now(),
 		})
 
