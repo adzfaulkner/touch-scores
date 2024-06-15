@@ -103,8 +103,8 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 
 		bgv, _ := getVals(SheetID, []string{SheetName})
 
-		log.Info("Current values", zap.Reflect("vals", bgv.ValueRanges[0].ValueRange))
-		
+		log.Info("Vals comparison", zap.Int("existing vals len", len(bgv.ValueRanges[0].ValueRange.Values)), zap.Int("new vals len", len(data)))
+
 		rs := map[string][][]interface{}{}
 		rs[SheetName] = data
 
@@ -119,6 +119,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		if err != nil {
 			log.Error("Error occurred whilst updating schedule vals", zap.Error(err))
 		}
+
 	})
 
 	_ = c.Visit(InitialUrl)
