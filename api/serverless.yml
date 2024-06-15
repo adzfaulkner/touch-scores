@@ -7,6 +7,16 @@ custom:
     Ref: ObjectStorage
   DataTable:
     Ref: DataTable
+  prod:
+    schedule:
+      method: scheduler
+      rate: rate(2 minutes)
+      enabled: true
+  dev:
+    schedule:
+      method: scheduler
+      rate: rate(20 minutes)
+      enabled: false
 
 package:
   individually: true
@@ -59,6 +69,7 @@ provider:
 functions:
   entrypoint:
     handler: bootstrap
+    timeout: 30
     package:
       artifact: bin/entrypoint/bootstrap.zip
     environment:
@@ -79,6 +90,7 @@ functions:
       - http:
           path: get
           method: get
+      - schedule: ${self:custom.${opt:stage, 'dev'}.schedule}
 
 resources:
   Resources:

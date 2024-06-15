@@ -16,11 +16,17 @@ type msgBody struct {
 	Action string `json:"action"`
 }
 
-func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, log logger) func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
+func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections persistence.GetAllConnectionsFunc, postConnection wsconnection.PostConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, clearSheetVals goog.ClearSheetValuesFunc, log logger) func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
 	return func(r map[string]interface{}) (events.APIGatewayProxyResponse, error) {
 		log.Info("request", zap.Reflect("r", r))
 
-		res := handleWebsocketProxyRequest(createConnection, getSheetVals, updateSheetVals, log, r)
+		res := handleScheduler(updateSheetVals, clearSheetVals, getSheetVals, log, r)
+
+		if res != nil {
+			return *res, nil
+		}
+
+		res = handleWebsocketProxyRequest(createConnection, getSheetVals, updateSheetVals, log, r)
 
 		if res != nil {
 			return *res, nil
@@ -35,8 +41,19 @@ func Handle(createConnection persistence.CreateConnectionFunc, getAllConnections
 		return events.APIGatewayProxyResponse{
 			StatusCode: 404,
 			Body:       "No request handler found",
-		}, fmt.Errorf("no request handler found")
+		}, fmt.Errorf("no request handler found: %+v", r)
 	}
+}
+
+func handleScheduler(updateSheetVals goog.UpdateSheetValuesFunc, clearSheetVals goog.ClearSheetValuesFunc, getVals goog.GetSheetValuesFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
+	res, ok := r["source"]
+
+	if ok && res == "aws.scheduler" {
+		ret := handleScape(clearSheetVals, updateSheetVals, getVals, log)
+		return &ret
+	}
+
+	return nil
 }
 
 func handleWebsocketProxyRequest(createConnection persistence.CreateConnectionFunc, getSheetVals goog.GetSheetValuesFunc, updateSheetVals goog.UpdateSheetValuesFunc, log logger, r map[string]interface{}) *events.APIGatewayProxyResponse {
@@ -116,7 +133,7 @@ func handleProxyRequest(getAllConnections persistence.GetAllConnectionsFunc, get
 		decoded, err := base64.StdEncoding.DecodeString(q)
 
 		log.Info("decoded", zap.String("q", string(decoded)))
-		
+
 		if err != nil {
 			return &events.APIGatewayProxyResponse{
 				StatusCode: 400,
