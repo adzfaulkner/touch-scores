@@ -88,10 +88,13 @@ func defineQryRanges(c *reqBodyConfig) []string {
 	for _, sched := range c.Schedule {
 		add(sched.Ranges.Fixtures)
 		add(sched.Ranges.FixturePitches)
-		add(sched.Ranges.SlotInfo)
 
 		if sched.Ranges.RefAllocations != "" {
 			add(sched.Ranges.RefAllocations)
+		}
+
+		if sched.Ranges.SlotInfo != "" {
+			add(sched.Ranges.SlotInfo)
 		}
 
 		if sched.Ranges.PlayOffSlotInfo != "" {

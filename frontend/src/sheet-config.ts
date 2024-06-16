@@ -2,56 +2,24 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
-    sheetId: '1-lWfwc1zCx1NIDNCGwBx-g_iVg8sJX925v9i2hNvyRQ',
+    sheetId: '1ss3ZuIZ7dGYBDV74WYnbLrYVYhPSxfOFbfH3ZBtXeng',
     schedule: [
       {
-        date: '2024-06-08T00:00:00+00:00',
+        date: '2024-07-15T00:00:00+00:00',
         ranges: {
-          fixtures: 'Schedule!A14:R69',
-          fixturePitches: 'Schedule!13:13',
-          slotInfo: 'Schedule!B12:Y12',
+          fixtures: 'Schedule!B9:BS32',
+          fixturePitches: 'Schedule!C8:BR8',
+          slotInfo: null,
           playOffSlotInfo: null,
-          refAllocations: 'Ref Allocations!A2:Q58',
+          refAllocations: null,
         },
       },
     ],
     standingRanges: [
-      'Pool A!B12:W20',
-      'Pool B!B12:W20',
-      'Pool C!B12:W20',
-      'Pool D!B12:W20',
-      'Pool E!B12:W20',
-      'Pool F!B12:W20',
+      'MO Pools!B25:AQ43',
     ],
-    competition: 'mixed_nts',
-    label: 'MX NTS Div 1/2 R1',
-  },
-  {
-    sheetId: '1nq8BHB7vd9ttqJXZFHExYZD91qotWbxcBgdzYCKdK6Q',
-    schedule: [
-      {
-        date: '2024-06-09T00:00:00+00:00',
-        ranges: {
-          fixtures: 'Schedule!14:68',
-          fixturePitches: 'Schedule!13:13',
-          slotInfo: 'Schedule!B12:AE12',
-          playOffSlotInfo: null,
-          refAllocations: 'Ref Allocations!A2:W58',
-        },
-      },
-    ],
-    standingRanges: [
-      'Pool A!B12:W20',
-      'Pool B!B12:W20',
-      'Pool C!B12:W20',
-      'Pool D!B12:W20',
-      'Pool E!B12:W20',
-      'Pool F!B12:W20',
-      'Pool G!B12:W20',
-      'Pool H!B12:W20',
-    ],
-    competition: 'mixed_nts',
-    label: 'MX NTS Div 3/4 R1',
+    competition: 'wc_24',
+    label: 'FIT World Cup 24',
   },
 ]
 
