@@ -94,7 +94,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 
 						data = append(data, row)
 					} else {
-						row := []interface{}{fmt.Sprintf("%s, %s, %s", date, tt, pitch), "", date, tt, pitch}
+						row := []interface{}{fmt.Sprintf("%s, %s, %s", date, tt, pitch), "", date, tt, pitch, "", "", "", "", ""}
 						data = append(data, row)
 					}
 				}
