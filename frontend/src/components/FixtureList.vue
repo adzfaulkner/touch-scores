@@ -100,7 +100,7 @@ const infoSplit = (info: string): string[] => {
             <div :class="['accordion-body', ...accordionBgClasses(fixturesBySheetDate.comp)]">
               <h6 class="m-0" v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
               <div class="container p-0 m-0" v-else>
-                  <div :class="['row', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]">
+                  <div :class="['row', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]"  v-if="fixturesBySheetDate.slotInfo !== ''">
                     <div class="col m-4 text-center">
                       <h5 class="m-0">
                         <span v-for="(i, k) in infoSplit(fixturesBySheetDate.slotInfo)" v-bind:key="k">{{i}}<br></span>
