@@ -10,7 +10,7 @@ import (
 
 const DateRegexp = "(?i)^MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY"
 const TimeRegexp = "^\\d+:\\d+$"
-const PitchRegexp = "(?i)^Field|Pitch|AGP|FOD|Roadside|Farside"
+const PitchRegexp = "(?i)^Field|Pitch|AGP|FOD|Roadside|Farside|HIGHFIELDS|RIVERSIDE"
 const yearIncluded = "\\d{2,4}$"
 const thSearch = "(?i)(\\d+)(st|nd|rd|th)"
 const extractSheetAndReadFrom = "^(([^!]+)!)?[A-Z]+([^:]+)"

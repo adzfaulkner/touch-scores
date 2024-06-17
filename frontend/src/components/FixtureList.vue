@@ -31,10 +31,10 @@ const toggleAccordion = (date: string): void => {
 }
 
 const accordionButtonClasses = (date: string, comp: string, totalCount: number): string[] => {
-  let classes = ['accordion-button', 'bg-gradient', 'fw-bold']
+  let classes = ['accordion-button', 'bg-gradient', 'fw-bold', ]
 
   if (totalCount > 0) {
-    classes = [...classes, 'bg-' + date.toLowerCase().replace(/\s+/g, '')]
+    classes = [...classes, 'bg-white']
   } else {
     classes = [...classes, 'bg-body-tertiary', 'text-black-50']
   }
@@ -100,7 +100,7 @@ const infoSplit = (info: string): string[] => {
             <div :class="['accordion-body', ...accordionBgClasses(fixturesBySheetDate.comp)]">
               <h6 class="m-0" v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
               <div class="container p-0 m-0" v-else>
-                  <div :class="['row', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]">
+                  <div :class="['row', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]"  v-if="fixturesBySheetDate.slotInfo !== ''">
                     <div class="col m-4 text-center">
                       <h5 class="m-0">
                         <span v-for="(i, k) in infoSplit(fixturesBySheetDate.slotInfo)" v-bind:key="k">{{i}}<br></span>
@@ -215,6 +215,10 @@ const infoSplit = (info: string): string[] => {
   background-image: url('@/assets/comps/mw_nts_34.png');
 }
 
+.img-wc_24 {
+  background-image: url('@/assets/comps/wc_24.png');
+}
+
 .button-nts {
   background-color: #c4bd97;
   color: black;
@@ -222,6 +226,10 @@ const infoSplit = (info: string): string[] => {
 
 .accordion-button-bg-mw_nts_12 {
   background-color: #c4ad74;
+}
+
+.accordion-button-bg-wc_24 {
+  background-color: #fff;
 }
 
 .accordion-button-bg-mw_nts_34 {

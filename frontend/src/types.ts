@@ -11,7 +11,7 @@ export interface SheetConfig {
       fixtures: string,
       fixturePitches: string
       refAllocations: null | string
-      slotInfo: string
+      slotInfo: null | string
       playOffSlotInfo: null | string
     }
   }[]
