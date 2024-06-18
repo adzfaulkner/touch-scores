@@ -31,12 +31,12 @@ const toggleAccordion = (date: string): void => {
 }
 
 const accordionButtonClasses = (date: string, comp: string, totalCount: number): string[] => {
-  let classes = ['accordion-button', 'bg-gradient', 'fw-bold', ]
+  let classes = ['accordion-button', 'bg-gradient', 'fw-bold']
 
   if (totalCount > 0) {
-    classes = [...classes, 'bg-white']
+    classes = [...classes, 'bg-' + date.toLowerCase().replace(/\s+/g, '')]
   } else {
-    classes = [...classes, 'bg-body-tertiary', 'text-black-50']
+    classes = [...classes, 'bg-body-white', 'text-black-50']
   }
 
   if (openAccordion.value !== date) {
@@ -248,22 +248,26 @@ const infoSplit = (info: string): string[] => {
   background-color: #ff0000;
 }
 
-.bg-8june2024 {
+.bg-22june2024 {
   background-color: #c0ae7a;
   color: black;
 }
 
-.bg-9june2024 {
+.bg-23june2024 {
   background-color: #38761d;
   color: white;
 }
 
-.slotInfo-8june2024 {
+.bg-15july2024, .bg-16july2024, .bg-17july2024, .bg-18july2024, .bg-19july2024, .bg-20july2024, .bg-21july2024 {
+  background-color: #fff;
+}
+
+.slotInfo-22june2024 {
   background-color: #a8d08d;
   color: black;
 }
 
-.slotInfo-9june2024 {
+.slotInfo-23june2024 {
   background-color: #f9cb9c;
   color: black;
 }
