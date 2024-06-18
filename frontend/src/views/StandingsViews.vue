@@ -48,6 +48,18 @@ const filterHeaderVal = (val: string): string => {
   return headValMap.has(val) ? String(headValMap.get(val)) : val
 }
 
+const standingCellWidth = (i: number): string => {
+  if (i === 0) {
+    return '5%'
+  }
+
+  if (i === 1) {
+    return '50%'
+  }
+
+  return '15%';
+}
+
 const filterLineVal = (val: string): string => {
   return val.replace(/^(\d+)([st|nd|rd|th]+\s.*)/gm, '$1')
 }
@@ -84,7 +96,7 @@ const filterLineVal = (val: string): string => {
                   <th v-for="(th, i) in poolStanding.standings[0]" :key="i">{{ filterHeaderVal(th) }}</th>
                 </tr>
                 <tr v-for="(line, i) in poolStanding.standings.slice(1)" :key="i">
-                  <td v-for="(td, i) in line" :key="i">{{ filterLineVal(td) }}</td>
+                  <td v-for="(td, i) in line" :style="{ width: standingCellWidth(i) }" :key="i">{{ filterLineVal(td) }}</td>
                 </tr>
               </table>
             </div>

@@ -2,6 +2,58 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
+    sheetId: '1IZfL0n5vW4ORSgOWQpSl_0L5dFIPYXZ5lfK_xq07S7w',
+    schedule: [
+      {
+        date: '2024-06-22T00:00:00+00:00',
+        ranges: {
+          fixtures: 'Schedule!A14:R69',
+          fixturePitches: 'Schedule!A13:R13',
+          slotInfo: "Schedule!B12:Y12",
+          playOffSlotInfo: null,
+          refAllocations: "Ref Allocations!A2:Q58",
+        },
+      },
+    ],
+    standingRanges: [
+      'Pool A!B12:W20',
+      'Pool B!B12:W20',
+      'Pool C!B12:W20',
+      'Pool D!B12:W20',
+      'Pool E!B12:W20',
+      'Pool F!B12:W20',
+    ],
+    competition: 'mixed_nts',
+    label: 'MX NTS Div 1/2 R2',
+  },
+  {
+    sheetId: '1_xz5Ws_meKpbxqcIowdPJ3W7Fa0fnOv1GkyKMVzlz1Y',
+    schedule: [
+      {
+        date: '2024-06-23T00:00:00+00:00',
+        ranges: {
+          fixtures: 'Schedule!A14:X69',
+          fixturePitches: 'Schedule!A13:X13',
+          slotInfo: "Schedule!B12:AE12",
+          playOffSlotInfo: null,
+          refAllocations: "Ref Allocations!A2:W58",
+        },
+      },
+    ],
+    standingRanges: [
+      'Pool A!B12:W20',
+      'Pool B!B12:W20',
+      'Pool C!B12:W20',
+      'Pool D!B12:W20',
+      'Pool E!B12:W20',
+      'Pool F!B12:W20',
+      'Pool G!B12:W20',
+      'Pool H!B12:W20',
+    ],
+    competition: 'mixed_nts',
+    label: 'MX NTS Div 3/4 R2',
+  },
+  {
     sheetId: '1ss3ZuIZ7dGYBDV74WYnbLrYVYhPSxfOFbfH3ZBtXeng',
     schedule: [
       {
