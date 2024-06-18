@@ -31,10 +31,10 @@ const toggleAccordion = (date: string): void => {
 }
 
 const accordionButtonClasses = (date: string, comp: string, totalCount: number): string[] => {
-  let classes = ['accordion-button', 'bg-gradient', 'fw-bold']
+  let classes = ['accordion-button', 'bg-gradient', 'fw-bold', ]
 
   if (totalCount > 0) {
-    classes = [...classes, 'bg-' + date.toLowerCase().replace(/\s+/g, '')]
+    classes = [...classes, 'bg-white']
   } else {
     classes = [...classes, 'bg-body-white', 'text-black-50']
   }
