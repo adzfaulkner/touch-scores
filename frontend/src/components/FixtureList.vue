@@ -275,4 +275,8 @@ const infoSplit = (info: string): string[] => {
 .accordion-bg-nationals {
   /*background-color: #ff0000;*/
 }
+
+.accordion-bg-wc_24 {
+  background-color: #3341b5 !important;
+}
 </style>
