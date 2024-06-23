@@ -65,6 +65,12 @@ type ProcessRangeValues struct {
 	Values [][]string `json:"values"`
 }
 
+type ProcessStandingsRangeValues struct {
+	Range  string     `json:"range"`
+	Label  string     `json:"label"`
+	Values [][]string `json:"values"`
+}
+
 type ProcessScheduleRanges struct {
 	Fixtures        *ProcessRangeValues `json:"fixtures"`
 	FixturePitches  *ProcessRangeValues `json:"fixturePitches"`
@@ -79,7 +85,7 @@ type ProcessSchedulesByDate struct {
 }
 
 type ProcessRequest struct {
-	SheetId   string                    `json:"sheetId"`
-	Schedules []*ProcessSchedulesByDate `json:"schedules"`
-	Standings []*ProcessRangeValues     `json:"standings"`
+	SheetId   string                         `json:"sheetId"`
+	Schedules []*ProcessSchedulesByDate      `json:"schedules"`
+	Standings []*ProcessStandingsRangeValues `json:"standings"`
 }

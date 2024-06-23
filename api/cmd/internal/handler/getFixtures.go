@@ -22,7 +22,10 @@ type reqBodyConfig struct {
 			RefAllocations  string `json:"refAllocations"`
 		} `json:"ranges"`
 	} `json:"schedule"`
-	StandingRanges []string `json:"standingRanges"`
+	StandingRanges []struct {
+		Label string `json:"label"`
+		Range string `json:"range"`
+	} `json:"standingRanges"`
 }
 
 type reqBodyGetFixtures struct {
@@ -103,18 +106,19 @@ func defineQryRanges(c *reqBodyConfig) []string {
 	}
 
 	for _, sr := range c.StandingRanges {
-		add(sr)
+		add(sr.Range)
 	}
 
 	return rgs
 }
 
 func buildProcessRequest(gVals *gsheets.Values, c *reqBodyConfig) *fixture_aggregate.ProcessRequest {
-	var stands []*fixture_aggregate.ProcessRangeValues
+	var stands []*fixture_aggregate.ProcessStandingsRangeValues
 	for _, sr := range c.StandingRanges {
-		prv := fixture_aggregate.ProcessRangeValues{
-			Range:  sr,
-			Values: gVals.Values[sr],
+		prv := fixture_aggregate.ProcessStandingsRangeValues{
+			Range:  sr.Range,
+			Label:  sr.Label,
+			Values: gVals.Values[sr.Range],
 		}
 
 		stands = append(stands, &prv)
