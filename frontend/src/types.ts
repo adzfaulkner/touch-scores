@@ -15,15 +15,12 @@ export interface SheetConfig {
       playOffSlotInfo: null | string
     }
   }[]
-  standingRanges: string[]
+  standingRanges: {
+    label: string
+    range: string
+  }[]
   competition: string
   label: string
-}
-
-export interface FixtureParamsBySpreadsheet {
-  fixtures: Map<string, Map<string, Fixture[]>>
-  filtered: Map<string, Map<string, Fixture[]>>
-  competition: Competition
 }
 
 export interface FixtureState {
@@ -47,13 +44,6 @@ export interface StandingsState {
 
 export interface NotificationState {
   notification: Notification,
-}
-
-export interface Competition {
-  sheetId: string
-  name: string
-  info: string
-  playoffInfo: null | string
 }
 
 export interface Fixture {

@@ -259,7 +259,7 @@ const infoSplit = (info: string): string[] => {
 }
 
 .bg-15july2024, .bg-16july2024, .bg-17july2024, .bg-18july2024, .bg-19july2024, .bg-20july2024, .bg-21july2024 {
-  background-color: #fff;
+  /* background-color: #fff; */
 }
 
 .slotInfo-22june2024 {
