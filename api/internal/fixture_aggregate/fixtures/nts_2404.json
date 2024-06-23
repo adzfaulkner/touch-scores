@@ -1132,6 +1132,7 @@
       "standings": [
         {
           "range": "Pool A!B11:W20",
+          "label": "Pool A",
           "values": [
             [
               "Position",
@@ -1260,6 +1261,7 @@
         },
         {
           "range": "Pool B!B11:W20",
+          "label": "Pool B",
           "values": [
             [
               "Position",
@@ -1388,6 +1390,7 @@
         },
         {
           "range": "Pool C!B15:AE28",
+          "label": "Pool C",
           "values": [
             [
               "Position",
@@ -1622,6 +1625,7 @@
         },
         {
           "range": "Pool D!B11:W20",
+          "label": "Pool D",
           "values": [
             [
               "Position",
@@ -1750,6 +1754,7 @@
         },
         {
           "range": "Pool E!B11:W20",
+          "label": "Pool E",
           "values": [
             [
               "Position",
@@ -1878,6 +1883,7 @@
         },
         {
           "range": "Pool F!B11:W20",
+          "label": "Pool F",
           "values": [
             [
               "Position",
@@ -2006,6 +2012,7 @@
         },
         {
           "range": "Pool G!B11:W20",
+          "label": "Pool G",
           "values": [
             [
               "Position",
@@ -4092,6 +4099,7 @@
       "standings": [
         {
           "range": "Pool A!B14:AA24",
+          "label": "Pool A",
           "values": [
             [
               "Position",
@@ -4269,6 +4277,7 @@
         },
         {
           "range": "Pool B!B14:AA24",
+          "label": "Pool B",
           "values": [
             [
               "Position",
@@ -4446,6 +4455,7 @@
         },
         {
           "range": "Pool C!B14:AA24",
+          "label": "Pool C",
           "values": [
             [
               "Position",
@@ -4623,6 +4633,7 @@
         },
         {
           "range": "Pool D!B14:AA24",
+          "label": "Pool D",
           "values": [
             [
               "Position",
@@ -4800,6 +4811,7 @@
         },
         {
           "range": "Pool E!B12:W20",
+          "label": "Pool E",
           "values": [
             [
               "Position",
@@ -4928,6 +4940,7 @@
         },
         {
           "range": "Pool F!B12:W20",
+          "label": "Pool F",
           "values": [
             [
               "Position",
@@ -5056,6 +5069,7 @@
         },
         {
           "range": "M Shield Pool 1!B10:S16",
+          "label": "M Shield Pool 1",
           "values": [
             [
               "Position",
@@ -5143,6 +5157,7 @@
         },
         {
           "range": "M Shield Pool 2!B10:S16",
+          "label": "M Shield Pool 2",
           "values": [
             [
               "Position",

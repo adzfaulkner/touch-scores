@@ -33,10 +33,8 @@ func Processor(pReqs []*ProcessRequest) *ProcessResult {
 
 		var stands []*PoolStandings
 		for _, s := range p.Standings {
-			pool, _ := extractSheetAndReadFromFromRange(s.Range)
-
 			ps := PoolStandings{
-				Pool:      pool,
+				Pool:      s.Label,
 				Standings: filterStandings(s.Values),
 			}
 
