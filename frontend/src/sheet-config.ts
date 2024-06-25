@@ -128,6 +128,62 @@ const sheetConfigs: SheetConfig[] = [
         label: 'Womens 27s Round Robin',
         range: 'W27 RRobin!B25:AU45',
       },
+      {
+        label: 'Mens 30s Pool A',
+        range: 'M30 Pools!B25:AU45',
+      },
+      {
+        label: 'Mens 30s Pool B',
+        range: 'M30 Pools!BE25:CX43',
+      },
+      {
+        label: 'Mixed 30s Pool A',
+        range: 'X30 Pools!B23:AQ41',
+      },
+      {
+        label: 'Mixed 30s Pool B',
+        range: 'X30 Pools!BA23:CP39',
+      },
+      {
+        label: 'Womens 35s Round Robin',
+        range: 'W35 RRobin!B21:AM37',
+      },
+      {
+        label: 'Mens 35s Round Robin',
+        range: 'M35 RRobin!B21:AM37',
+      },
+      {
+        label: 'Womens 40s Round Robin',
+        range: 'W40 RRobin!B15:AU25',
+      },
+      {
+        label: 'Mens 40s Pool A',
+        range: 'M40 Pools!B23:AQ39',
+      },
+      {
+        label: 'Mens 40s Pool B',
+        range: 'M40 Pools!BA23:CP41',
+      },
+      {
+        label: 'Mens 45s Pool A',
+        range: 'M45 Pools!B19:AI33',
+      },
+      {
+        label: 'Mens 45s Pool B',
+        range: 'M45 Pools!AS19:BZ33',
+      },
+      {
+        label: 'Mens 50s Pool A',
+        range: 'M50 Pools!B21:AM37',
+      },
+      {
+        label: 'Mens 50s Pool B',
+        range: 'M50 Pools!AW21:CH35',
+      },
+      {
+        label: 'Mens 55s Round Robin',
+        range: 'M55 RRobin!B15:AA25',
+      },
     ],
     competition: 'wc_24',
     label: 'FIT World Cup 24',
