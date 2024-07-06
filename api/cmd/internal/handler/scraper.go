@@ -54,7 +54,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 	c.OnHTML(".category-list", func(e *colly.HTMLElement) {
 		cc := colly.NewCollector(
 			colly.MaxDepth(2),
-			colly.Async(true),
+			//colly.Async(true),
 		)
 
 		cc.SetRequestTimeout(15 * time.Second)
