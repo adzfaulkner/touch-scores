@@ -15,8 +15,8 @@ custom:
   dev:
     schedule:
       method: scheduler
-      rate: rate(20 minutes)
-      enabled: false
+      rate: rate(2 minutes)
+      enabled: true
 
 package:
   individually: true
@@ -76,6 +76,7 @@ functions:
       DB_TBL_NAME: ${self:custom.DataTable}
       OBJECT_STORAGE: ${self:custom.ObjectStorage}
       CORS_ALLOWED_ORIGIN: ${env:CORS_ALLOWED_ORIGIN, "*"}
+      STAGE: ${opt:stage, 'dev'}
     events:
       - websocket:
           route: $connect

@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"github.com/adzfaulkner/touch-scores/internal/goog"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -16,7 +17,6 @@ import (
 
 const InitialUrl = "https://www.internationaltouch.org/events/world-cup/2024/"
 const SheetID = "1TWcOcSM74c3wXTh_8IDcKbaeaMccDwgr-utliWK6ARs"
-const SheetName = "Schedule"
 
 type Fixture struct {
 	Date               string
@@ -35,11 +35,12 @@ type Fixture struct {
 	Ref2Range          string `json:"ref2Range"`
 	Ref3               string `json:"ref3"`
 	Ref3Range          string `json:"ref3Range"`
+	Video              string `json:"video"`
 }
 
-var fixtures []Fixture
-var fixtureByDateTimePitch = make(map[string]int)
-var dateTimes = make(map[string]map[string]bool)
+var fixtures = make(map[string]Fixture)
+var dates = make(map[string]bool)
+var dateTimes = make(map[string]bool)
 var times = make(map[string]bool)
 var pitches = map[string]bool{
 	"Riverside 9":  true,
@@ -47,12 +48,25 @@ var pitches = map[string]bool{
 }
 
 func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.UpdateSheetValuesFunc, getVals goog.GetSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
-	c := newCollector()
+	c := colly.NewCollector(
+		colly.MaxDepth(2),
+		colly.Async(true),
+	)
+	c.SetRequestTimeout(15 * time.Second)
 
 	c.OnHTML(".category-list", func(e *colly.HTMLElement) {
-		e.ForEach("a", func(i int, h *colly.HTMLElement) {
-			cc := colly.NewCollector()
+		cc := colly.NewCollector(
+			colly.MaxDepth(2),
+			colly.Async(true),
+		)
 
+		cc.SetRequestTimeout(15 * time.Second)
+
+		cc.OnResponse(func(r *colly.Response) {
+			fmt.Println("Visited", r.Request.URL)
+		})
+
+		e.ForEach("a", func(i int, h *colly.HTMLElement) {
 			cc.OnHTML("div.content-block", setFixtures)
 
 			err := cc.Visit(h.Request.AbsoluteURL(h.Attr("href")))
@@ -62,51 +76,21 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 			}
 		})
 
-		var data [][]interface{}
+		cc.Wait()
 
-		data = append(data, []interface{}{
-			"Date updated:",
-			time.Now(),
-		})
+		toWrite := flattenFixtures()
 
-		for _, date := range sortDates(maps.Keys(dateTimes)) {
-			for _, tt := range sortTimes(maps.Keys(times)) {
-				if _, ok := dateTimes[date][tt]; !ok {
-					continue
-				}
-
-				for _, pitch := range sortPitches(maps.Keys(pitches)) {
-					if ind, ok := fixtureByDateTimePitch[fmt.Sprintf("%s|%s|%s", date, tt, pitch)]; ok {
-						fix := fixtures[ind]
-
-						row := []interface{}{
-							fmt.Sprintf("%s, %s, %s", fix.Date, fix.Time, fix.Pitch),
-							fmt.Sprintf("%s, %s", fix.HomeTeam, fix.AwayTeam),
-							fix.Date,
-							fix.Time,
-							fix.Pitch,
-							fix.Stage,
-							fix.HomeTeam,
-							fix.HomeTeamScore,
-							fix.AwayTeamScore,
-							fix.AwayTeam,
-						}
-
-						data = append(data, row)
-					} else {
-						row := []interface{}{fmt.Sprintf("%s, %s, %s", date, tt, pitch), "", date, tt, pitch, "", "", "", "", ""}
-						data = append(data, row)
-					}
-				}
-			}
+		SheetName := "Test"
+		if os.Getenv("STAGE") == "prod" {
+			//SheetName = "Schedule"
 		}
 
 		bgv, _ := getVals(SheetID, []string{SheetName})
 
-		log.Info("Vals comparison", zap.Int("existing vals len", len(bgv.ValueRanges[0].ValueRange.Values)), zap.Int("new vals len", len(data)))
+		log.Info("Vals comparison", zap.Int("existing vals len", len(bgv.ValueRanges[0].ValueRange.Values)), zap.Int("new vals len", len(toWrite)))
 
 		rs := map[string][][]interface{}{}
-		rs[SheetName] = data
+		rs[SheetName] = toWrite
 
 		_, err := updateVals(SheetID, rs)
 
@@ -114,8 +98,8 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 			log.Error("Error occurred whilst updating schedule vals", zap.Error(err))
 		}
 
-		if len(bgv.ValueRanges[0].ValueRange.Values) > len(data) {
-			d := len(bgv.ValueRanges[0].ValueRange.Values) - len(data)
+		if len(bgv.ValueRanges[0].ValueRange.Values) > len(toWrite) {
+			d := len(bgv.ValueRanges[0].ValueRange.Values) - len(toWrite)
 			r := fmt.Sprintf("%s!%d:%d", SheetName, d+1, len(bgv.ValueRanges[0].ValueRange.Values))
 
 			err = clearSheetVals(SheetID, r)
@@ -146,6 +130,7 @@ func setFixtures(e *colly.HTMLElement) {
 			stage = strings.TrimSpace(h.Text)
 		case "h4":
 			date = strings.TrimSpace(h.Text)
+			dates[date] = true
 		case "td":
 			if h.DOM.HasClass("label") {
 				if strings.TrimSpace(h.ChildText("strong")) != "" {
@@ -169,41 +154,81 @@ func setFixtures(e *colly.HTMLElement) {
 					Ref2Range:          "",
 					Ref3:               "",
 					Ref3Range:          "",
+					Video:              "",
 				}
-
-				fixtures = append(fixtures, fixture)
 			} else if h.DOM.HasClass("time") {
-				fixtures[len(fixtures)-1].Time = convertTo24Hour(strings.TrimSpace(h.ChildText("span")))
+				fixture.Time = convertTo24Hour(strings.TrimSpace(h.ChildText("span")))
 
-				if _, ok := dateTimes[date]; !ok {
-					dateTimes[date] = map[string]bool{}
-				}
+				dateTimes[fmt.Sprintf("%s|%s", date, fixture.Time)] = true
+				times[fixture.Time] = true
 
-				dateTimes[date][fixtures[len(fixtures)-1].Time] = true
-				times[fixtures[len(fixtures)-1].Time] = true
+				vidHref := h.ChildAttr("a", "href")
+
+				fixture.Video = h.Request.AbsoluteURL(vidHref)
 			} else if h.DOM.HasClass("field") {
-				fixtures[len(fixtures)-1].Pitch = strings.TrimSpace(h.ChildText("span"))
-				pitches[fixtures[len(fixtures)-1].Pitch] = true
-				fixtureByDateTimePitch[fmt.Sprintf("%s|%s|%s", date, fixtures[len(fixtures)-1].Time, fixtures[len(fixtures)-1].Pitch)] = len(fixtures) - 1
+				fixture.Pitch = strings.TrimSpace(h.ChildText("span"))
+				pitches[fixture.Pitch] = true
 			} else if h.DOM.HasClass("home") {
-				fixtures[len(fixtures)-1].HomeTeam = addTeamDivAbbrev(strings.TrimSpace(h.ChildText("span")), division)
+				fixture.HomeTeam = addTeamDivAbbrev(strings.TrimSpace(h.ChildText("span")), division)
 			} else if h.DOM.HasClass("away") {
-				fixtures[len(fixtures)-1].AwayTeam = addTeamDivAbbrev(strings.TrimSpace(h.ChildText("span")), division)
+				fixture.AwayTeam = addTeamDivAbbrev(strings.TrimSpace(h.ChildText("span")), division)
 			} else if h.DOM.HasClass("score") {
-				if fixtures[len(fixtures)-1].HomeTeamScore == "" {
-					fixtures[len(fixtures)-1].HomeTeamScore = strings.TrimSpace(h.Text)
+				if fixture.HomeTeamScore == "" {
+					fixture.HomeTeamScore = strings.TrimSpace(h.Text)
 				} else {
-					fixtures[len(fixtures)-1].AwayTeamScore = strings.TrimSpace(h.Text)
+					fixture.AwayTeamScore = strings.TrimSpace(h.Text)
 				}
 			}
+		}
+
+		if fixture.Date != "" && fixture.Time != "" && fixture.Pitch != "" {
+			fixtures[fmt.Sprintf("%s|%s|%s", fixture.Date, fixture.Time, fixture.Pitch)] = fixture
 		}
 	})
 }
 
-func newCollector() *colly.Collector {
-	c := colly.NewCollector()
-	c.SetRequestTimeout(15 * time.Second)
-	return c
+func flattenFixtures() [][]interface{} {
+	var data [][]interface{}
+
+	data = append(data, []interface{}{
+		"Date updated:",
+		time.Now().Format(time.RFC822),
+	})
+
+	for _, date := range sortDates(maps.Keys(dates)) {
+		for _, tt := range sortTimes(maps.Keys(times)) {
+			if _, ok := dateTimes[fmt.Sprintf("%s|%s", date, tt)]; !ok {
+				continue
+			}
+
+			for _, pitch := range sortPitches(maps.Keys(pitches)) {
+				if fix, ok := fixtures[fmt.Sprintf("%s|%s|%s", date, tt, pitch)]; ok {
+					row := []interface{}{
+						fmt.Sprintf("%s, %s, %s", fix.Date, fix.Time, fix.Pitch),
+						fmt.Sprintf("%s, %s", fix.HomeTeam, fix.AwayTeam),
+						fix.Date,
+						fix.Time,
+						fix.Pitch,
+						fix.Stage,
+						fix.HomeTeam,
+						fix.HomeTeamScore,
+						fix.AwayTeamScore,
+						fix.AwayTeam,
+						fix.Video,
+					}
+
+					data = append(data, row)
+				} else {
+					row := []interface{}{fmt.Sprintf("%s, %s, %s", date, tt, pitch), "", date, tt, pitch, "", "", "", "", "", ""}
+					data = append(data, row)
+				}
+			}
+		}
+	}
+
+	fmt.Println(data[0])
+
+	return data
 }
 
 func convertTo24Hour(time string) string {
