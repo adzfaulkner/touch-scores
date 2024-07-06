@@ -63,7 +63,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		cc.SetRequestTimeout(15 * time.Second)
 
 		cc.OnResponse(func(r *colly.Response) {
-			fmt.Println("Visited", r.Request.URL)
+			log.Info("Visited", zap.String("url", r.Request.URL.String()))
 		})
 
 		e.ForEach("a", func(i int, h *colly.HTMLElement) {
@@ -72,7 +72,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 			err := cc.Visit(h.Request.AbsoluteURL(h.Attr("href")))
 
 			if err != nil {
-				fmt.Printf("Error: %v+\n", err)
+				log.Error("Error", zap.Error(err))
 			}
 		})
 
