@@ -62,10 +62,6 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 
 		cc.SetRequestTimeout(15 * time.Second)
 
-		cc.OnResponse(func(r *colly.Response) {
-			log.Info("Visited", zap.String("url", r.Request.URL.String()))
-		})
-
 		e.ForEach("a", func(i int, h *colly.HTMLElement) {
 			cc.OnHTML("div.content-block", setFixtures)
 
@@ -86,8 +82,6 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		}
 
 		bgv, _ := getVals(SheetID, []string{SheetName})
-
-		log.Info("Vals comparison", zap.Int("existing vals len", len(bgv.ValueRanges[0].ValueRange.Values)), zap.Int("new vals len", len(toWrite)))
 
 		rs := map[string][][]interface{}{}
 		rs[SheetName] = toWrite
