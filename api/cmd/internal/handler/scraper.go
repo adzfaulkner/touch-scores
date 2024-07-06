@@ -48,10 +48,7 @@ var pitches = map[string]bool{
 }
 
 func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.UpdateSheetValuesFunc, getVals goog.GetSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
-	c := colly.NewCollector(
-		colly.MaxDepth(2),
-		colly.Async(true),
-	)
+	c := colly.NewCollector()
 	c.SetRequestTimeout(15 * time.Second)
 
 	c.OnHTML(".category-list", func(e *colly.HTMLElement) {
