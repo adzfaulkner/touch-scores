@@ -163,7 +163,9 @@ func setFixtures(e *colly.HTMLElement) {
 
 				vidHref := h.ChildAttr("a", "href")
 
-				fixture.Video = h.Request.AbsoluteURL(vidHref)
+				if strings.Contains(vidHref, "video") {
+					fixture.Video = h.Request.AbsoluteURL(vidHref)
+				}
 			} else if h.DOM.HasClass("field") {
 				fixture.Pitch = strings.TrimSpace(h.ChildText("span"))
 				mutex.Lock()
