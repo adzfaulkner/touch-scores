@@ -7,7 +7,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -39,9 +38,6 @@ type Fixture struct {
 	Video              string `json:"video"`
 }
 
-var wg sync.WaitGroup
-var mutex = &sync.Mutex{}
-
 var fixtures = make(map[string]Fixture)
 var dates = make(map[string]bool)
 var dateTimes = make(map[string]bool)
@@ -68,9 +64,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		})
 
 		e.ForEach("a", func(i int, h *colly.HTMLElement) {
-			wg.Add(1)
 			cc.OnHTML("div.content-block", setFixtures)
-			wg.Wait()
 
 			err := cc.Visit(h.Request.AbsoluteURL(h.Attr("href")))
 
@@ -185,9 +179,7 @@ func setFixtures(e *colly.HTMLElement) {
 		}
 
 		if fixture.Date != "" && fixture.Time != "" && fixture.Pitch != "" {
-			mutex.Lock()
 			fixtures[fmt.Sprintf("%s|%s|%s", fixture.Date, fixture.Time, fixture.Pitch)] = fixture
-			mutex.Unlock()
 		}
 	})
 }
