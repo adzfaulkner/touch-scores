@@ -78,7 +78,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 
 		SheetName := "Test"
 		if os.Getenv("STAGE") == "prod" {
-			//SheetName = "Schedule"
+			SheetName = "Schedule"
 		}
 
 		bgv, _ := getVals(SheetID, []string{SheetName})
@@ -230,8 +230,6 @@ func flattenFixtures() [][]interface{} {
 			}
 		}
 	}
-
-	fmt.Println(data[0])
 
 	return data
 }
