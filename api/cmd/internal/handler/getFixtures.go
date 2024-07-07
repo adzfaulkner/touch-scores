@@ -37,6 +37,12 @@ type respBodyGetFixtures struct {
 	Data  *fixture_aggregate.ProcessResult `json:"data"`
 }
 
+func tmp_(getSheetVals goog.GetSheetValuesFunc, log logger) {
+	vals, _ := getSheetVals("1TWcOcSM74c3wXTh_8IDcKbaeaMccDwgr-utliWK6ARs", []string{"A2:K"})
+
+	log.Info("Vals from TWC sheet", zap.Reflect("vals", vals))
+}
+
 func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body string) events.APIGatewayProxyResponse {
 	var reqB reqBodyGetFixtures
 	err := json.Unmarshal([]byte(body), &reqB)
@@ -47,6 +53,8 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 	}
 
 	var pReqs []*fixture_aggregate.ProcessRequest
+
+	tmp_(getSheetVals, log)
 
 	for _, reqC := range reqB.Configs {
 		ranges := defineQryRanges(&reqC)
