@@ -59,7 +59,7 @@ type ProcessResult struct {
 	FixturesFilters *FixtureFilters `json:"fixtureFilters"`
 }
 
-type ProcessAggregation func(schedule, refAllocs [][]string, scheduleRange string, schedulePitchMap map[int]string) []*FixturesByTime
+type ProcessAggregation func(date string, schedule, refAllocs [][]string, scheduleRange string, schedulePitchMap map[int]string) []*FixturesByTime
 
 type ProcessRangeValues struct {
 	Range  string     `json:"range"`

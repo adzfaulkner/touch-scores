@@ -4,22 +4,27 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-func Processor(pReqs []*ProcessRequest) *ProcessResult {
+func Processor(videoMap map[string]string, pReqs []*ProcessRequest) *ProcessResult {
 	teams := map[string]bool{}
 	referees := map[string]bool{}
 	times := map[string]bool{}
 	pitches := map[string]bool{}
 	stages := map[string]bool{}
 
-	aggFixturesByTime := processEtaSheet(teams, referees, pitches, stages, times)
-
+	var aggFixturesByTime ProcessAggregation
+	if len(videoMap) > 0 {
+		aggFixturesByTime = processTWCSheet(teams, referees, pitches, stages, times, videoMap)
+	} else {
+		aggFixturesByTime = processEtaSheet(teams, referees, pitches, stages, times)
+	}
+	
 	var scheds []*Schedule
 
 	for _, p := range pReqs {
 		var sbds []*ScheduleByDate
 		for _, s := range p.Schedules {
 			schedulePitchMap := produceSchedulePitchMap(s.Ranges.FixturePitches.Values)
-			fbt := aggFixturesByTime(s.Ranges.Fixtures.Values, s.Ranges.RefAllocations.Values, s.Ranges.Fixtures.Range, schedulePitchMap)
+			fbt := aggFixturesByTime(s.Date, s.Ranges.Fixtures.Values, s.Ranges.RefAllocations.Values, s.Ranges.Fixtures.Range, schedulePitchMap)
 
 			sbd := ScheduleByDate{
 				Date:            s.Date,

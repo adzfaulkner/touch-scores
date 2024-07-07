@@ -37,7 +37,7 @@ type respBodyGetFixtures struct {
 	Data  *fixture_aggregate.ProcessResult `json:"data"`
 }
 
-func tmp_(getSheetVals goog.GetSheetValuesFunc, log logger) map[string]string {
+func tmp_(getSheetVals goog.GetSheetValuesFunc) map[string]string {
 	fvm := make(map[string]string)
 
 	vals, _ := getSheetVals("1TWcOcSM74c3wXTh_8IDcKbaeaMccDwgr-utliWK6ARs", []string{"A2:K"})
@@ -47,8 +47,6 @@ func tmp_(getSheetVals goog.GetSheetValuesFunc, log logger) map[string]string {
 			fvm[v[0]] = v[10]
 		}
 	}
-
-	log.Info("mapped", zap.Reflect("fvm", fvm))
 
 	return fvm
 }
@@ -64,7 +62,7 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 
 	var pReqs []*fixture_aggregate.ProcessRequest
 
-	tmp_(getSheetVals, log)
+	fvm := tmp_(getSheetVals)
 
 	for _, reqC := range reqB.Configs {
 		ranges := defineQryRanges(&reqC)
@@ -81,7 +79,7 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 		pReqs = append(pReqs, pReq)
 	}
 
-	pRes := fixture_aggregate.Processor(pReqs)
+	pRes := fixture_aggregate.Processor(fvm, pReqs)
 
 	resB := respBodyGetFixtures{
 		Event: "FIXTURES_RETRIEVED",

@@ -25,7 +25,7 @@ func Test_Processor(t *testing.T) {
 		fmt.Println(err)
 	}
 
-	res := Processor(ts.Data)
+	res := Processor(map[string]string{}, ts.Data)
 
 	ff, _ := json.Marshal(res.FixturesFilters)
 	ss, _ := json.Marshal(res.Schedules)
