@@ -66,7 +66,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 			cc.OnHTML("div.content-block", setFixtures)
 
 			log.Info("Found url", zap.String("url", h.Attr("href")))
-			
+
 			err := cc.Visit(h.Request.AbsoluteURL(h.Attr("href")))
 
 			if err != nil {
@@ -106,7 +106,11 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		}
 	})
 
-	_ = c.Visit(InitialUrl)
+	err := c.Visit(InitialUrl)
+
+	if err != nil {
+		log.Error("Error occurred whilst making initial req", zap.Error(err))
+	}
 
 	return *generateResponse(200, "Operation complete")
 }
