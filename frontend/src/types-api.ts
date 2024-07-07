@@ -14,6 +14,7 @@ export interface Fixture {
     ref2Range: string
     ref3: string
     ref3Range: string
+    videoUrl: string
 }
 
 export interface FixtureByTime {
