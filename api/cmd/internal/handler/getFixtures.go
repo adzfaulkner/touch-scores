@@ -44,12 +44,12 @@ func tmp_(getSheetVals goog.GetSheetValuesFunc, log logger) map[string]string {
 
 	for _, v := range vals.ValueRanges[0].ValueRange.Values {
 		if len(v) >= 1 && len(v) >= 11 {
-			fvm[v[0]] = v[11]
+			fvm[v[0]] = v[10]
 		}
 	}
 
 	log.Info("mapped", zap.Reflect("fvm", fvm))
-	
+
 	return fvm
 }
 
