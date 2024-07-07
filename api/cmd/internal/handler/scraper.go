@@ -65,6 +65,8 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		e.ForEach("a", func(i int, h *colly.HTMLElement) {
 			cc.OnHTML("div.content-block", setFixtures)
 
+			log.Info("Found url", zap.String("url", h.Attr("href")))
+			
 			err := cc.Visit(h.Request.AbsoluteURL(h.Attr("href")))
 
 			if err != nil {
