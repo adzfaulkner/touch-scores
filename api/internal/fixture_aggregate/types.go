@@ -20,6 +20,7 @@ type Fixture struct {
 	Ref2Range          string `json:"ref2Range"`
 	Ref3               string `json:"ref3"`
 	Ref3Range          string `json:"ref3Range"`
+	VideoUrl           string `json:"videoUrl"`
 }
 
 type FixturesByTime struct {

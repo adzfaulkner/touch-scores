@@ -46,8 +46,6 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 		return *generateResponse(500, "Check logs")
 	}
 
-	log.Info("ReqBs", zap.Reflect("reqBs", reqB))
-
 	var pReqs []*fixture_aggregate.ProcessRequest
 
 	for _, reqC := range reqB.Configs {
@@ -64,8 +62,6 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 
 		pReqs = append(pReqs, pReq)
 	}
-
-	log.Info("pReqs", zap.Reflect("pReqs", pReqs))
 
 	pRes := fixture_aggregate.Processor(pReqs)
 

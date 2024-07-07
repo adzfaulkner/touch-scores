@@ -40,6 +40,7 @@ func processEtaSheet(teams, referees, pitches, stages, times map[string]bool) Pr
 					Ref2Range:          "",
 					Ref3:               normalizeRefName(pluckValue(refAllocs, refTimeMap[time]+3, refPitchMap[pitch])),
 					Ref3Range:          "",
+					VideoUrl:           "",
 				}
 
 				if _, ok := timeFixsMap[fix.Time]; !ok {
