@@ -3,6 +3,8 @@ package fixture_aggregate
 import (
 	"fmt"
 	"golang.org/x/exp/maps"
+	"strings"
+	"unicode"
 )
 
 func processTWCSheet(teams, referees, pitches, stages, times map[string]bool, vidMap map[string]string) ProcessAggregation {
@@ -21,7 +23,7 @@ func processTWCSheet(teams, referees, pitches, stages, times map[string]bool, vi
 				}
 
 				videoUrl := ""
-				if vu, ok := vidMap[fmt.Sprintf("%s, %s, %s", date, time, pitch)]; ok {
+				if vu, ok := vidMap[fmt.Sprintf("%s, %s, %s", date, time, ucfirst(pitch))]; ok {
 					videoUrl = vu
 				}
 
@@ -85,4 +87,15 @@ func processTWCSheet(teams, referees, pitches, stages, times map[string]bool, vi
 
 		return fixsByTime
 	}
+}
+
+func ucfirst(str string) string {
+	str = strings.ToLower(str)
+
+	for _, v := range str {
+		u := string(unicode.ToUpper(v))
+		return u + str[len(u):]
+	}
+
+	return ""
 }
