@@ -106,11 +106,11 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		}
 	})
 
-	err := c.Visit(InitialUrl)
+	c.OnError(func(resp *colly.Response, err error) {
+		log.Error("Error occurred whilst making initial req", zap.Error(err), zap.Reflect("response", resp))
+	})
 
-	if err != nil {
-		log.Error("Error occurred whilst making initial req", zap.Error(err))
-	}
+	_ = c.Visit(InitialUrl)
 
 	return *generateResponse(200, "Operation complete")
 }
