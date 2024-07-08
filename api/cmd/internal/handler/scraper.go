@@ -51,11 +51,14 @@ var pitches = map[string]bool{
 }
 
 func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.UpdateSheetValuesFunc, getVals goog.GetSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+		colly.UserAgent("thetouch.live TWC2024 fixture scraper"),
+	)
 	c.SetRequestTimeout(15 * time.Second)
 
 	c.OnHTML(".category-list", func(e *colly.HTMLElement) {
 		cc := colly.NewCollector(
+			colly.UserAgent("thetouch.live TWC2024 fixture scraper"),
 			colly.MaxDepth(2),
 			colly.Async(true),
 		)
