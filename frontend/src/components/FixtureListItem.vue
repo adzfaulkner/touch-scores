@@ -85,7 +85,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
 </script>
 
 <template>
-  <div class="card rounded-0 mt-2">
+  <div class="card h-100 rounded-0 mt-2">
     <div :class="['card-header', 'text-center']">{{ fixture.time }} - {{ fixture.pitch }}</div>
     <div class="card-body p-0">
       <h6 :class="['card-title', 'text-center', 'm-2', 'p-1', 'fw-bold']">{{ fixture.stage }}</h6>
@@ -170,7 +170,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
       <div class="row" v-if="fixture.videoUrl !== ''">
         <div class="col">
           <div class="m-2">
-            <a class="btn btn-primary btn-lg w-100 rounded-0" :href="fixture.videoUrl">
+            <a class="btn btn-primary btn-lg w-100 rounded-0" :href="fixture.videoUrl" target="_blank">
               <i class="bi bi-camera-video-fill"></i> Watch Stream
             </a>
           </div>

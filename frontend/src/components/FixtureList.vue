@@ -125,17 +125,17 @@ const infoSplit = (info: string): string[] => {
                     </div>
                     <div class="row mt-0 row-cols-1 row-cols-lg-2">
                       <div
-                          class="col p-0 p-sm-1"
+                          class="col p-1"
                           v-for="fixture of fixturesByTime.fixtures"
                           :key="fixturesBySheetDate.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
                       >
-                        <FixtureListItem
-                            :fixture="fixture"
-                            :can-edit="authenticatedStore.isAuthenticated"
-                            :referees="filterStore.values.referees"
-                            :sheet-id="fixturesBySheetDate.sheetId"
-                            @fixtureUpdated="fixtureUpdated"
-                        />
+                          <FixtureListItem
+                              :fixture="fixture"
+                              :can-edit="authenticatedStore.isAuthenticated"
+                              :referees="filterStore.values.referees"
+                              :sheet-id="fixturesBySheetDate.sheetId"
+                              @fixtureUpdated="fixtureUpdated"
+                          />
                       </div>
                     </div>
                 </div>
