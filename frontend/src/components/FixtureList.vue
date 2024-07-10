@@ -118,14 +118,14 @@ const infoSplit = (info: string): string[] => {
                       v-for="fixturesByTime of fixturesBySheetDate.fixturesByTime"
                       :key="fixturesByTime.time"
                   >
-                    <div class="row mt-2 bg-danger-subtle">
+                    <div class="row mt-1 bg-danger-subtle g-1">
                       <div class="col text-center">
-                        <h3 class="p-0 m-3">{{ fixturesByTime.time }}</h3>
+                        <h3 class="p-0 m-2">{{ fixturesByTime.time }}</h3>
                       </div>
                     </div>
-                    <div class="row mt-0 row-cols-1 row-cols-lg-2">
+                    <div class="row mt-0 row-cols-1 row-cols-lg-2 g-1">
                       <div
-                          class="col p-1"
+                          class="col mt-1"
                           v-for="fixture of fixturesByTime.fixtures"
                           :key="fixturesBySheetDate.date + fixture.time + fixture.homeTeam + fixture.awayTeam"
                       >
