@@ -51,11 +51,14 @@ var pitches = map[string]bool{
 }
 
 func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.UpdateSheetValuesFunc, getVals goog.GetSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+		colly.UserAgent("thetouch.live TWC2024 fixture scraper"),
+	)
 	c.SetRequestTimeout(15 * time.Second)
 
 	c.OnHTML(".category-list", func(e *colly.HTMLElement) {
 		cc := colly.NewCollector(
+			colly.UserAgent("thetouch.live TWC2024 fixture scraper"),
 			colly.MaxDepth(2),
 			colly.Async(true),
 		)
@@ -64,6 +67,8 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 
 		e.ForEach("a", func(i int, h *colly.HTMLElement) {
 			cc.OnHTML("div.content-block", setFixtures)
+
+			log.Info("Found url", zap.String("url", h.Attr("href")))
 
 			err := cc.Visit(h.Request.AbsoluteURL(h.Attr("href")))
 
@@ -102,6 +107,10 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 				log.Error("Error occurred whilst clearing schedule", zap.Error(err))
 			}
 		}
+	})
+
+	c.OnError(func(resp *colly.Response, err error) {
+		log.Error("Error occurred whilst making initial req", zap.Error(err), zap.Reflect("response", resp))
 	})
 
 	_ = c.Visit(InitialUrl)
