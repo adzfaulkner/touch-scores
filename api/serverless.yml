@@ -10,12 +10,12 @@ custom:
   prod:
     schedule:
       method: scheduler
-      rate: rate(2 minutes)
+      rate: rate(30 minutes)
       enabled: true
   dev:
     schedule:
       method: scheduler
-      rate: rate(2 minutes)
+      rate: rate(30 minutes)
       enabled: false
 
 package:
