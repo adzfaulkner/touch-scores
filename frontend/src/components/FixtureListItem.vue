@@ -85,9 +85,9 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
 </script>
 
 <template>
-  <div class="card rounded-0 mt-2">
+  <div class="card h-100 rounded-0">
     <div :class="['card-header', 'text-center']">{{ fixture.time }} - {{ fixture.pitch }}</div>
-    <div class="card-body p-0">
+    <div class="card-body p-0 m-0">
       <h6 :class="['card-title', 'text-center', 'm-2', 'p-1', 'fw-bold']">{{ fixture.stage }}</h6>
       <div class="ps-2 fs-5">
         <div class="d-flex">
@@ -164,6 +164,15 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
               <option v-for="referee in referees" :key="referee">{{ referee }}</option>
             </select>
             <span class="text-danger fst-italic fw-bold" v-else>{{ fixture.ref3 }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row" v-if="fixture.videoUrl !== ''">
+        <div class="col">
+          <div class="m-1">
+            <a class="btn btn-primary btn-lg w-100 rounded-0" :href="fixture.videoUrl" target="_blank">
+              <i class="bi bi-camera-video-fill"></i> Watch Stream
+            </a>
           </div>
         </div>
       </div>

@@ -3,25 +3,28 @@ package fixture_aggregate
 import (
 	"fmt"
 	"golang.org/x/exp/maps"
+	"strings"
+	"unicode"
 )
 
-func processEtaSheet(teams, referees, pitches, stages, times map[string]bool) ProcessAggregation {
+func processTWCSheet(teams, referees, pitches, stages, times map[string]bool, vidMap map[string]string) ProcessAggregation {
 	return func(date string, schedule, refAllocs [][]string, scheduleRange string, schedulePitchMap map[int]string) []*FixturesByTime {
 		tapOffTimeMap := produceTapOffTimeMap(schedule)
-		refPitchMap := produceRefPitchMap(refAllocs)
-		refTimeMap := produceRefTimeMap(refAllocs)
 
 		var stage string
 		timeFixsMap := map[string]map[string]*Fixture{}
 		ttimes := map[string]bool{}
 		ppitches := map[string]bool{}
 
-		scheduleSheet, scheduleFromCell := extractSheetAndReadFromFromRange(scheduleRange)
-
 		for r, time := range tapOffTimeMap {
 			for c, pitch := range schedulePitchMap {
 				if stage = pluckValue(schedule, r, c); stage == "" {
 					continue
+				}
+
+				videoUrl := ""
+				if vu, ok := vidMap[fmt.Sprintf("%s, %s, %s", date, time, ucfirst(pitch))]; ok {
+					videoUrl = vu
 				}
 
 				fix := Fixture{
@@ -30,17 +33,17 @@ func processEtaSheet(teams, referees, pitches, stages, times map[string]bool) Pr
 					Pitch:              pitch,
 					HomeTeam:           pluckValue(schedule, r+1, c),
 					HomeTeamScore:      pluckValue(schedule, r+1, c+1),
-					HomeTeamScoreRange: fmt.Sprintf("%s!%s%d", scheduleSheet, columnToLetter(c+2), scheduleFromCell+(r+1)),
+					HomeTeamScoreRange: "",
 					AwayTeam:           pluckValue(schedule, r+2, c),
 					AwayTeamScore:      pluckValue(schedule, r+2, c+1),
-					AwayTeamScoreRange: fmt.Sprintf("%s!%s%d", scheduleSheet, columnToLetter(c+2), scheduleFromCell+(r+2)),
-					Ref1:               normalizeRefName(pluckValue(refAllocs, refTimeMap[time]+1, refPitchMap[pitch])),
+					AwayTeamScoreRange: "",
+					Ref1:               "",
 					Ref1Range:          "",
-					Ref2:               normalizeRefName(pluckValue(refAllocs, refTimeMap[time]+2, refPitchMap[pitch])),
+					Ref2:               "",
 					Ref2Range:          "",
-					Ref3:               normalizeRefName(pluckValue(refAllocs, refTimeMap[time]+3, refPitchMap[pitch])),
+					Ref3:               "",
 					Ref3Range:          "",
-					VideoUrl:           "",
+					VideoUrl:           videoUrl,
 				}
 
 				if _, ok := timeFixsMap[fix.Time]; !ok {
@@ -84,4 +87,15 @@ func processEtaSheet(teams, referees, pitches, stages, times map[string]bool) Pr
 
 		return fixsByTime
 	}
+}
+
+func ucfirst(str string) string {
+	str = strings.ToLower(str)
+
+	for _, v := range str {
+		u := string(unicode.ToUpper(v))
+		return u + str[len(u):]
+	}
+
+	return ""
 }

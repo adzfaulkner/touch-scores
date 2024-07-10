@@ -36,7 +36,7 @@ func Test_ProcessEtaSheet(t *testing.T) {
 	for _, sched := range ts.Data {
 		for _, psbd := range sched.Schedules {
 			schedulePitchMap := produceSchedulePitchMap(psbd.Ranges.FixturePitches.Values)
-			_ = processor(psbd.Ranges.Fixtures.Values, psbd.Ranges.RefAllocations.Values, psbd.Ranges.Fixtures.Range, schedulePitchMap)
+			_ = processor("19th Aug 23", psbd.Ranges.Fixtures.Values, psbd.Ranges.RefAllocations.Values, psbd.Ranges.Fixtures.Range, schedulePitchMap)
 		}
 	}
 

@@ -20,6 +20,7 @@ type Fixture struct {
 	Ref2Range          string `json:"ref2Range"`
 	Ref3               string `json:"ref3"`
 	Ref3Range          string `json:"ref3Range"`
+	VideoUrl           string `json:"videoUrl"`
 }
 
 type FixturesByTime struct {
@@ -58,7 +59,7 @@ type ProcessResult struct {
 	FixturesFilters *FixtureFilters `json:"fixtureFilters"`
 }
 
-type ProcessAggregation func(schedule, refAllocs [][]string, scheduleRange string, schedulePitchMap map[int]string) []*FixturesByTime
+type ProcessAggregation func(date string, schedule, refAllocs [][]string, scheduleRange string, schedulePitchMap map[int]string) []*FixturesByTime
 
 type ProcessRangeValues struct {
 	Range  string     `json:"range"`
