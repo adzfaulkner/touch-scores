@@ -64,7 +64,8 @@ const filterFixtures = (fixtures: Fixture[], filters: Filters): Fixture[] => {
             filters.ref.includes(fix.ref1) ||
             filters.ref.includes(fix.ref2) ||
             filters.ref.includes(fix.ref3)) &&
-        (filters.global.length === 0 || globalSearch(filters.global, fix))
+        (filters.global.length === 0 || globalSearch(filters.global, fix)) &&
+        (filters.stream.length === 0 || filters.stream[0] === 'false' || fix.videoUrl !== '')
     )
   })
 }

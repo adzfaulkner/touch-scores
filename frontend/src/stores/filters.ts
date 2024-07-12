@@ -17,7 +17,8 @@ const defaultFilters: Filters = {
   pitch: [] as string[],
   ref: [] as string[],
   team: [] as string[],
-  global: [] as string[]
+  global: [] as string[],
+  stream: [] as string[],
 }
 
 export const useFilterStore = defineStore('filter', {
