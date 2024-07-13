@@ -134,7 +134,7 @@ document.addEventListener('click', (event: Event) => {
     <div class="row mb-3">
       <div class="col">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="streamCb" @change="(e: Event) => filterFixtures(e, filterByStream)">
+          <input class="form-check-input" type="checkbox" id="streamCb" :checked="'stream' in filtersStore.filtersApplied && filtersStore.filtersApplied.stream.includes('true')" @change="(e: Event) => filterFixtures(e, filterByStream)">
           <label class="form-check-label" for="streamCb">
             Streamed fixtures only
           </label>
