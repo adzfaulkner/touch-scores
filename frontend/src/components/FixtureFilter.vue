@@ -5,7 +5,6 @@ import { ref } from 'vue'
 import escapeStringRegexp from 'escape-string-regexp'
 
 import { useFilterStore } from '@/stores/filters'
-import { useFixtureStore } from '@/stores/fixture'
 import { FilterBy } from '@/types'
 
 const globalSearchTxt = ref<HTMLInputElement>()
@@ -23,9 +22,13 @@ const filterByPitch = FilterBy.Pitch
 const filterByStage = FilterBy.Stage
 const filterByTeam = FilterBy.Team
 const filterByGlobal = FilterBy.Global
+const filterByStream = FilterBy.Stream
 
 const filterFixtures = (event: Event, by: FilterBy): void => {
-  filtersStore.filterBy(by, [(event.target as HTMLInputElement).value])
+  const target = event.target as HTMLInputElement
+  const val = target.type === 'checkbox' ? target.checked.toString() : target.value
+
+  filtersStore.filterBy(by, [val])
 }
 
 const resetGlobal = (): void => {
@@ -75,15 +78,6 @@ const acceptSuggestion = (suggestion: string): void => {
   filtersStore.filterBy(filterByGlobal, [suggestion])
 }
 
-const timesSorted = (times: Set<string>): string[] => {
-  return Array.from(times).sort((a: string, b: string): number => {
-    const A: number = parseInt(a.replace(':', ''), 10)
-    const B: number = parseInt(b.replace(':', ''), 10)
-
-    return A - B
-  })
-}
-
 document.addEventListener('click', (event: Event) => {
   const target: HTMLInputElement = event.target as HTMLInputElement
 
@@ -103,7 +97,7 @@ document.addEventListener('click', (event: Event) => {
   <div class="container">
     <div class="row mb-3">
       <div class="col">
-        <label class="form-label">Quick all field search</label>
+        <label class="form-label">Suggestive search</label>
         <div class="input-group">
           <input
             type="text"
@@ -134,6 +128,16 @@ document.addEventListener('click', (event: Event) => {
             >
             </a>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="streamCb" @change="(e: Event) => filterFixtures(e, filterByStream)">
+          <label class="form-check-label" for="streamCb">
+            Streamed fixtures only
+          </label>
         </div>
       </div>
     </div>

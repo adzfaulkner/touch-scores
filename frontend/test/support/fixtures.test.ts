@@ -12,6 +12,7 @@ interface arg {
     ref1: string,
     ref2: string,
     ref3: string,
+    videoUrl: string
 }
 
 const arg: arg = {
@@ -23,9 +24,10 @@ const arg: arg = {
     ref1: 'Ref 1',
     ref2: 'Ref2 ',
     ref3: 'Ref 3',
+    videoUrl: '',
 }
 
-const defaultFixture = {
+const defaultFixture: Fixture = {
     homeTeam: 'A',
     homeTeamScore: '',
     homeTeamScoreRange: 'A1',
@@ -41,6 +43,7 @@ const defaultFixture = {
     ref2Range: 'B2',
     ref3: 'Ref 3',
     ref3Range: 'B3',
+    videoUrl: ''
 }
 
 const produceFixture = (arg: arg): Fixture => {
@@ -61,6 +64,7 @@ describe('filters fixtures', () => {
                 team: [],
                 ref: [],
                 global: [],
+                stream: []
             }
 
             const fixtures: Fixture[] = [
@@ -83,6 +87,7 @@ describe('filters fixtures', () => {
                 team: [],
                 ref: [],
                 global: [],
+                stream: [],
             }
 
             const fixtures: Fixture[] = [
@@ -106,6 +111,7 @@ describe('filters fixtures', () => {
                 team: [],
                 ref: [],
                 global: [],
+                stream: [],
             }
 
             const fixtures: Fixture[] = [
@@ -129,6 +135,7 @@ describe('filters fixtures', () => {
                 team: ["A"],
                 ref: ["Ref 2"],
                 global: [],
+                stream: []
             }
 
             const fixtures: Fixture[] = [
@@ -143,6 +150,30 @@ describe('filters fixtures', () => {
             const result = filterFixtures(fixtures, filters)
 
             assert.deepEqual([fixtures[2], fixtures[4]], result)
+        }
+    )
+
+    it('Should filter by video url',
+        (): void => {
+            const filters: Filters = {
+                date: [],
+                time: [],
+                pitch: [],
+                stage: [],
+                team: [],
+                ref: [],
+                global: [],
+                stream: ['true']
+            }
+
+            const fixtures: Fixture[] = [
+                { ...produceFixture({ ...arg, homeTeam: 'A', awayTeam: 'B', videoUrl: '' }) },
+                { ...produceFixture({ ...arg, homeTeam: 'C', awayTeam: 'D', videoUrl: 'http://exampple'}) },
+            ];
+
+            const result = filterFixtures(fixtures, filters)
+
+            assert.deepEqual([fixtures[1]], result)
         }
     )
 })

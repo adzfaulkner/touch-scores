@@ -78,6 +78,7 @@ export interface Filters {
   ref: string[]
   team: string[]
   global: string[]
+  stream: string[]
 }
 
 export enum FilterBy {
@@ -86,7 +87,8 @@ export enum FilterBy {
   Pitch = 'pitch',
   Ref = 'ref',
   Team = 'team',
-  Global = 'global'
+  Global = 'global',
+  Stream = 'stream'
 }
 
 export interface FixturesBySheetDate {

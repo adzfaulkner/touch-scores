@@ -36,7 +36,7 @@ const accordionButtonClasses = (date: string, comp: string, totalCount: number):
   if (totalCount > 0) {
     classes = [...classes, 'bg-' + date.toLowerCase().replace(/\s+/g, '')]
   } else {
-    classes = [...classes, 'bg-body-white', 'text-black-50']
+    classes = [...classes, 'bg-white', 'text-black-50']
   }
 
   if (openAccordion.value !== date) {
@@ -98,7 +98,7 @@ const infoSplit = (info: string): string[] => {
           </h2>
           <div v-if="openAccordion === fixturesBySheetDate.date.toFormat('d MMMM y')">
             <div :class="['accordion-body', ...accordionBgClasses(fixturesBySheetDate.comp)]">
-              <h6 class="m-0" v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
+              <h6 class="m-0 text-white" v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
               <div class="container p-0 m-0" v-else>
                   <div :class="['row', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]"  v-if="fixturesBySheetDate.slotInfo !== ''">
                     <div class="col m-4 text-center">
@@ -119,8 +119,8 @@ const infoSplit = (info: string): string[] => {
                       :key="fixturesByTime.time"
                   >
                     <div class="row mt-1 bg-danger-subtle g-1">
-                      <div class="col text-center">
-                        <h3 class="p-0 m-2">{{ fixturesByTime.time }}</h3>
+                      <div class="col m-0 p-2 text-center">
+                        <h3 class="p-0 m-0">{{ fixturesByTime.time }}</h3>
                       </div>
                     </div>
                     <div class="row mt-0 row-cols-1 row-cols-lg-2 g-1">

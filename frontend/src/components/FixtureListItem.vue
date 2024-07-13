@@ -169,7 +169,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
       </div>
       <div class="row" v-if="fixture.videoUrl !== ''">
         <div class="col">
-          <div class="m-1">
+          <div class="mt-0">
             <a class="btn btn-primary btn-lg w-100 rounded-0" :href="fixture.videoUrl" target="_blank">
               <i class="bi bi-camera-video-fill"></i> Watch Stream
             </a>
