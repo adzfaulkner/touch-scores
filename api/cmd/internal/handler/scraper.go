@@ -77,11 +77,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 
 			log.Info("Found url", zap.String("url", h.Attr("href")))
 
-			err := cc.Visit(h.Request.AbsoluteURL(h.Attr("href")))
-
-			if err != nil {
-				log.Error("Error", zap.Error(err))
-			}
+			_ = cc.Visit(h.Request.AbsoluteURL(h.Attr("href")))
 		})
 
 		cc.Wait()
