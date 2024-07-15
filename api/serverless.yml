@@ -10,7 +10,7 @@ custom:
   prod:
     schedule:
       method: scheduler
-      rate: rate(30 minutes)
+      rate: rate(5 minutes)
       enabled: true
   dev:
     schedule:

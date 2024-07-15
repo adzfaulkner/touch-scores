@@ -42,8 +42,6 @@ func tmp_(getSheetVals goog.GetSheetValuesFunc, log logger) map[string]string {
 
 	vals, _ := getSheetVals("1TWcOcSM74c3wXTh_8IDcKbaeaMccDwgr-utliWK6ARs", []string{"A2:K"})
 
-	log.Info("vals from twc sheet", zap.Reflect("vals", vals))
-
 	for _, v := range vals.ValueRanges[0].ValueRange.Values {
 		if len(v) >= 1 && len(v) >= 11 {
 			fvm[v[0]] = v[10]
