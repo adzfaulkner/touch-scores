@@ -57,11 +57,18 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 	c.SetRequestTimeout(15 * time.Second)
 
 	c.OnHTML(".category-list", func(e *colly.HTMLElement) {
+		errDet := false
+
 		cc := colly.NewCollector(
 			colly.UserAgent("thetouch.live TWC2024 fixture scraper"),
 			colly.MaxDepth(2),
 			colly.Async(true),
 		)
+
+		cc.OnError(func(resp *colly.Response, err error) {
+			errDet = true
+			log.Error("Error occurred whilst making req", zap.Error(err), zap.Reflect("response", resp))
+		})
 
 		cc.SetRequestTimeout(15 * time.Second)
 
@@ -78,6 +85,11 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		})
 
 		cc.Wait()
+
+		if errDet {
+			log.Info("Exiting due to error in get fixture request(s)")
+			return
+		}
 
 		toWrite := flattenFixtures()
 
