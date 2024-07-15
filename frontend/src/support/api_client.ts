@@ -88,7 +88,7 @@ const initPolling = () => {
         if (!authenticationStore.isAuthenticated && !filtersStore.isFilteringInProgress) {
             requestFixtures()
         }
-    }, 10000)
+    }, 200000)
 
     return {
         requestFixtures,

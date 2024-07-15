@@ -64,7 +64,7 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 
 	var pReqs []*fixture_aggregate.ProcessRequest
 
-	fvm := tmp_(getSheetVals)
+	fvm := tmp_(getSheetVals, log)
 
 	for _, reqC := range reqB.Configs {
 		ranges := defineQryRanges(&reqC)
