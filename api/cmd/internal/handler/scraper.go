@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -233,8 +234,8 @@ func flattenFixtures() [][]interface{} {
 						fix.Pitch,
 						fix.Stage,
 						fix.HomeTeam,
-						fix.HomeTeamScore,
-						fix.AwayTeamScore,
+						numeric(fix.HomeTeamScore),
+						numeric(fix.AwayTeamScore),
 						fix.AwayTeam,
 						fix.Video,
 					}
@@ -330,4 +331,14 @@ func sortPitches(vals []string) []string {
 	})
 
 	return vals
+}
+
+func numeric(input string) string {
+	if input == "-" {
+		return "-"
+	}
+	
+	r, _ := regexp.Compile("([0-9]+)")
+
+	return r.FindString(input)
 }
