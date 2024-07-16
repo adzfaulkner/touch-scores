@@ -38,6 +38,7 @@ type Fixture struct {
 	Ref3               string `json:"ref3"`
 	Ref3Range          string `json:"ref3Range"`
 	Video              string `json:"video"`
+	Report             string `json:"report"`
 }
 
 var mutex = &sync.Mutex{}
@@ -170,6 +171,7 @@ func setFixtures(e *colly.HTMLElement) {
 					Ref3:               "",
 					Ref3Range:          "",
 					Video:              "",
+					Report:             "",
 				}
 			} else if h.DOM.HasClass("time") {
 				fixture.Time = convertTo24Hour(strings.TrimSpace(h.ChildText("span")))
@@ -199,6 +201,8 @@ func setFixtures(e *colly.HTMLElement) {
 				} else {
 					fixture.AwayTeamScore = strings.TrimSpace(h.Text)
 				}
+			} else if h.DOM.HasClass("report") {
+				fixture.Report = h.ChildAttr("a", "href")
 			}
 		}
 
@@ -238,11 +242,12 @@ func flattenFixtures() [][]interface{} {
 						numeric(fix.AwayTeamScore),
 						fix.AwayTeam,
 						fix.Video,
+						fix.Report,
 					}
 
 					data = append(data, row)
 				} else {
-					row := []interface{}{fmt.Sprintf("%s, %s, %s", date, tt, pitch), "", date, tt, pitch, "", "", "", "", "", ""}
+					row := []interface{}{fmt.Sprintf("%s, %s, %s", date, tt, pitch), "", date, tt, pitch, "", "", "", "", "", "", ""}
 					data = append(data, row)
 				}
 			}
@@ -337,7 +342,7 @@ func numeric(input string) string {
 	if input == "-" {
 		return "-"
 	}
-	
+
 	r, _ := regexp.Compile("([0-9]+)")
 
 	return r.FindString(input)
