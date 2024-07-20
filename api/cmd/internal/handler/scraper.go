@@ -65,7 +65,6 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		cc := colly.NewCollector(
 			colly.UserAgent("thetouch.live TWC2024 fixture scraper"),
 			colly.MaxDepth(2),
-			colly.Async(true),
 		)
 
 		cc.OnError(func(resp *colly.Response, err error) {
