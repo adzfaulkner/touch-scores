@@ -51,11 +51,9 @@ var pitches = map[string]bool{
 	"Riverside 9":  true,
 	"Riverside 10": true,
 }
-var scoreFound bool
+var scoresFound = make(map[string]bool)
 
 func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.UpdateSheetValuesFunc, getVals goog.GetSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
-	scoreFound = true
-
 	c := colly.NewCollector(
 		colly.UserAgent("thetouch.live TWC2024 fixture scraper"),
 	)
@@ -87,10 +85,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 
 		cc.Wait()
 
-		if !scoreFound {
-			log.Error("No scores found")
-			return
-		}
+		log.Info("scoresFound", zap.Reflect("val", scoresFound))
 
 		if errDet {
 			log.Info("Exiting due to error in get fixture request(s)")
@@ -137,7 +132,8 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 }
 
 func setFixtures(e *colly.HTMLElement) {
-	sf := false
+	scoresFound[e.Request.URL.String()] = false
+
 	var division string
 	var stage string
 	var date string
@@ -207,8 +203,10 @@ func setFixtures(e *colly.HTMLElement) {
 			} else if h.DOM.HasClass("score") {
 				score := strings.TrimSpace(h.Text)
 
-				if score != "-" {
-					sf = true
+				if score != "_" {
+					mutex.Lock()
+					scoresFound[e.Request.URL.String()] = true
+					mutex.Unlock()
 				}
 
 				if fixture.HomeTeamScore == "" {
@@ -227,12 +225,6 @@ func setFixtures(e *colly.HTMLElement) {
 			mutex.Unlock()
 		}
 	})
-
-	if !sf {
-		mutex.Lock()
-		scoreFound = false
-		mutex.Unlock()
-	}
 }
 
 func flattenFixtures() [][]interface{} {
@@ -253,10 +245,6 @@ func flattenFixtures() [][]interface{} {
 				if fix, ok := fixtures[fmt.Sprintf("%s|%s|%s", date, tt, pitch)]; ok {
 					hs := numeric(fix.HomeTeamScore)
 					as := numeric(fix.AwayTeamScore)
-
-					if hs != "-" && as != "-" {
-						scoreFound = true
-					}
 
 					row := []interface{}{
 						fmt.Sprintf("%s, %s, %s", fix.Date, fix.Time, fix.Pitch),
