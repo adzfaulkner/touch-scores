@@ -8,7 +8,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -40,8 +39,6 @@ type Fixture struct {
 	Video              string `json:"video"`
 	Report             string `json:"report"`
 }
-
-var mutex = &sync.Mutex{}
 
 var fixtures = make(map[string]Fixture)
 var dates = make(map[string]bool)
@@ -149,9 +146,7 @@ func setFixtures(e *colly.HTMLElement) {
 		case "h4":
 			date = strings.TrimSpace(h.Text)
 
-			mutex.Lock()
 			dates[date] = true
-			mutex.Unlock()
 		case "td":
 			if h.DOM.HasClass("label") {
 				if strings.TrimSpace(h.ChildText("strong")) != "" {
@@ -181,10 +176,8 @@ func setFixtures(e *colly.HTMLElement) {
 			} else if h.DOM.HasClass("time") {
 				fixture.Time = convertTo24Hour(strings.TrimSpace(h.ChildText("span")))
 
-				mutex.Lock()
 				dateTimes[fmt.Sprintf("%s|%s", date, fixture.Time)] = true
 				times[fixture.Time] = true
-				mutex.Unlock()
 
 				vidHref := h.ChildAttr("a", "href")
 
@@ -193,9 +186,7 @@ func setFixtures(e *colly.HTMLElement) {
 				}
 			} else if h.DOM.HasClass("field") {
 				fixture.Pitch = strings.TrimSpace(h.ChildText("span"))
-				mutex.Lock()
 				pitches[fixture.Pitch] = true
-				mutex.Unlock()
 			} else if h.DOM.HasClass("home") {
 				fixture.HomeTeam = addTeamDivAbbrev(strings.TrimSpace(h.ChildText("span")), division)
 			} else if h.DOM.HasClass("away") {
@@ -204,9 +195,7 @@ func setFixtures(e *colly.HTMLElement) {
 				score := strings.TrimSpace(h.Text)
 
 				if score != "_" {
-					mutex.Lock()
 					scoresFound[e.Request.URL.String()] = true
-					mutex.Unlock()
 				}
 
 				if fixture.HomeTeamScore == "" {
@@ -220,9 +209,7 @@ func setFixtures(e *colly.HTMLElement) {
 		}
 
 		if fixture.Date != "" && fixture.Time != "" && fixture.Pitch != "" {
-			mutex.Lock()
 			fixtures[fmt.Sprintf("%s|%s|%s", fixture.Date, fixture.Time, fixture.Pitch)] = fixture
-			mutex.Unlock()
 		}
 	})
 }
