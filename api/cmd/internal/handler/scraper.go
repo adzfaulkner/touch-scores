@@ -89,7 +89,12 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 			return
 		}
 
-		toWrite := flattenFixtures()
+		toWrite, scoreFound := flattenFixtures()
+
+		if !scoreFound {
+			log.Error("No scores found")
+			return
+		}
 
 		SheetName := "Test"
 		if os.Getenv("STAGE") == "prod" {
@@ -214,7 +219,7 @@ func setFixtures(e *colly.HTMLElement) {
 	})
 }
 
-func flattenFixtures() [][]interface{} {
+func flattenFixtures() ([][]interface{}, bool) {
 	var data [][]interface{}
 
 	data = append(data, []interface{}{
@@ -222,6 +227,7 @@ func flattenFixtures() [][]interface{} {
 		time.Now().Format(time.RFC822),
 	})
 
+	scoreFound := false
 	for _, date := range sortDates(maps.Keys(dates)) {
 		for _, tt := range sortTimes(maps.Keys(times)) {
 			if _, ok := dateTimes[fmt.Sprintf("%s|%s", date, tt)]; !ok {
@@ -230,6 +236,13 @@ func flattenFixtures() [][]interface{} {
 
 			for _, pitch := range sortPitches(maps.Keys(pitches)) {
 				if fix, ok := fixtures[fmt.Sprintf("%s|%s|%s", date, tt, pitch)]; ok {
+					hs := numeric(fix.HomeTeamScore)
+					as := numeric(fix.AwayTeamScore)
+
+					if hs != "-" && as != "-" {
+						scoreFound = true
+					}
+
 					row := []interface{}{
 						fmt.Sprintf("%s, %s, %s", fix.Date, fix.Time, fix.Pitch),
 						fmt.Sprintf("%s, %s", fix.HomeTeam, fix.AwayTeam),
@@ -238,8 +251,8 @@ func flattenFixtures() [][]interface{} {
 						fix.Pitch,
 						fix.Stage,
 						fix.HomeTeam,
-						numeric(fix.HomeTeamScore),
-						numeric(fix.AwayTeamScore),
+						hs,
+						as,
 						fix.AwayTeam,
 						fix.Video,
 						fix.Report,
@@ -254,7 +267,7 @@ func flattenFixtures() [][]interface{} {
 		}
 	}
 
-	return data
+	return data, scoreFound
 }
 
 func convertTo24Hour(time string) string {
