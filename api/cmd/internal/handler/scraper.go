@@ -51,8 +51,11 @@ var pitches = map[string]bool{
 	"Riverside 9":  true,
 	"Riverside 10": true,
 }
+var scoreFound bool
 
 func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.UpdateSheetValuesFunc, getVals goog.GetSheetValuesFunc, log logger) events.APIGatewayProxyResponse {
+	scoreFound = true
+
 	c := colly.NewCollector(
 		colly.UserAgent("thetouch.live TWC2024 fixture scraper"),
 	)
@@ -84,17 +87,17 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 
 		cc.Wait()
 
+		if !scoreFound {
+			log.Error("No scores found")
+			return
+		}
+
 		if errDet {
 			log.Info("Exiting due to error in get fixture request(s)")
 			return
 		}
 
-		toWrite, scoreFound := flattenFixtures()
-
-		if !scoreFound {
-			log.Error("No scores found")
-			return
-		}
+		toWrite := flattenFixtures()
 
 		SheetName := "Test"
 		if os.Getenv("STAGE") == "prod" {
@@ -134,6 +137,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 }
 
 func setFixtures(e *colly.HTMLElement) {
+	sf := false
 	var division string
 	var stage string
 	var date string
@@ -201,10 +205,16 @@ func setFixtures(e *colly.HTMLElement) {
 			} else if h.DOM.HasClass("away") {
 				fixture.AwayTeam = addTeamDivAbbrev(strings.TrimSpace(h.ChildText("span")), division)
 			} else if h.DOM.HasClass("score") {
+				score := strings.TrimSpace(h.Text)
+
+				if score != "-" {
+					sf = true
+				}
+
 				if fixture.HomeTeamScore == "" {
-					fixture.HomeTeamScore = strings.TrimSpace(h.Text)
+					fixture.HomeTeamScore = score
 				} else {
-					fixture.AwayTeamScore = strings.TrimSpace(h.Text)
+					fixture.AwayTeamScore = score
 				}
 			} else if h.DOM.HasClass("report") {
 				fixture.Report = h.ChildAttr("a", "href")
@@ -217,9 +227,15 @@ func setFixtures(e *colly.HTMLElement) {
 			mutex.Unlock()
 		}
 	})
+
+	if !sf {
+		mutex.Lock()
+		scoreFound = false
+		mutex.Unlock()
+	}
 }
 
-func flattenFixtures() ([][]interface{}, bool) {
+func flattenFixtures() [][]interface{} {
 	var data [][]interface{}
 
 	data = append(data, []interface{}{
@@ -227,7 +243,6 @@ func flattenFixtures() ([][]interface{}, bool) {
 		time.Now().Format(time.RFC822),
 	})
 
-	scoreFound := false
 	for _, date := range sortDates(maps.Keys(dates)) {
 		for _, tt := range sortTimes(maps.Keys(times)) {
 			if _, ok := dateTimes[fmt.Sprintf("%s|%s", date, tt)]; !ok {
@@ -267,7 +282,7 @@ func flattenFixtures() ([][]interface{}, bool) {
 		}
 	}
 
-	return data, scoreFound
+	return data
 }
 
 func convertTo24Hour(time string) string {
