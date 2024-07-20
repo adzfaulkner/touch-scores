@@ -261,6 +261,10 @@ func convertTo24Hour(time string) string {
 	timeAmPm := strings.Split(time, " ")
 	hoursMins := strings.Split(timeAmPm[0], ":")
 
+	if hoursMins[0] == "" {
+		return ""
+	}
+
 	hour, _ := strconv.Atoi(hoursMins[0])
 
 	if hour < 12 && len(timeAmPm) >= 1 && timeAmPm[1] == "p.m." {
