@@ -257,15 +257,13 @@ func flattenFixtures() [][]interface{} {
 	return data
 }
 
-func convertTo24Hour(time string, log logger) string {
+func convertTo24Hour(time string) string {
 	timeAmPm := strings.Split(time, " ")
 	hoursMins := strings.Split(timeAmPm[0], ":")
 
 	hour, _ := strconv.Atoi(hoursMins[0])
 
-	log.Info("timeAmPm", zap.Reflect("val", timeAmPm))
-
-	if hour < 12 && timeAmPm[1] == "p.m." {
+	if hour < 12 && len(timeAmPm) >= 1 && timeAmPm[1] == "p.m." {
 		hour = hour + 12
 	}
 
