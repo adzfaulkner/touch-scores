@@ -85,6 +85,7 @@ func handleScape(clearSheetVals goog.ClearSheetValuesFunc, updateVals goog.Updat
 		cc.Wait()
 
 		log.Info("scoresFound", zap.Reflect("val", scoresFound))
+		log.Info("fixs", zap.Reflect("val", fixtures))
 
 		if errDet {
 			log.Info("Exiting due to error in get fixture request(s)")
