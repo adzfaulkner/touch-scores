@@ -100,13 +100,13 @@ const infoSplit = (info: string): string[] => {
             <div :class="['accordion-body', ...accordionBgClasses(fixturesBySheetDate.comp)]">
               <h6 class="m-0 text-white" v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
               <div class="container p-0 m-0" v-else>
-                  <div :class="['row', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]"  v-if="fixturesBySheetDate.slotInfo !== ''">
-                    <div class="col m-4 text-center">
-                      <h5 class="m-0">
-                        <span v-for="(i, k) in infoSplit(fixturesBySheetDate.slotInfo)" v-bind:key="k">{{i}}<br></span>
-                      </h5>
-                    </div>
+                <div :class="['row',  'g-1', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]">
+                  <div class="col m-0 p-0 text-center">
+                    <h5 class="p-0 mt-3 mb-3">
+                      <span v-for="(i, k) in infoSplit(fixturesBySheetDate.slotInfo)" v-bind:key="k">{{i}}<br></span>
+                    </h5>
                   </div>
+                </div>
                   <div class="row bg-playoff text-white" v-if="fixturesBySheetDate.playOffSlotInfo !== ''">
                     <div class="col m-4 text-center">
                       <h5 class="m-0">
@@ -248,35 +248,27 @@ const infoSplit = (info: string): string[] => {
   background-color: #ff0000;
 }
 
-.bg-22june2024 {
+.bg-24august2024 {
   background-color: #c0ae7a;
   color: black;
 }
 
-.bg-23june2024 {
+.bg-25august2024 {
   background-color: #38761d;
   color: white;
 }
 
-.bg-15july2024, .bg-16july2024, .bg-17july2024, .bg-18july2024, .bg-19july2024, .bg-20july2024, .bg-21july2024 {
-  background-color: #fff;
-}
-
-.slotInfo-22june2024 {
+.slotInfo-24august2024 {
   background-color: #a8d08d;
   color: black;
 }
 
-.slotInfo-23june2024 {
+.slotInfo-25august2024 {
   background-color: #f9cb9c;
   color: black;
 }
 
 .accordion-bg-nationals {
   /*background-color: #ff0000;*/
-}
-
-.accordion-bg-wc_24 {
-  background-color: #3341b5 !important;
 }
 </style>
