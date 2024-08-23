@@ -50,11 +50,11 @@ const sheetConfigs: SheetConfig[] = [
       {
         date: '2024-08-25T00:00:00+00:00',
         ranges: {
-          fixtures: 'Schedule!A14:X73',
-          fixturePitches: 'Schedule!13:13',
+          fixtures: 'Schedule!A14:R73',
+          fixturePitches: 'Schedule!A13:R13',
           slotInfo: 'Schedule!B12:AE12',
           playOffSlotInfo: null,
-          refAllocations: 'Ref Allocations!2:62',
+          refAllocations: 'Ref Allocations!A2:Q62',
         },
       },
     ],
@@ -86,10 +86,6 @@ const sheetConfigs: SheetConfig[] = [
       {
         label: 'Div 4 Pool G',
         range: 'Pool G!B12:W20',
-      },
-      {
-        label: 'Div 4 Pool H',
-        range: 'Pool H!B12:W20',
       },
     ],
     competition: 'mixed_nts',
