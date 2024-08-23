@@ -6,19 +6,14 @@ import (
 	"time"
 )
 
-func Processor(videoMap map[string]string, pReqs []*ProcessRequest) *ProcessResult {
+func Processor(pReqs []*ProcessRequest) *ProcessResult {
 	teams := map[string]bool{}
 	referees := map[string]bool{}
 	times := map[string]bool{}
 	pitches := map[string]bool{}
 	stages := map[string]bool{}
-
-	var aggFixturesByTime ProcessAggregation
-	if len(videoMap) > 0 {
-		aggFixturesByTime = processTWCSheet(teams, referees, pitches, stages, times, videoMap)
-	} else {
-		aggFixturesByTime = processEtaSheet(teams, referees, pitches, stages, times)
-	}
+	
+	aggFixturesByTime := processEtaSheet(teams, referees, pitches, stages, times)
 
 	var scheds []*Schedule
 
@@ -32,7 +27,7 @@ func Processor(videoMap map[string]string, pReqs []*ProcessRequest) *ProcessResu
 			if err != nil {
 				fmt.Println(err)
 			}
-			
+
 			fbt := aggFixturesByTime(tt.Format("2 Jan 2006"), s.Ranges.Fixtures.Values, s.Ranges.RefAllocations.Values, s.Ranges.Fixtures.Range, schedulePitchMap)
 
 			sbd := ScheduleByDate{
