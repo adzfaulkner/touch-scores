@@ -3,6 +3,7 @@ package fixture_aggregate
 import (
 	"fmt"
 	"golang.org/x/exp/maps"
+	"log"
 )
 
 func processEtaSheet(teams, referees, pitches, stages, times map[string]bool) ProcessAggregation {
@@ -10,6 +11,10 @@ func processEtaSheet(teams, referees, pitches, stages, times map[string]bool) Pr
 		tapOffTimeMap := produceTapOffTimeMap(schedule)
 		refPitchMap := produceRefPitchMap(refAllocs)
 		refTimeMap := produceRefTimeMap(refAllocs)
+
+		log.Printf("%v+", refAllocs)
+		log.Printf("%v+", refPitchMap)
+		log.Printf("%v+", refTimeMap)
 
 		var stage string
 		timeFixsMap := map[string]map[string]*Fixture{}
