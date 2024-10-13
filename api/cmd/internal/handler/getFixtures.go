@@ -63,6 +63,10 @@ func handleGetFixtures(getSheetVals goog.GetSheetValuesFunc, log logger, body st
 		pReqs = append(pReqs, pReq)
 	}
 
+	tmp, _ := json.Marshal(pReqs)
+	
+	log.Info("fetched from google", zap.String("pReqs", string(tmp)))
+
 	pRes := fixture_aggregate.Processor(pReqs)
 
 	resB := respBodyGetFixtures{
