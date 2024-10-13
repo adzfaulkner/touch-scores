@@ -22,7 +22,7 @@ const initWs = () => {
             requestFixtures()
         },
         (e: MessageEvent) => {
-            const { event, data: { data: { schedules, fixtureFilters } }  } = JSON.parse(e.data)
+            const { event, data: { schedules, fixtureFilters }  } = JSON.parse(e.data)
 
             switch (event) {
                 case 'UPDATE_RECEIVED':

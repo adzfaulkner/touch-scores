@@ -1,5 +1,5 @@
 <script setup lang="ts">
-//import AuthenticationControls from '@/components/AuthenticationControls.vue'
+import AuthenticationControls from '@/components/AuthenticationControls.vue'
 
 defineProps<{
   showAuthenticationControls: boolean
@@ -12,9 +12,7 @@ defineProps<{
       <span class="logo-container navbar-brand">
         <img src="@/assets/logo.png" class="img-fluid" alt="TheTouch.live" />
       </span>
-      <!--
-        <AuthenticationControls v-if="showAuthenticationControls" />
-      -->
+      <AuthenticationControls v-if="showAuthenticationControls" />
     </div>
   </nav>
 </template>

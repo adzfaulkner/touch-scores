@@ -98,7 +98,7 @@ const infoSplit = (info: string): string[] => {
           </h2>
           <div v-if="openAccordion === fixturesBySheetDate.date.toFormat('d MMMM y')">
             <div :class="['accordion-body', ...accordionBgClasses(fixturesBySheetDate.comp)]">
-              <h6 class="m-0 text-white" v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
+              <h6 class="m-0" v-if="fixturesBySheetDate.totalCount < 1">No fixtures found matching filter criteria</h6>
               <div class="container p-0 m-0" v-else>
                 <div :class="['row',  'g-1', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]">
                   <div class="col m-0 p-0 text-center">

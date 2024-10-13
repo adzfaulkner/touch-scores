@@ -7,6 +7,8 @@ import type { AwsRumConfig } from 'aws-rum-web'
 import App from './App.vue'
 import router from './router'
 import { initApiClient } from '@/support/api_client'
+import { getEnv } from '@/support/env'
+import { initSignInClient } from '@/support/google-clients'
 
 try {
     const config: AwsRumConfig = {
@@ -33,7 +35,7 @@ try {
     // Ignore errors thrown during CloudWatch RUM web client initialization
 }
 
-//initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
+initSignInClient(getEnv('VITE_CLIENT_ID'), getEnv('VITE_SCOPES'))
 
 const pinia = createPinia()
 const app = createApp(App)
