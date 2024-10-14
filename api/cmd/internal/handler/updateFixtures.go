@@ -93,22 +93,30 @@ func validatedToken(log logger) func(token string) bool {
 		req, _ := http.NewRequest(http.MethodGet, requestURL, nil)
 
 		cl := http.Client{
-			Timeout: time.Second * 2, // Timeout after 2 seconds
+			Timeout: time.Second * 2,
 		}
 
 		res, err := cl.Do(req)
 
 		if err != nil {
 			log.Error("look up token response error", zap.Error(err))
-			return true
+			return false
 		}
 
 		body, _ := io.ReadAll(res.Body)
 
 		rp := resp{}
-		json.Unmarshal(body, &rp)
+		err = json.Unmarshal(body, &rp)
 
-		log.Info("look up token response", zap.Reflect("resp", rp), zap.String("token", token))
+		if err != nil {
+			log.Error("look up token response error", zap.Error(err))
+			return false
+		}
+
+		if rp.ErrorDescription != "" {
+			return false
+		}
+
 		return true
 	}
 }
