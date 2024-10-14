@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/adzfaulkner/touch-scores/internal/goog"
@@ -92,14 +91,7 @@ func validatedToken(log logger) func(token string) bool {
 			return true
 		}
 
-		body, err := io.ReadAll(res.Body)
-
-		if err != nil {
-			log.Error("look up token response body read err", zap.Error(err))
-			return true
-		}
-
-		log.Info("look up token response", zap.String("body", string(body)), zap.String("token", token))
+		log.Info("look up token response", zap.Reflect("res", res), zap.String("token", token))
 		return true
 	}
 }
