@@ -22,21 +22,25 @@ const initWs = () => {
             requestFixtures()
         },
         (e: MessageEvent) => {
-            const { event, data: { schedules, fixtureFilters }  } = JSON.parse(e.data)
+            const r = JSON.parse(e.data)
 
-            switch (event) {
+            switch (r.event) {
                 case 'UPDATE_RECEIVED':
-                    if (!authenticationStore.isAuthenticated && !filtersStore.isFilteringInProgress && sheetConfigMap.has(schedules[0].spreadsheetId)) {
+                    if (
+                        !authenticationStore.isAuthenticated
+                        && !filtersStore.isFilteringInProgress
+                        && sheetConfigMap.has(r.data.schedules[0].spreadsheetId)
+                    ) {
                         ws().send(JSON.stringify({
                             action: 'GET_FIXTURES',
-                            configs: [sheetConfigMap.get(schedules[0].spreadsheetId)],
+                            configs: [sheetConfigMap.get(r.data.schedules[0].spreadsheetId)],
                         }))
                     }
                     break;
                 case 'FIXTURES_RETRIEVED':
-                    fixtureStore.intFixtures(schedules)
-                    filtersStore.setValues(fixtureFilters)
-                    standingsStore.setValues(schedules)
+                    fixtureStore.intFixtures(r.data.schedules)
+                    filtersStore.setValues(r.data.fixtureFilters)
+                    standingsStore.setValues(r.data.schedules)
                     break
             }
         }

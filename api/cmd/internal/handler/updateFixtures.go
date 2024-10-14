@@ -26,6 +26,7 @@ type updateReqBody struct {
 type updateRespBody struct {
 	Event   string `json:"event"`
 	Success bool   `json:"success"`
+	Message string `json:"message"`
 }
 
 func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger, body string) events.APIGatewayProxyResponse {
@@ -38,8 +39,15 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 	}
 
 	if !validatedToken(log)(reqB.Token) {
-		log.Error("Invalid token received", zap.Error(err))
-		return *generateResponse(401, "Unauthorized")
+		resB := updateRespBody{
+			Event:   "FIXTURES_UPDATED",
+			Success: false,
+			Message: "Unauthenticated",
+		}
+
+		b, _ := json.Marshal(resB)
+
+		return *generateResponse(401, string(b))
 	}
 
 	agg := map[string]map[string][][]interface{}{}
@@ -76,6 +84,7 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 	resB := updateRespBody{
 		Event:   "FIXTURES_UPDATED",
 		Success: success,
+		Message: "",
 	}
 
 	b, _ := json.Marshal(resB)
