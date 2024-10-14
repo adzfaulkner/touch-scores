@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/adzfaulkner/touch-scores/internal/goog"
@@ -84,14 +85,21 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 func validatedToken(log logger) func(token string) bool {
 	return func(token string) bool {
 		requestURL := fmt.Sprintf("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=%s", token)
-		res, err := http.Get(requestURL)
+		res, err := http.NewRequest(http.MethodGet, requestURL, nil)
 
 		if err != nil {
 			log.Error("look up token response error", zap.Error(err))
 			return true
 		}
 
-		log.Info("look up token response", zap.Reflect("res", res))
+		body, err := io.ReadAll(res.Body)
+
+		if err != nil {
+			log.Error("look up token response body read err", zap.Error(err))
+			return true
+		}
+
+		log.Info("look up token response", zap.String("body", string(body)), zap.String("token", token))
 		return true
 	}
 }
