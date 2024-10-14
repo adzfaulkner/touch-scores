@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"github.com/aws/aws-lambda-go/events"
@@ -84,14 +85,20 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 func validatedToken(log logger) func(token string) bool {
 	return func(token string) bool {
 		requestURL := fmt.Sprintf("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=%s", token)
-		res, err := http.NewRequest(http.MethodGet, requestURL, nil)
+		req, _ := http.NewRequest(http.MethodGet, requestURL, nil)
+
+		cl := http.Client{
+			Timeout: time.Second * 2, // Timeout after 2 seconds
+		}
+
+		res, err := cl.Do(req)
 
 		if err != nil {
 			log.Error("look up token response error", zap.Error(err))
 			return true
 		}
 
-		log.Info("look up token response", zap.Reflect("res", res.Response), zap.String("token", token))
+		log.Info("look up token response", zap.Reflect("res", res), zap.String("token", token))
 		return true
 	}
 }
