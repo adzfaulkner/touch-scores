@@ -91,7 +91,7 @@ func validatedToken(log logger) func(token string) bool {
 			return true
 		}
 
-		log.Info("look up token response", zap.Reflect("res", res.Body), zap.String("token", token))
+		log.Info("look up token response", zap.Reflect("res", res.Response), zap.String("token", token))
 		return true
 	}
 }
