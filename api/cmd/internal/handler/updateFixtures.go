@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -82,6 +83,10 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 	return *generateResponse(200, string(b))
 }
 
+type resp struct {
+	ErrorDescription string `json:"error_description"`
+}
+
 func validatedToken(log logger) func(token string) bool {
 	return func(token string) bool {
 		requestURL := fmt.Sprintf("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=%s", token)
@@ -98,7 +103,12 @@ func validatedToken(log logger) func(token string) bool {
 			return true
 		}
 
-		log.Info("look up token response", zap.Reflect("res", res), zap.String("token", token))
+		body, _ := io.ReadAll(res.Body)
+
+		rp := resp{}
+		json.Unmarshal(body, &rp)
+
+		log.Info("look up token response", zap.Reflect("resp", rp), zap.String("token", token))
 		return true
 	}
 }
