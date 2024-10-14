@@ -51,8 +51,9 @@ const initWs = () => {
         }))
     })(ws, sheetConfigs)
 
-    const updateSheet = (updates: SheetUpdate[]) => ws().send(JSON.stringify({
+    const updateSheet = (updates: SheetUpdate[], token: string) => ws().send(JSON.stringify({
         action: 'UPDATE_FIXTURES',
+        token,
         updates,
     }))
     

@@ -3,9 +3,11 @@ import { createPinia } from 'pinia'
 import { AwsRum } from 'aws-rum-web'
 
 import type { AwsRumConfig } from 'aws-rum-web'
+import type { SheetUpdate } from '@/types'
 
 import App from './App.vue'
 import router from './router'
+import { useFixtureStore } from '@/stores/fixture'
 import { initApiClient } from '@/support/api_client'
 import { getEnv } from '@/support/env'
 import { initSignInClient } from '@/support/google-clients'
@@ -46,6 +48,9 @@ app.use(pinia)
 const { requestFixtures, updateSheet } = initApiClient()
 
 app.provide('requestFixtures', requestFixtures)
-app.provide('updateSheet', updateSheet)
+app.provide('updateSheet', ((updateSheet: Function) => (updates: SheetUpdate[]) => {
+    const fixtureStore = useFixtureStore()
+    fixtureStore.update(updateSheet, updates)
+})(updateSheet))
 
 app.mount('#app')

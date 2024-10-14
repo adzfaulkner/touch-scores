@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"context"
 	"encoding/json"
+	"fmt"
+	"net/http"
+
 	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"github.com/aws/aws-lambda-go/events"
 	"go.uber.org/zap"
-	"google.golang.org/api/idtoken"
 )
 
 type update struct {
@@ -34,7 +35,7 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 		return *generateResponse(500, "Check logs")
 	}
 
-	if !validatedToken(context.TODO(), log)(reqB.Token) {
+	if !validatedToken(log)(reqB.Token) {
 		log.Error("Invalid token received", zap.Error(err))
 		return *generateResponse(401, "Unauthorized")
 	}
@@ -80,16 +81,17 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 	return *generateResponse(200, string(b))
 }
 
-func validatedToken(ctx context.Context, log logger) func(token string) bool {
+func validatedToken(log logger) func(token string) bool {
 	return func(token string) bool {
-		payload, err := idtoken.Validate(ctx, token, "")
+		requestURL := fmt.Sprintf("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=%s", token)
+		res, err := http.Get(requestURL)
 
 		if err != nil {
-			log.Error("Error occurred whilst validating token", zap.Error(err))
-			return false
+			log.Error("look up token response error", zap.Error(err))
+			return true
 		}
 
-		log.Info("token claims", zap.Reflect("payload", payload))
+		log.Info("look up token response", zap.Reflect("res", res))
 		return true
 	}
 }
