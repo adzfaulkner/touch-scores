@@ -2,8 +2,9 @@ package fixture_aggregate
 
 import (
 	"fmt"
-	"golang.org/x/exp/maps"
 	"time"
+
+	"golang.org/x/exp/maps"
 )
 
 func Processor(pReqs []*ProcessRequest) *ProcessResult {
@@ -12,7 +13,7 @@ func Processor(pReqs []*ProcessRequest) *ProcessResult {
 	times := map[string]bool{}
 	pitches := map[string]bool{}
 	stages := map[string]bool{}
-	
+
 	aggFixturesByTime := processEtaSheet(teams, referees, pitches, stages, times)
 
 	var scheds []*Schedule

@@ -1,11 +1,12 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
-
 	"github.com/adzfaulkner/touch-scores/internal/goog"
 	"github.com/aws/aws-lambda-go/events"
 	"go.uber.org/zap"
+	"google.golang.org/api/idtoken"
 )
 
 type update struct {
@@ -15,6 +16,7 @@ type update struct {
 }
 
 type updateReqBody struct {
+	Token   string   `json:"token"`
 	Updates []update `json:"updates"`
 }
 
@@ -30,6 +32,11 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 	if err != nil {
 		log.Error("Unable to decode request body", zap.Error(err))
 		return *generateResponse(500, "Check logs")
+	}
+
+	if !validatedToken(context.TODO(), log)(reqB.Token) {
+		log.Error("Invalid token received", zap.Error(err))
+		return *generateResponse(401, "Unauthorized")
 	}
 
 	agg := map[string]map[string][][]interface{}{}
@@ -71,4 +78,18 @@ func handleUpdateFixtures(updateSheetVals goog.UpdateSheetValuesFunc, log logger
 	b, _ := json.Marshal(resB)
 
 	return *generateResponse(200, string(b))
+}
+
+func validatedToken(ctx context.Context, log logger) func(token string) bool {
+	return func(token string) bool {
+		payload, err := idtoken.Validate(ctx, token, "")
+
+		if err != nil {
+			log.Error("Error occurred whilst validating token", zap.Error(err))
+			return false
+		}
+
+		log.Info("token claims", zap.Reflect("payload", payload))
+		return true
+	}
 }

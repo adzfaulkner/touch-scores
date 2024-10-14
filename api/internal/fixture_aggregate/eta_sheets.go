@@ -2,6 +2,7 @@ package fixture_aggregate
 
 import (
 	"fmt"
+
 	"golang.org/x/exp/maps"
 )
 
