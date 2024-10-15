@@ -45,11 +45,9 @@ const refreshFixtures = async (): Promise<void> => {
       <button class="btn btn text-primary fw-bold border-0 m-0" type="button" @click="toggleFilterModal">
         <i class="bi bi-filter me-1"></i>Filter
       </button>
-      <!--
       <button class="btn btn text-primary fw-bold border-0 m-0" type="button" @click="togglePitchMapModal">
         <i class="bi bi-map me-1"></i>Venue Layout
       </button>
-      -->
       <button
         class="btn text-primary fw-bold border-0 m-0"
         type="button"
@@ -65,7 +63,7 @@ const refreshFixtures = async (): Promise<void> => {
   <ModalView :id="'pitchMapModal'" :open="showPitchMapModal" @close="togglePitchMapModal">
     <template #header></template>
     <template #default>
-      <img src="@/assets/burton_layout_240822.png" class="img-fluid" alt="Burton venue map" />
+      <img src="@/assets/seds_pitches_3.png" class="img-fluid" alt="Burton venue map" />
     </template>
   </ModalView>
   <ModalView :id="'filterModal'" :open="showFilterModal" @close="toggleFilterModal">
