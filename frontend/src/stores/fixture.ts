@@ -3,7 +3,8 @@ import { DateTime } from 'luxon'
 
 import type {
   FixtureState,
-  Filters, FixturesBySheetDate, SheetConfig
+  Filters, FixturesBySheetDate,
+  SheetUpdate, SheetConfig
 } from '@/types'
 
 import type {
@@ -12,6 +13,7 @@ import type {
 } from '@/types-api'
 
 import { sheetConfigMap } from '@/sheet-config'
+import { useAuthenticationStore } from '@/stores/authentication'
 import { useFilterStore } from '@/stores/filters'
 import { filterFixtures } from '@/support/fixtures'
 
@@ -59,6 +61,10 @@ export const useFixtureStore = defineStore('fixture', {
           })
         } as FixturesRetrieved
       })
+    },
+    update(updateSheet: Function, updates: SheetUpdate[]): void {
+      const authStore = useAuthenticationStore()
+      updateSheet(updates, authStore.token.access_token)
     }
   },
   getters: {

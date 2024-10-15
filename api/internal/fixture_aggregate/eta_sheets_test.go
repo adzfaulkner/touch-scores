@@ -3,9 +3,10 @@ package fixture_aggregate
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_ProcessEtaSheet(t *testing.T) {

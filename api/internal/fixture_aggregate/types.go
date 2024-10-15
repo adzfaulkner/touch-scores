@@ -10,7 +10,7 @@ type Fixture struct {
 	Pitch              string `json:"pitch"`
 	HomeTeam           string `json:"homeTeam"`
 	HomeTeamScore      string `json:"homeTeamScore"`
-	HomeTeamScoreRange string `json:"HomeTeamScoreRange"`
+	HomeTeamScoreRange string `json:"homeTeamScoreRange"`
 	AwayTeam           string `json:"awayTeam"`
 	AwayTeamScore      string `json:"awayTeamScore"`
 	AwayTeamScoreRange string `json:"awayTeamScoreRange"`

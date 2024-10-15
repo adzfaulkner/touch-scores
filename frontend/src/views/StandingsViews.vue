@@ -93,10 +93,10 @@ const filterLineVal = (val: string): string => {
               <h5>{{ poolStanding.pool }}</h5>
               <table class="table mt-3">
                 <tr>
-                  <th v-for="(th, i) in poolStanding.standings[0]" :key="i">{{ filterHeaderVal(th) }}</th>
+                  <th v-for="(th, i) in poolStanding.standings[0]" class="text-center" :key="i">{{ filterHeaderVal(th) }}</th>
                 </tr>
                 <tr v-for="(line, i) in poolStanding.standings.slice(1)" :key="i">
-                  <td v-for="(td, i) in line" :style="{ width: standingCellWidth(i) }" :key="i">{{ filterLineVal(td) }}</td>
+                  <td v-for="(td, i) in line" :key="i" class="text-center">{{ filterLineVal(td) }}</td>
                 </tr>
               </table>
             </div>
