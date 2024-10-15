@@ -42,6 +42,11 @@ const initWs = () => {
                     filtersStore.setValues(r.data.fixtureFilters)
                     standingsStore.setValues(r.data.schedules)
                     break
+                case 'FIXTURES_UPDATED':
+                    if (!r.success && r.message === 'Unauthenticated') {
+                        authenticationStore.expiredToken()
+                    }
+                    break
             }
         }
     )
