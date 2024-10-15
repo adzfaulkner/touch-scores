@@ -29,11 +29,11 @@ const initWs = () => {
                     if (
                         !authenticationStore.isAuthenticated
                         && !filtersStore.isFilteringInProgress
-                        && sheetConfigMap.has(r.data.schedules[0].spreadsheetId)
+                        && sheetConfigMap.has(r.data.spreadsheetId)
                     ) {
                         ws().send(JSON.stringify({
                             action: 'GET_FIXTURES',
-                            configs: [sheetConfigMap.get(r.data.schedules[0].spreadsheetId)],
+                            configs: [sheetConfigMap.get(r.data.spreadsheetId)],
                         }))
                     }
                     break;
