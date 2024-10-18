@@ -51,7 +51,7 @@ const accordionBgClasses = (comp: string): string[] => {
 }
 
 const slotInfoClasses = (date: string): string[] => {
-  return ['slotInfo-' + date.toLowerCase().replace(/\s+/g, '')]
+  return ['slotInfo', 'slotInfo-' + date]
 }
 
 const fixtureUpdated = () => {
@@ -258,14 +258,9 @@ const infoSplit = (info: string): string[] => {
   color: white;
 }
 
-.slotInfo-24august2024 {
-  background-color: #a8d08d;
-  color: black;
-}
-
-.slotInfo-25august2024 {
-  background-color: #f9cb9c;
-  color: black;
+.slotInfo {
+  background-color: #3c78d8;
+  color: white;
 }
 
 .accordion-bg-nationals {
