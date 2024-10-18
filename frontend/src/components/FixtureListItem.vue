@@ -86,9 +86,8 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
 
 <template>
   <div class="card h-100 rounded-0">
-    <div :class="['card-header', 'text-center']">{{ fixture.time }} - {{ fixture.pitch }}</div>
+    <div :class="['card-header', 'text-center', 'fw-bold']">{{ fixture.time }} - {{ fixture.pitch }} - {{ fixture.stage }}</div>
     <div class="card-body p-0 m-0">
-      <h6 :class="['card-title', 'text-center', 'm-2', 'p-1', 'fw-bold']">{{ fixture.stage }}</h6>
       <div class="ps-2 fs-5">
         <div class="d-flex">
           <div class="d-flex align-items-center flex-grow-1 me-2">
@@ -230,5 +229,9 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
 .bg-default {
   /*background-color: #cce3f6;*/
   background-color: #a5a5a5;
+}
+
+.card-header {
+  background-color: #fff3cc;
 }
 </style>
