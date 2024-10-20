@@ -7,7 +7,7 @@ import { useAuthenticationStore } from '@/stores/authentication'
 import { useFilterStore } from '@/stores/filters'
 import { useFixtureStore } from '@/stores/fixture'
 import { useStandingsStore } from '@/stores/standings'
-import { getWS } from '@/support/websocket'
+import { getWS, sendWS } from '@/support/websocket'
 import { getEnv } from '@/support/env'
 
 const initWs = () => {
@@ -31,12 +31,12 @@ const initWs = () => {
                         && !filtersStore.isFilteringInProgress
                         && sheetConfigMap.has(r.data.spreadsheetId)
                     ) {
-                        ws().send(JSON.stringify({
+                        sendWS(ws(), JSON.stringify({
                             action: 'GET_FIXTURES',
                             configs: [sheetConfigMap.get(r.data.spreadsheetId)],
                         }))
                     }
-                    break;
+                    break
                 case 'FIXTURES_RETRIEVED':
                     fixtureStore.intFixtures(r.data.schedules)
                     filtersStore.setValues(r.data.fixtureFilters)
@@ -53,18 +53,18 @@ const initWs = () => {
 
     ws()
 
-    const requestFixtures = ((ws: Function, sheetConfigs: SheetConfig[]) => () => {
-        ws().send(JSON.stringify({
+    const requestFixtures = ((ws: Function, sednWS: Function, sheetConfigs: SheetConfig[]) => () => {
+        sendWS(ws(), JSON.stringify({
             action: 'GET_FIXTURES',
             configs: sheetConfigs,
         }))
-    })(ws, sheetConfigs)
+    })(ws, sendWS, sheetConfigs)
 
-    const updateSheet = (updates: SheetUpdate[], token: string) => ws().send(JSON.stringify({
+    const updateSheet = ((ws: Function, sendWS: Function) => (updates: SheetUpdate[], token: string) => sendWS(ws(), JSON.stringify({
         action: 'UPDATE_FIXTURES',
         token,
         updates,
-    }))
+    })))(ws, sendWS)
     
     return {
         requestFixtures,

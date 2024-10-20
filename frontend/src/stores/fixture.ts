@@ -15,6 +15,7 @@ import type {
 import { sheetConfigMap } from '@/sheet-config'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useFilterStore } from '@/stores/filters'
+import { useNotificationStore } from '@/stores/notification'
 import { filterFixtures } from '@/support/fixtures'
 
 export const useFixtureStore = defineStore('fixture', {
@@ -64,7 +65,9 @@ export const useFixtureStore = defineStore('fixture', {
     },
     update(updateSheet: Function, updates: SheetUpdate[]): void {
       const authStore = useAuthenticationStore()
+      const notificationStore = useNotificationStore()
       updateSheet(updates, authStore.token.access_token)
+      notificationStore.setNotification(true, "Sheet updated")
     }
   },
   getters: {

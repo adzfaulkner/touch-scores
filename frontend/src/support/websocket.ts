@@ -3,6 +3,21 @@ const reg: Map<string, WebSocket>  = new Map()
 type OnOpen = (this: WebSocket, ev: Event) => any
 type OnMessage = (this: WebSocket, ev: MessageEvent) => any
 
+const waitForConnection = function (ws: WebSocket, callback: Function, interval: number) {
+    if (ws.readyState === 1) {
+        callback()
+    } else {
+        // optional: implement backoff for interval here
+        setTimeout(function () {
+            waitForConnection(ws, callback, interval)
+        }, interval)
+    }
+}
+
+const sendWS = ((waitForConnection: Function) => (ws: WebSocket, message: any) => {
+    waitForConnection(ws, () => ws.send(message), 1000)
+})(waitForConnection)
+
 const connect = (url: string, onOpen: OnOpen, onMessage: OnMessage): WebSocket => {
     const ws = new WebSocket(url)
 
@@ -12,13 +27,11 @@ const connect = (url: string, onOpen: OnOpen, onMessage: OnMessage): WebSocket =
     ws.onmessage = onMessage
 
     ws.onclose = (e: CloseEvent) => {
-        console.log('Socket is closed. Reconnect will be attempted in 1 second.')
-        setTimeout(() => connect(url, onOpen, onMessage), 500)
+        setTimeout(() => connect(url, onOpen, onMessage), 1000)
     }
 
     ws.onerror = (e: Event) => {
-        console.log('Socket has errord. Reconnect will be attempted in 1 second.')
-        setTimeout(() => connect(url, onOpen, onMessage), 500)
+        ws.close()
     }
 
     return ws
@@ -29,5 +42,6 @@ const getWS = (url: string, onOpen: OnOpen, onMessage: OnMessage): WebSocket => 
 }
 
 export {
-    getWS
+    getWS,
+    sendWS,
 }
