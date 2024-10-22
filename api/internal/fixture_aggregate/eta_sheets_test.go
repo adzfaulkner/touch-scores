@@ -12,7 +12,7 @@ import (
 func Test_ProcessEtaSheet(t *testing.T) {
 	t.Parallel()
 
-	raw, err := os.ReadFile("./fixtures/nts_2404.json")
+	raw, err := os.ReadFile("./data/seds_24_25_r1_fixture.json")
 
 	if err != nil {
 		fmt.Println(err)
@@ -41,9 +41,9 @@ func Test_ProcessEtaSheet(t *testing.T) {
 		}
 	}
 
-	assert.Equal(t, 57, len(teams))
-	assert.Equal(t, 65, len(referees))
-	assert.Equal(t, 21, len(times))
-	assert.Equal(t, 6, len(pitches))
-	assert.Equal(t, 34, len(stages))
+	assert.Equal(t, 7, len(teams))
+	assert.Equal(t, 8, len(referees))
+	assert.Equal(t, 11, len(times))
+	assert.Equal(t, 2, len(pitches))
+	assert.Equal(t, 1, len(stages))
 }

@@ -1,0 +1,645 @@
+{
+  "data": [
+    {
+      "sheetId": "1Y0ckxL8HvbFncwF1zpYLq_CMbshyUXTNCyU2IZnILwk",
+      "schedules": [
+        {
+          "date": "2024-10-19T00:00:00+00:00",
+          "ranges": {
+            "fixtures": {
+              "range": "Schedule!A7:F50",
+              "values": [
+                [
+                  "12:15",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "London Eagles",
+                  "3",
+                  "",
+                  "Farnham Hornets",
+                  "5"
+                ],
+                [
+                  "",
+                  "Wolves",
+                  "1",
+                  "",
+                  "Invicta Touch",
+                  "2"
+                ],
+                [],
+                [
+                  "12:45",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "Horsham Tigers",
+                  "5",
+                  "",
+                  "Surrey Bisons",
+                  "3"
+                ],
+                [
+                  "",
+                  "Surrey University",
+                  "3",
+                  "",
+                  "Invicta Touch",
+                  "4"
+                ],
+                [],
+                [
+                  "13:15",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "London Eagles",
+                  "8",
+                  "",
+                  "Wolves",
+                  "2"
+                ],
+                [
+                  "",
+                  "Surrey University",
+                  "0",
+                  "",
+                  "Farnham Hornets",
+                  "2"
+                ],
+                [],
+                [
+                  "13:45",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "London Eagles",
+                  "5",
+                  "",
+                  "Horsham Tigers",
+                  "0"
+                ],
+                [
+                  "",
+                  "Surrey Bisons",
+                  "1",
+                  "",
+                  "Farnham Hornets",
+                  "7"
+                ],
+                [],
+                [
+                  "14:15",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "Wolves",
+                  "1",
+                  "",
+                  "Horsham Tigers",
+                  "4"
+                ],
+                [
+                  "",
+                  "Surrey Bisons",
+                  "0",
+                  "",
+                  "Invicta Touch",
+                  "1"
+                ],
+                [],
+                [
+                  "14:45",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "Wolves",
+                  "6",
+                  "",
+                  "London Eagles",
+                  "4"
+                ],
+                [
+                  "",
+                  "Surrey University",
+                  "3",
+                  "",
+                  "Farnham Hornets",
+                  "3"
+                ],
+                [],
+                [
+                  "15:15",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "Surrey Bisons",
+                  "3",
+                  "",
+                  "London Eagles",
+                  "5"
+                ],
+                [
+                  "",
+                  "Surrey University",
+                  "2",
+                  "",
+                  "Horsham Tigers",
+                  "0"
+                ],
+                [],
+                [
+                  "15:45",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "Surrey Bisons",
+                  "2",
+                  "",
+                  "Invicta Touch",
+                  "4"
+                ],
+                [
+                  "",
+                  "Farnham Hornets",
+                  "3",
+                  "",
+                  "Wolves",
+                  "3"
+                ],
+                [],
+                [
+                  "16:15",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "Surrey University",
+                  "2"
+                ],
+                [
+                  "",
+                  "Farnham Hornets",
+                  "4"
+                ],
+                [],
+                [
+                  "16:45",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "Surrey Bisons",
+                  "1",
+                  "",
+                  "Invicta Touch",
+                  "1"
+                ],
+                [
+                  "",
+                  "Horsham Tigers",
+                  "1",
+                  "",
+                  "London Eagles",
+                  "5"
+                ],
+                [],
+                [
+                  "17:15",
+                  "CUP POOL",
+                  "",
+                  "",
+                  "CUP POOL"
+                ],
+                [
+                  "",
+                  "Wolves",
+                  "6",
+                  "",
+                  "Invicta Touch",
+                  "3"
+                ],
+                [
+                  "",
+                  "Horsham Tigers",
+                  "4",
+                  "",
+                  "Surrey University",
+                  "1"
+                ]
+              ]
+            },
+            "fixturePitches": {
+              "range": "Schedule!6:6",
+              "values": [
+                [
+                  "TIME",
+                  "AGP 1",
+                  "",
+                  "",
+                  "AGP 2"
+                ]
+              ]
+            },
+            "slotInfo": {
+              "range": "Schedule!B5:F5",
+              "values": [
+                [
+                  "GAMES 10 MINUTES PER HALF | 3 MINUTE HALF TIME"
+                ]
+              ]
+            },
+            "playOffSlotInfo": {
+              "range": "",
+              "values": null
+            },
+            "refAllocations": {
+              "range": "Ref Allocations!2:58",
+              "values": [
+                [
+                  "TIME",
+                  "AGP 1",
+                  "",
+                  "",
+                  "AGP 2"
+                ],
+                [
+                  "12:15",
+                  "CUP POOL - London Eagles v Wolves",
+                  "",
+                  "",
+                  "CUP POOL - Farnham Hornets v Invicta Touch"
+                ],
+                [
+                  "",
+                  "JONATHAN G",
+                  "",
+                  "",
+                  "LAYO A"
+                ],
+                [
+                  "",
+                  "OWEN C",
+                  "",
+                  "",
+                  "CHRISTINE"
+                ],
+                [],
+                [
+                  "12:45",
+                  "CUP POOL - Horsham Tigers v Surrey University",
+                  "",
+                  "",
+                  "CUP POOL - Surrey Bisons v Invicta Touch"
+                ],
+                [
+                  "",
+                  "JONATHAN G",
+                  "",
+                  "",
+                  "NICHOLAS VDR"
+                ],
+                [
+                  "",
+                  "MAGS VG",
+                  "",
+                  "",
+                  "MATTHEW T"
+                ],
+                [],
+                [
+                  "13:15",
+                  "CUP POOL - London Eagles v Surrey University",
+                  "",
+                  "",
+                  "CUP POOL - Wolves v Farnham Hornets"
+                ],
+                [
+                  "",
+                  "LAYO A",
+                  "",
+                  "",
+                  "MAGS VG"
+                ],
+                [
+                  "",
+                  "OWEN C",
+                  "",
+                  "",
+                  "DIEGO J"
+                ],
+                [],
+                [
+                  "13:45",
+                  "CUP POOL - London Eagles v Surrey Bisons",
+                  "",
+                  "",
+                  "CUP POOL - Horsham Tigers v Farnham Hornets"
+                ],
+                [
+                  "",
+                  "NICHOLAS VDR",
+                  "",
+                  "",
+                  "DIEGO J"
+                ],
+                [
+                  "",
+                  "JONATHAN G",
+                  "",
+                  "",
+                  "MATTHEW T"
+                ],
+                [],
+                [
+                  "14:15",
+                  "CUP POOL - Wolves v Surrey Bisons",
+                  "",
+                  "",
+                  "CUP POOL - Horsham Tigers v Invicta Touch"
+                ],
+                [
+                  "",
+                  "LAYO A",
+                  "",
+                  "",
+                  "JONATHAN G"
+                ],
+                [
+                  "",
+                  "MAGS VG",
+                  "",
+                  "",
+                  "OWEN C"
+                ],
+                [],
+                [
+                  "14:45",
+                  "CUP POOL - Wolves v Surrey University",
+                  "",
+                  "",
+                  "CUP POOL - London Eagles v Farnham Hornets"
+                ],
+                [
+                  "",
+                  "DIEGO J",
+                  "",
+                  "",
+                  "LAYO A"
+                ],
+                [
+                  "",
+                  "NICHOLAS VDR",
+                  "",
+                  "",
+                  "MATTHEW T"
+                ],
+                [],
+                [
+                  "15:15",
+                  "CUP POOL - Surrey Bisons v Surrey University",
+                  "",
+                  "",
+                  "CUP POOL - London Eagles v Horsham Tigers"
+                ],
+                [
+                  "",
+                  "JONATHAN G",
+                  "",
+                  "",
+                  "NICHOLAS VDR"
+                ],
+                [
+                  "",
+                  "MAGS VG",
+                  "",
+                  "",
+                  "DIEGO J"
+                ],
+                [],
+                [
+                  "15:45",
+                  "CUP POOL - Surrey Bisons v Farnham Hornets",
+                  "",
+                  "",
+                  "CUP POOL - Invicta Touch v Wolves"
+                ],
+                [
+                  "",
+                  "JONATHAN G",
+                  "",
+                  "",
+                  "LAYO A"
+                ],
+                [
+                  "",
+                  "OWEN C",
+                  "",
+                  "",
+                  "MATTHEW T"
+                ],
+                [],
+                [
+                  "16:15",
+                  "CUP POOL - Surrey University v Farnham Hornets"
+                ],
+                [
+                  "",
+                  "NICHOLAS VDR"
+                ],
+                [
+                  "",
+                  "MAGS VG"
+                ],
+                [],
+                [
+                  "16:45",
+                  "CUP POOL - Surrey Bisons v Horsham Tigers",
+                  "",
+                  "",
+                  "CUP POOL - Invicta Touch v London Eagles"
+                ],
+                [
+                  "",
+                  "NICHOLAS VDR",
+                  "",
+                  "",
+                  "OWEN C"
+                ],
+                [
+                  "",
+                  "MATTHEW T",
+                  "",
+                  "",
+                  "MAGS VG"
+                ],
+                [],
+                [
+                  "17:15",
+                  "CUP POOL - Wolves v Horsham Tigers",
+                  "",
+                  "",
+                  "CUP POOL - Invicta Touch v Surrey University"
+                ],
+                [
+                  "",
+                  "LAYO A",
+                  "",
+                  "",
+                  "OWEN C"
+                ],
+                [
+                  "",
+                  "DIEGO J",
+                  "",
+                  "",
+                  "MATTHEW T"
+                ]
+              ]
+            }
+          }
+        }
+      ],
+      "standings": [
+        {
+          "range": "Standings!A2:J9",
+          "label": "Pool Table",
+          "values": [
+            [
+              "Pos",
+              "Team",
+              "PL",
+              "W",
+              "D",
+              "L",
+              "TF",
+              "TA",
+              "TD",
+              "Pts"
+            ],
+            [
+              "1",
+              "London Eagles",
+              "6",
+              "6",
+              "0",
+              "0",
+              "30",
+              "6",
+              "24",
+              "24"
+            ],
+            [
+              "2",
+              "Farnham Hornets",
+              "6",
+              "4",
+              "1",
+              "1",
+              "24",
+              "12",
+              "12",
+              "19"
+            ],
+            [
+              "3",
+              "Wolves",
+              "6",
+              "3",
+              "1",
+              "2",
+              "19",
+              "16",
+              "3",
+              "16"
+            ],
+            [
+              "4",
+              "Invicta Touch",
+              "6",
+              "3",
+              "0",
+              "3",
+              "15",
+              "21",
+              "-6",
+              "15"
+            ],
+            [
+              "5",
+              "Horsham Tigers",
+              "6",
+              "2",
+              "1",
+              "3",
+              "14",
+              "23",
+              "-9",
+              "13"
+            ],
+            [
+              "6",
+              "Surrey Bisons",
+              "6",
+              "1",
+              "1",
+              "4",
+              "10",
+              "16",
+              "-6",
+              "10"
+            ],
+            [
+              "7",
+              "Surrey University",
+              "6",
+              "0",
+              "0",
+              "6",
+              "11",
+              "29",
+              "-18",
+              "6"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}
