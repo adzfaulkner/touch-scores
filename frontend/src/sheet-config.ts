@@ -2,10 +2,10 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
-    sheetId: '1Y0ckxL8HvbFncwF1zpYLq_CMbshyUXTNCyU2IZnILwk',
+    sheetId: '18DJh_p93Trq2VBzQlqB3cAYVP1NC50N9RwEYcoYF-jA',
     schedule: [
       {
-        date: '2024-10-19T00:00:00+00:00',
+        date: '2024-11-23T00:00:00+00:00',
         ranges: {
           fixtures: 'Schedule!A7:F50',
           fixturePitches: 'Schedule!6:6',
@@ -22,7 +22,7 @@ const sheetConfigs: SheetConfig[] = [
       },
     ],
     competition: 'seds',
-    label: 'SEDS 24/25 R1',
+    label: 'SEDS 24/25 R2',
   },
 ]
 
