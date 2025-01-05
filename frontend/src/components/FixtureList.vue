@@ -60,13 +60,9 @@ const fixtureUpdated = () => {
 }
 
 const infoSplit = (info: string): string[] => {
-  let parts = info.split('|')
-  let first = parts.shift() ?? ''
-
-  return [
-      ...first.split(':'),
-      ...parts
-  ].map(s => s.trim())
+  return info.replace(new RegExp("\\|", "g"), "\n")
+      .split("\n")
+      .map((l: string) => l.trim())
 }
 </script>
 
@@ -102,9 +98,9 @@ const infoSplit = (info: string): string[] => {
               <div class="container p-0 m-0" v-else>
                 <div :class="['row',  'g-1', ...slotInfoClasses(fixturesBySheetDate.date.toFormat('d MMMM y'))]">
                   <div class="col m-0 p-0 text-center">
-                    <h5 class="p-0 mt-3 mb-3">
+                    <h6 class="p-1 mt-2 mb-2">
                       <span v-for="(i, k) in infoSplit(fixturesBySheetDate.slotInfo)" v-bind:key="k">{{i}}<br></span>
-                    </h5>
+                    </h6>
                   </div>
                 </div>
                   <div class="row bg-playoff text-white" v-if="fixturesBySheetDate.playOffSlotInfo !== ''">
@@ -118,11 +114,6 @@ const infoSplit = (info: string): string[] => {
                       v-for="fixturesByTime of fixturesBySheetDate.fixturesByTime"
                       :key="fixturesByTime.time"
                   >
-                    <div class="row mt-1 bg-danger-subtle g-1">
-                      <div class="col m-0 p-2 text-center">
-                        <h3 class="p-0 m-0">{{ fixturesByTime.time }}</h3>
-                      </div>
-                    </div>
                     <div class="row mt-0 row-cols-1 row-cols-lg-2 g-1">
                       <div
                           class="col mt-1"
@@ -259,7 +250,7 @@ const infoSplit = (info: string): string[] => {
 }
 
 .slotInfo {
-  background-color: #3c78d8;
+  background-color: #00b000;
   color: white;
 }
 
