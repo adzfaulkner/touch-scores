@@ -60,7 +60,7 @@ const fixtureUpdated = () => {
 }
 
 const infoSplit = (info: string): string[] => {
-  return info.replaceAll("|","\n")
+  return info.replace(new RegExp("\\|", "g"), "\n")
       .split("\n")
       .map((l: string) => l.trim())
 }
