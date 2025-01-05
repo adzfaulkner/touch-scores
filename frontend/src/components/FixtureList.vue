@@ -250,7 +250,7 @@ const infoSplit = (info: string): string[] => {
 }
 
 .slotInfo {
-  background-color: #3c78d8;
+  background-color: #00b000;
   color: white;
 }
 
