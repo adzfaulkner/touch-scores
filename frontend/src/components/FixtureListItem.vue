@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { Fixture } from '@/types'
-import type { PropType, Ref, StyleValue } from 'vue'
+import type { PropType, Ref } from 'vue'
 
 import { inject } from 'vue'
 
 import type { SheetUpdate } from '@/types'
 
 import { debounce } from '@/support/debounce'
+import { getCardHeaderStyle } from '@/support/card-header'
 
 const emit = defineEmits(['fixtureUpdated'])
 
@@ -18,28 +19,6 @@ defineProps({
 })
 
 const updates = inject('updates') as Ref<Map<string, SheetUpdate>>
-
-const timePitchStyle = (fixture: Fixture): object => {
-  const ms = fixture.pitch.match(/\d+$/)
-
-  if (!ms || ms.length === 0) {
-    return {}
-  }
-
-  const pitchNo = parseInt(ms[0], 10)
-
-  if (pitchNo % 2 === 0) {
-    return {
-      backgroundColor: '#ff0000',
-      color: '#fff'
-    }
-  }
-
-  return {
-    backgroundColor: '#00b3f6',
-    color: '#000'
-  }
-}
 
 const scoreClasses = (stage: string, defaults: string[]): string[] => {
   const ret = [...defaults, 'pt-2', 'pb-2', 'text-center', 'fw-bold', 'bg-default']
@@ -86,7 +65,7 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
 
 <template>
   <div class="card h-100 rounded-0">
-    <div :class="['card-header', 'text-center', 'fw-bold']">{{ fixture.time }} - {{ fixture.pitch }} - {{ fixture.stage }}</div>
+    <div :class="['card-header', 'text-center', 'fw-bold']" :style="getCardHeaderStyle(fixture.stage)">{{ fixture.time }} - {{ fixture.pitch }} - {{ fixture.stage }}</div>
     <div class="card-body p-0 m-0">
       <div class="ps-2 fs-5">
         <div class="d-flex">
@@ -232,6 +211,6 @@ const fixtureUpdate = (event: Event, sheetId: string, range: string): void => {
 }
 
 .card-header {
-  background-color: #fff3cc;
+  /*background-color: #fff3cc;*/
 }
 </style>

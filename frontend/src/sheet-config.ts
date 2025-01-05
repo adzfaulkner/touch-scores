@@ -2,27 +2,27 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
-    sheetId: '18DJh_p93Trq2VBzQlqB3cAYVP1NC50N9RwEYcoYF-jA',
+    sheetId: '1_7iZ4Xrv8Vt7GIXaecY19gwqFyUUaHXNdEHzjuAi_HQ',
     schedule: [
       {
-        date: '2024-11-23T00:00:00+00:00',
+        date: '2025-01-11T00:00:00+00:00',
         ranges: {
-          fixtures: 'Schedule!A7:F50',
+          fixtures: 'Schedule!A7:F65',
           fixturePitches: 'Schedule!6:6',
           slotInfo: 'Schedule!B5:F5',
           playOffSlotInfo: null,
-          refAllocations: 'Ref Allocations!2:58',
+          refAllocations: 'Ref Allocations!2:62',
         },
       },
     ],
     standingRanges: [
       {
         label: 'Pool Table',
-        range: 'Standings!A2:J9',
+        range: 'Standings!A2:J14',
       },
     ],
     competition: 'seds',
-    label: 'SEDS 24/25 R2',
+    label: 'SEDS 24/25 R3',
   },
 ]
 
