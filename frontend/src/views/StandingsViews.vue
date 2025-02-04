@@ -48,21 +48,27 @@ const filterHeaderVal = (val: string): string => {
   return headValMap.has(val) ? String(headValMap.get(val)) : val
 }
 
-const standingCellWidth = (i: number): string => {
-  if (i === 0) {
-    return '5%'
-  }
-
-  if (i === 1) {
-    return '50%'
-  }
-
-  return '15%';
-}
-
 const filterLineVal = (val: string): string => {
   return val.replace(/^(\d+)([st|nd|rd|th]+\s.*)/gm, '$1')
 }
+
+const posClasses = (line: number, i: number): string[] => {
+  const ret = []
+
+  if (i !== 1) {
+    ret.push('text-center')
+  }
+
+  if (line < 4) {
+    ret.push('cup')
+  } else if (line < 8) {
+    ret.push('plate')
+  } else {
+    ret.push('bowl')
+  }
+
+  return ret
+};
 </script>
 
 <template>
@@ -93,10 +99,10 @@ const filterLineVal = (val: string): string => {
               <h5>{{ poolStanding.pool }}</h5>
               <table class="table mt-3">
                 <tr>
-                  <th v-for="(th, i) in poolStanding.standings[0]" class="text-center" :key="i">{{ filterHeaderVal(th) }}</th>
+                  <th v-for="(th, i) in poolStanding.standings[0]" :class="posClasses(t, i)" :key="i">{{ filterHeaderVal(th) }}</th>
                 </tr>
-                <tr v-for="(line, i) in poolStanding.standings.slice(1)" :key="i">
-                  <td v-for="(td, i) in line" :key="i" class="text-center">{{ filterLineVal(td) }}</td>
+                <tr v-for="(line, t) in poolStanding.standings.slice(1)" :key="t">
+                  <td v-for="(td, i) in line" :key="i" :class="posClasses(t, i)">{{ filterLineVal(td) }}</td>
                 </tr>
               </table>
             </div>
@@ -126,6 +132,23 @@ const filterLineVal = (val: string): string => {
 .td,
 .td2 {
   width: 10%;
+}
+
+th {
+  background-color: #666666;
+  color: white;
+}
+
+td.cup {
+  background-color: #fcf2cc;
+}
+
+td.plate {
+  background-color: #efefef;
+}
+
+td.bowl {
+  background-color: #e6b8ae;
 }
 
 td {
