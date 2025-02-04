@@ -59,6 +59,10 @@ const posClasses = (line: number, i: number): string[] => {
     ret.push('text-center')
   }
 
+  if (line < 0) {
+    return ret
+  }
+    
   if (line < 4) {
     ret.push('cup')
   } else if (line < 8) {
@@ -99,7 +103,7 @@ const posClasses = (line: number, i: number): string[] => {
               <h5>{{ poolStanding.pool }}</h5>
               <table class="table mt-3">
                 <tr>
-                  <th v-for="(th, i) in poolStanding.standings[0]" :class="posClasses(t, i)" :key="i">{{ filterHeaderVal(th) }}</th>
+                  <th v-for="(th, i) in poolStanding.standings[0]" :class="posClasses(-1, i)" :key="i">{{ filterHeaderVal(th) }}</th>
                 </tr>
                 <tr v-for="(line, t) in poolStanding.standings.slice(1)" :key="t">
                   <td v-for="(td, i) in line" :key="i" :class="posClasses(t, i)">{{ filterLineVal(td) }}</td>
