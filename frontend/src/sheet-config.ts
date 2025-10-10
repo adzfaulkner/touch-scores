@@ -2,10 +2,10 @@ import type { SheetConfig } from '@/types'
 
 const sheetConfigs: SheetConfig[] = [
   {
-    sheetId: '1_7iZ4Xrv8Vt7GIXaecY19gwqFyUUaHXNdEHzjuAi_HQ',
+    sheetId: '1c6MJB1CMttmo02vW1q1JZ3kCPoYv09H0WeLnUgEhs9U',
     schedule: [
       {
-        date: '2025-01-11T00:00:00+00:00',
+        date: '2025-02-08T00:00:00+00:00',
         ranges: {
           fixtures: 'Schedule!A7:F65',
           fixturePitches: 'Schedule!6:6',
